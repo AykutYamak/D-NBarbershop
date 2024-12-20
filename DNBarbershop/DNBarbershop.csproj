@@ -21,8 +21,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DNBarbershop.Core\DNBarbershop.Core.csproj" />
-    <ProjectReference Include="..\DNBarbershop.DataAccess\DNBarbershop.DataAccess.csproj" />
-    <ProjectReference Include="..\DNBarbershop.Models\DNBarbershop.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DNBarbershop.DataAccess">
+      <HintPath>..\DNBarbershop.DataAccess\obj\Debug\net9.0\DNBarbershop.DataAccess.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
