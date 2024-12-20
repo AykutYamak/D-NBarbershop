@@ -19,12 +19,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DNBarbershop.Core\DNBarbershop.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DNBarbershop.DataAccess\DNBarbershop.DataAccess.csproj" />
-  </ItemGroup>
-
 </Project>
