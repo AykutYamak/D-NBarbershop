@@ -19,8 +19,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DNBarbershop.Models\DNBarbershop.Models.csproj" />
-  </ItemGroup>
-
 </Project>

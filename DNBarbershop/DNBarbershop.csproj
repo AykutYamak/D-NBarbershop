@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -22,12 +22,21 @@
   <ItemGroup>
     <ProjectReference Include="..\DNBarbershop.Core\DNBarbershop.Core.csproj" />
     <ProjectReference Include="..\DNBarbershop.DataAccess\DNBarbershop.DataAccess.csproj" />
+    <ProjectReference Include="..\DNBarbershop.Models\DNBarbershop.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="DNBarbershop.DataAccess">
       <HintPath>..\DNBarbershop.DataAccess\obj\Debug\net9.0\DNBarbershop.DataAccess.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Images\3194016d-ecf4-4ee6-aef0-d0752b92d6f6.png" />
   </ItemGroup>
 
 </Project>
