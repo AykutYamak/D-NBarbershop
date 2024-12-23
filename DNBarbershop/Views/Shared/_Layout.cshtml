@@ -7,26 +7,22 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DNBarbershop.styles.css" asp-append-version="true" />
+    <link rel="preload" href="../Assets/Fonts/Nordic Alternative Regular.ttf" asp-append-version="true"/> 
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DNBarbershop</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+            <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarNavAltMarkup">
+                <div class="navbar-nav text-center">
+                    <a class="nav-link active me-5" aria-current="page" asp-action="Index" asp-controller="Home">Начало</a>
+                    <a class="nav-link me-5 ms-5" asp-action="Index" asp-controller="Home">Услуги</a>
+                    <div class="container-fluid">
+                        <a class="nav-link me-5" asp-action="Index" asp-controller="Home">
+                            <img src="../Assets/Images/1000_F_205498258_AfQmtyR5kO5llwKd6fWRRxcc4xRUbQcb.jpg" style="height: 80px; width: 80px" class="rounded"  />
+                        </a>                        
+                    </div>
+                    <a class="nav-link me-5 ms-5" asp-action="Index" asp-controller="Home">Barbers</a>
+                    <a class="nav-link me-5 ms-5" asp-action="Index" asp-controller="Home">About us</a>
                 </div>
             </div>
         </nav>
