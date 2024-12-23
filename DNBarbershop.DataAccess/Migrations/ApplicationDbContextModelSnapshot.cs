@@ -197,7 +197,7 @@ namespace DNBarbershop.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ordersDetail");
+                    b.ToTable("orderDetails");
                 });
 
             modelBuilder.Entity("DNBarbershop.Models.Entities.Product", b =>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DNBarbershop.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241223200745_Initial Setup")]
+    [Migration("20241223202542_Initial Setup")]
     partial class InitialSetup
     {
         /// <inheritdoc />
@@ -200,7 +200,7 @@ namespace DNBarbershop.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ordersDetail");
+                    b.ToTable("orderDetails");
                 });
 
             modelBuilder.Entity("DNBarbershop.Models.Entities.Product", b =>

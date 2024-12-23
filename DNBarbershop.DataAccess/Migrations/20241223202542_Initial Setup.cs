@@ -222,7 +222,7 @@ namespace DNBarbershop.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ordersDetail",
+                name: "orderDetails",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -233,15 +233,15 @@ namespace DNBarbershop.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ordersDetail", x => x.Id);
+                    table.PrimaryKey("PK_orderDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ordersDetail_orders_OrderId",
+                        name: "FK_orderDetails_orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ordersDetail_products_ProductId",
+                        name: "FK_orderDetails_products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "products",
                         principalColumn: "Id",
@@ -284,19 +284,19 @@ namespace DNBarbershop.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_UserId",
-                table: "orders",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ordersDetail_OrderId",
-                table: "ordersDetail",
+                name: "IX_orderDetails_OrderId",
+                table: "orderDetails",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ordersDetail_ProductId",
-                table: "ordersDetail",
+                name: "IX_orderDetails_ProductId",
+                table: "orderDetails",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_UserId",
+                table: "orders",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_products_CategoryId",
@@ -319,7 +319,7 @@ namespace DNBarbershop.DataAccess.Migrations
                 name: "feedbacks");
 
             migrationBuilder.DropTable(
-                name: "ordersDetail");
+                name: "orderDetails");
 
             migrationBuilder.DropTable(
                 name: "workSchedules");
