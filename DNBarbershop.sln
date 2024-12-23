@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35506.116 d17.12
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNBarbershop", "DNBarbershop\DNBarbershop.csproj", "{5AED2A05-975D-4B83-9B35-E7BFE4D8924D}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNBarbershop.Models", "DNBarbershop.Models\DNBarbershop.Models.csproj", "{A469FB91-25C5-4C5D-9236-CB39A1B1CB39}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNBarbershop.DataAccess", "DNBarbershop.DataAccess\DNBarbershop.DataAccess.csproj", "{369FE290-1DDD-4043-BF71-7162C026A8FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNBarbershop.Common", "DNBarbershop.Common\DNBarbershop.Common.csproj", "{F1C3587E-210B-4171-82EB-589E25E68C66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{369FE290-1DDD-4043-BF71-7162C026A8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{369FE290-1DDD-4043-BF71-7162C026A8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{369FE290-1DDD-4043-BF71-7162C026A8FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1C3587E-210B-4171-82EB-589E25E68C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1C3587E-210B-4171-82EB-589E25E68C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1C3587E-210B-4171-82EB-589E25E68C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1C3587E-210B-4171-82EB-589E25E68C66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
