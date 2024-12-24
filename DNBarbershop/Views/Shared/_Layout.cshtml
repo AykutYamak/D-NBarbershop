@@ -7,29 +7,29 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DNBarbershop.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DNBarbershop</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <header class="bg-transparent">
+        <nav>        
+            <ul class="nav nav-underline d-flex justify-content-center align-items-center text-center fs-5">
+            <li class="nav-item m-3">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Appointment" asp-action="BookNow">Book Now</a> 
+            </li>
+                <li class="nav-item m-3">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Barber" asp-action="Barbers">Barbers</a>
+            </li>
+                <li class="nav-item p-0">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Assets/Images/1600w-MnTa2CvxlTE.jpg" class="block" alt="logo" width="120" height="120" /></a>
+                </li>
+                <li class="nav-item m-3">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Service" asp-action="Services">Services</a>
+            </li>
+                <li class="nav-item m-3">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Products">Products</a>
+            </li>
+        </ul>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -37,7 +37,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted fixed-bottom p-3">
         <div class="container">
             &copy; 2024 - DNBarbershop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
@@ -45,6 +45,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/css/site.css" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
