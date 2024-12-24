@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DNBarbershop.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241224120131_Fixed Decimal Properties")]
+    [Migration("20241224121019_Fixed Decimal Properties")]
     partial class FixedDecimalProperties
     {
         /// <inheritdoc />
