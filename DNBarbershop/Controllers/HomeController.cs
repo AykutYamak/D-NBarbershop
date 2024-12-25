@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using DNBarbershop.Models;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DNBarbershop.Controllers
@@ -12,7 +13,7 @@ namespace DNBarbershop.Controllers
         {
             _logger = logger;
         }
-
+    
         public IActionResult Index()
         {
             return View();

@@ -30,10 +30,46 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+.customnavbar li a {
+    transition: transform .25s, visibility .25s ease-in;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.customnavbar li a:hover{
+        transform: scale(1.1);
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
 
-#HomepageBody{
-    background-image:url(~/Assets/Images/barber-background.jpg);
-    background-repeat: no-repeat;
-    background-position:center;
-    background-size:cover;
+.button {
+    cursor: pointer;
+    text-decoration: none;
+    color: #ffff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #2d2e32;
+    border: 2px solid #2d2e32;
+    transition: all 0.45s;
+}
+
+    .button:hover {
+        transform: rotate(360deg);
+        transform-origin: center center;
+        background-color: #ffff;
+        color: #2d2e32;
+    }
+
+        .button:hover .btn-svg {
+            filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(103%) contrast(103%);
+        }
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
