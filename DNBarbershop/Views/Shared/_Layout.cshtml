@@ -10,34 +10,33 @@
 </head>
 <body>
     <header class=" customnavbarHeader">
-        <nav >     
-          
-            <ul class="nav nav-underline d-flex justify-content-center align-items-center text-center fs-5 customnavbar" >
-               
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Appointment" asp-action="Index">Book Now</a> 
-            </li>
+        <nav>
+            <ul class="nav nav-underline d-flex justify-content-center align-items-center text-center fs-5 customnavbar">
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" asp-area="" asp-controller="Appointment" asp-action="Index">Book Now</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-area="" asp-controller="Service" asp-action="Services">Services</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Barber" asp-action="Barbers">Barbers</a>
-            </li>
-                <li class="nav-item">
-                    <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Assets/Images/Untitled_design_1_-removebg-preview.png" class="block" alt="logo" width="110" height="110" /></a>
+                    <a class="nav-link text-white" asp-area="" asp-controller="Barber" asp-action="Barbers">Barbers</a>
                 </li>
-            
                 <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Product" asp-action="Products">Products</a>
-            </li>
+                    <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Assets/Images/Untitled_design_5_-removebg-preview.png" class="block" alt="logo" width="110" height="110" /></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" asp-area="" asp-controller="Product" asp-action="Products">Products</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-area="" asp-controller="AboutUs" asp-action="Index">About Us</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-area="" asp-controller="Login" asp-action="Index">Log in</a>
                 </li>
-        </ul>
-           <hr / class="fw-bold">
+            </ul>
+            <hr class="fw-bold" />
         </nav>
 
     </header>
@@ -47,7 +46,9 @@
         </main>
     </div>
 
-    <footer class="footer text-muted fixed-bottom p-3">
+    <footer class="footer text-muted fixed-bottom p-3 customFooter">
+
+
         <div class="button-container">
             <a class="button flex-center" href="https://www.instagram.com/barberhouseteam/" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -175,8 +176,9 @@
                 </svg>
             </button>
         </div>
+     
         <div class="container d-flex justify-content-center text-white-50">
-            &copy; 2024 - DNBarbershop 
+            &copy; 2024 - DNBarbershop
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
