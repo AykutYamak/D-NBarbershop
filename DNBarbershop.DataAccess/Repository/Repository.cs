@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,44 +18,49 @@ namespace DNBarbershop.DataAccess.Repository
             db= _db;
             dbSet = db.Set<T>();
         }
-        public void Add(T entity)
+        public async Task Add(T entity)
         {
-            dbSet.Add(entity);
+            await dbSet.AddAsync(entity);
+            await db.SaveChangesAsync();
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
-            throw new NotImplementedException();
+            dbSet.RemoveRange(dbSet);
+            await db.SaveChangesAsync();
         }
 
-        public void Find(Expression<Func<T, bool>> filter)
+        public async Task Find(Expression<Func<T, bool>> filter)
         {
-            throw new NotImplementedException();
+            await dbSet.Where(filter).ToListAsync();
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
+        public async Task<T> Get(Expression<Func<T, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await dbSet.FirstOrDefaultAsync(filter);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            throw new NotImplementedException();
+            return await dbSet.ToListAsync();
         }
 
-        public void Remove(T entity)
+        public async Task Remove(T entity)
         {
             dbSet.Remove(entity);
+            await db.SaveChangesAsync();
         }
 
-        public void RemoveRange(IEnumerable<T> entities)
+        public async Task RemoveRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            dbSet.RemoveRange(entities);
+            await db.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
-            throw new NotImplementedException();
+            dbSet.Update(entity);
+            await db.SaveChangesAsync();
         }
     }
 }

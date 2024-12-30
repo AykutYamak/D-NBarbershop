@@ -9,14 +9,14 @@ namespace DNBarbershop.DataAccess.Repository
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T> GetAll();
-        T Get(Expression<Func<T, bool>> filter);
+        Task<IEnumerable<T>> GetAll();
+        Task<T> Get(Expression<Func<T, bool>> filter);
         Task Add(T entity);
         Task Remove(T entity);
         Task RemoveRange(IEnumerable<T> entities);
-        void Update(T entity);
-        void DeleteAll();
-        void Find(Expression<Func<T, bool>> filter);
+        Task Update(T entity);
+        Task DeleteAll();
+        Task Find(Expression<Func<T, bool>> filter);
 
 
     }
