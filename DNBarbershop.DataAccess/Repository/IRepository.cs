@@ -11,9 +11,9 @@ namespace DNBarbershop.DataAccess.Repository
     {
         IEnumerable<T> GetAll();
         T Get(Expression<Func<T, bool>> filter);
-        void Add(T entity);
-        void Remove(T entity);
-        void RemoveRange(IEnumerable<T> entities);
+        Task Add(T entity);
+        Task Remove(T entity);
+        Task RemoveRange(IEnumerable<T> entities);
         void Update(T entity);
         void DeleteAll();
         void Find(Expression<Func<T, bool>> filter);

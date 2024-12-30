@@ -2,17 +2,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System;
 using DNBarbershop.DataAccess;
+using DNBarbershop.DataAccess.Repository;
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-var connection = builder.Configuration.GetConnectionString("HomeConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
-var app = builder.Build();
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
+        var connection = builder.Configuration.GetConnectionString("HomeConnection");
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
