@@ -19,12 +19,16 @@ namespace DNBarbershop.DataAccess.AppointmentRepository
         }
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date)
         {
-            return await appointments.Where(a => a.AppointmentDate == date).ToListAsync();
+            return await appointments
+                .Where(a => a.AppointmentDate == date)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByService(string service)
         {
-            return await appointments.Where(a => a.Service.ServiceName == service).ToListAsync();
+            return await appointments
+                .Where(a => a.Service.ServiceName == service)
+                .ToListAsync();
         }
     }
 }

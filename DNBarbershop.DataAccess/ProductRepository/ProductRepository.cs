@@ -17,21 +17,27 @@ namespace DNBarbershop.DataAccess.ProductRepository
         public ProductRepository(ApplicationDbContext _db)
         {
             db = _db;
-            products = db.Set<Product>();
+            products = db.products;
         }
         public async Task<IEnumerable<Product>> GetProductsFromCategory(string category)
         {
-            return await products.Where(p => p.Category.Name == category).ToListAsync();
+            return await products
+                .Where(p => p.Category.Name == category)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductsOverPrice(decimal price)
         {
-            return await products.Where(p => p.Price > price).ToListAsync();
+            return await products
+                .Where(p => p.Price > price)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductsUnderPrice(decimal price)
         {
-            return await products.Where(p => p.Price < price).ToListAsync();
+            return await products
+                .Where(p => p.Price < price)
+                .ToListAsync();
         }
     }
 }

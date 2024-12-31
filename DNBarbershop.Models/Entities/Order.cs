@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using static DNBarbershop.Common.ErrorMessages;
@@ -27,5 +28,6 @@ namespace DNBarbershop.Models.Entities
         public decimal TotalAmount { get; set; }
         [Required]
         public OrderStatus Status { get; set; }
-    }
+        public ICollection<OrderDetail> orderDetails { get; set; } = new HashSet<OrderDetail>();
+    } 
 }
