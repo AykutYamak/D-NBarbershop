@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DNBarbershop.Core\DNBarbershop.Core.csproj" />
-    <ProjectReference Include="..\DNBarbershop.DataAccess\DNBarbershop.DataAccess.csproj" />
     <ProjectReference Include="..\DNBarbershop.Models\DNBarbershop.Models.csproj" />
   </ItemGroup>
 

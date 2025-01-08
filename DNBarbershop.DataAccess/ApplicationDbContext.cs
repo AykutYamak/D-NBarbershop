@@ -19,6 +19,7 @@ namespace DNBarbershop.DataAccess
         public DbSet<WorkSchedule> workSchedules { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             base.OnModelCreating(modelBuilder);
            
         }
