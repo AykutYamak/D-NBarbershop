@@ -36,4 +36,11 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Barber\" />
+    <Folder Include="Views\User\" />
+    <Folder Include="Views\Service\" />
+    <Folder Include="Views\Order\" />
+  </ItemGroup>
+
 </Project>
