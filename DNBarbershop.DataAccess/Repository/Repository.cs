@@ -45,8 +45,13 @@ namespace DNBarbershop.DataAccess.Repository
             return await dbSet.ToListAsync();
         }
 
-        public async Task Remove(T entity)
+        public async Task Delete(int id)
         {
+            var entity = dbSet.Find(id);
+            if (entity == null) 
+            {
+                throw new ArgumentException($"Entity with ID {id} not found.");
+            }
             dbSet.Remove(entity);
             await db.SaveChangesAsync();
         }

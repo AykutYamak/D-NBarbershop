@@ -12,7 +12,7 @@ namespace DNBarbershop.DataAccess.Repository
         Task<IEnumerable<T>> GetAll();
         Task<T> Get(Expression<Func<T, bool>> filter);
         Task Add(T entity);
-        Task Remove(T entity);
+        Task Delete(int id);
         Task RemoveRange(IEnumerable<T> entities);
         Task Update(T entity);
         Task DeleteAll();
