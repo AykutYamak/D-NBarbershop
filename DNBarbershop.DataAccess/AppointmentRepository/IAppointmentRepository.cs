@@ -10,7 +10,6 @@ namespace DNBarbershop.DataAccess.AppointmentRepository
 {
     public interface IAppointmentRepository<T> where T : class
     {
-        Task<IEnumerable<Appointment>> GetAppointmentsByService(string service);
-        Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date);
+        
     }
 }

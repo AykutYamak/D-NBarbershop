@@ -31,7 +31,8 @@ namespace DNBarbershop.Models.Entities
         public DateTime AppointmentTime { get; set; }
         [Required]
         public AppointmentStatus Status { get; set; }
-      
+
+        public ICollection<Service> Services { get; set; } = new HashSet<Service>();
 
     }
 }
