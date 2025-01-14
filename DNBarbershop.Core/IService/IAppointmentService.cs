@@ -8,6 +8,6 @@ namespace DNBarbershop.Core.IService
 {
     public interface IAppointmentService
     {
-
+        Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date);
     }
 }
