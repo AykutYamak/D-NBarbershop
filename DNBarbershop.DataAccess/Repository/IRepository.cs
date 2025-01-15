@@ -16,8 +16,6 @@ namespace DNBarbershop.DataAccess.Repository
         Task RemoveRange(IEnumerable<T> entities);
         Task Update(T entity);
         Task DeleteAll();
-        Task Find(Expression<Func<T, bool>> filter);
-
-
+        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> filter);
     }
 }

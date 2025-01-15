@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DNBarbershop.Core.Service
 {
-    internal class AppointmentService
+    public class ServiceService
     {
+
     }
 }

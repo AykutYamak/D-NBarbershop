@@ -19,9 +19,6 @@ namespace DNBarbershop.DataAccess
         public DbSet<WorkSchedule> workSchedules { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Service>.HasOne()
-
-
             base.OnModelCreating(modelBuilder);
            
         }

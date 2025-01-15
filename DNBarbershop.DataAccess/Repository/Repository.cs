@@ -30,9 +30,9 @@ namespace DNBarbershop.DataAccess.Repository
             await db.SaveChangesAsync();
         }
 
-        public async Task Find(Expression<Func<T, bool>> filter)
+        public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> filter)
         {
-            await dbSet.Where(filter).ToListAsync();
+            return await dbSet.Where(filter).ToListAsync();
         }
 
         public async Task<T> Get(Expression<Func<T, bool>> filter)
