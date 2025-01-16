@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static DNBarbershop.Common.ErrorMessages;
+
 namespace DNBarbershop.Models.Entities
 {
     public class Service

@@ -17,13 +17,11 @@ namespace DNBarbershop.Core.Service
         {
             _feedbackRepository = feedbackRepository;
         }
-
         public async Task<IEnumerable<Feedback>> GetFeedbackForBarber(string[] barberName)
         {
             Expression<Func<Feedback,bool>> filter = feedback => feedback.Barber.FirstName.Equals(barberName[0]) && feedback.Barber.LastName.Equals(barberName[1]);
             return await _feedbackRepository.Find(filter);
         }
-
         public async Task<IEnumerable<Feedback>> GetFeedbackForService(string service)
         {
             Expression<Func<Feedback, bool>> filter = feedback => feedback.Service.ServiceName.Equals(service);

@@ -1,5 +1,4 @@
 ﻿using System;
-using DNBarbershop.Models.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +8,6 @@ namespace DNBarbershop.Core.IService
 {
     public interface IServiceService
     {
-        Task<IEnumerable<Service>> GetServiceUnderPrice(decimal price);
+        Task<IEnumerable<DNBarbershop.Models.Entities.Service>> GetServiceUnderPrice(decimal price);
     }
 }
