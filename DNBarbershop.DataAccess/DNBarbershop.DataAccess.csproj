@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DNBarbershop.Common\DNBarbershop.Common.csproj" />
     <ProjectReference Include="..\DNBarbershop.Models\DNBarbershop.Models.csproj" />
   </ItemGroup>
 
