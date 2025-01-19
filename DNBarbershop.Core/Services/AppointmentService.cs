@@ -16,7 +16,8 @@ namespace DNBarbershop.Core.Service
 {
     public class AppointmentService : IAppointmentService
     {
-        
+        //here is  a dev change
+
         private readonly IRepository<Appointment> _appointmentRepository;
         public AppointmentService(IRepository<Appointment> appointmentRepository)
         {

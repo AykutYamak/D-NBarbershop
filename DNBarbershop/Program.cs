@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using DNBarbershop.DataAccess;
 using DNBarbershop.DataAccess.Repository;
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -11,7 +12,7 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("HomeConnection");
+        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         var app = builder.Build();
