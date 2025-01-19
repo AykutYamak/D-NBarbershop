@@ -2,6 +2,7 @@
 using DNBarbershop.Core.Validators;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,48 +53,95 @@ namespace DNBarbershop.Core.Service
                 throw new ArgumentException("Validation didn't pass.");
             }
         }
-        public async Task Delete(int id)
+        public async Task Delete(Guid id)
         {
-            await _appointmentRepository.Delete(id);
+            if (AppointmentValidator.AppointmentExists(id))
+            {
+                await _appointmentRepository.Delete(id);
+            }
+            else
+            {
+                throw new ArgumentException("This appointment doesn't exist.");
+            }
         }
-
         public async Task DeleteAll()
         {
-            await _appointmentRepository.DeleteAll();
+            if (await _appointmentRepository.GetCount()<=0)
+            {
+                throw new ArgumentException("Nothing to delete here.");
+            }
+            else
+            {
+                await _appointmentRepository.DeleteAll();
+            }
         }
-
         public async Task<Appointment> Get(Expression<Func<Appointment, bool>> filter)
         {
-            return await _appointmentRepository.Get(filter);
+            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
+            {
+                return await _appointmentRepository.Get(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
-
         public async Task<IEnumerable<Appointment>> GetAll()
         {
-            return await _appointmentRepository.GetAll();
+            if (await _appointmentRepository.GetCount()<=0)
+            {
+                throw new ArgumentException("Nothing to get from here");
+            }
+            else
+            {
+                return await _appointmentRepository.GetAll();
+            }
         }
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date)
         {
             Expression<Func<Appointment, bool>> filter = appointment => appointment.AppointmentDate == date.Date;
-            return await _appointmentRepository.Find(filter);
+            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
+            {
+                return await _appointmentRepository.Find(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
-
         public async Task<IEnumerable<Appointment>> GetAppointmentsByService(string service)
         {
             Expression<Func<Appointment, bool>> filter = appointment => appointment.Service.ServiceName == service;
-            return await _appointmentRepository.Find(filter);
+            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
+            {
+                return await _appointmentRepository.Find(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }   
         }
-
         public async Task RemoveRange(IEnumerable<Appointment> entities)
         {
-            await _appointmentRepository.RemoveRange(entities);
+            if (entities.Count()<0)
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
+            else
+            {
+                await _appointmentRepository.RemoveRange(entities);
+            }
         }
-
         public async Task UpdateByUserName(string[] username)
         {
             Expression<Func<Appointment, bool>> filter = appointment => appointment.User.FirstName == username[0] && appointment.User.LastName == username[1];
-            Appointment entity = _appointmentRepository.Get(filter).Result;
-            await _appointmentRepository.Update(entity);
+            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
+            {
+                Appointment entity = _appointmentRepository.Get(filter).Result;
+                await _appointmentRepository.Update(entity);
+            }
         }
+        
     }
 }

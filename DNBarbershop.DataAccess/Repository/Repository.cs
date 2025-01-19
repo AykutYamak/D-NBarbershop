@@ -45,7 +45,7 @@ namespace DNBarbershop.DataAccess.Repository
             return await dbSet.ToListAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(Guid id)
         {
             var entity = dbSet.Find(id);
             if (entity == null) 
@@ -61,11 +61,14 @@ namespace DNBarbershop.DataAccess.Repository
             dbSet.RemoveRange(entities);
             await db.SaveChangesAsync();
         }
-
         public async Task Update(T entity)
         {
             dbSet.Update(entity);
             await db.SaveChangesAsync();
+        }
+        public async Task<int> GetCount()
+        {
+            return await dbSet.CountAsync();
         }
     }
 }

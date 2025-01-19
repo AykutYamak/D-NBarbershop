@@ -13,7 +13,7 @@ namespace DNBarbershop.Core.IService
         Task<IEnumerable<Appointment>> GetAll();
         Task<Appointment> Get(Expression<Func<Appointment, bool>> filter);
         Task Add(Appointment appointment);
-        Task Delete(int id);
+        Task Delete(Guid id);
         Task RemoveRange(IEnumerable<Appointment> entities);
         Task UpdateByUserName(string[] username);
         Task DeleteAll();

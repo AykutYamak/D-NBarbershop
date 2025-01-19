@@ -23,7 +23,7 @@ namespace DNBarbershop.Core.Service
             await _barberRepository.Add(barber);
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(Guid id)
         {
             await _barberRepository.Delete(id);
         }
