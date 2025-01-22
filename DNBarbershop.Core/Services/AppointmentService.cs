@@ -16,8 +16,6 @@ namespace DNBarbershop.Core.Services
 {
     public class AppointmentService : IAppointmentService
     {
-        //here is  a dev change
-
         private readonly IRepository<Appointment> _appointmentRepository;
         public AppointmentService(IRepository<Appointment> appointmentRepository)
         {
@@ -134,7 +132,7 @@ namespace DNBarbershop.Core.Services
                 await _appointmentRepository.RemoveRange(entities);
             }
         }
-        public async Task UpdateByName(Guid id, Appointment appointment)
+        public async Task Update(Guid id, Appointment appointment)
         {
             Expression<Func<Appointment, bool>> filter = appointment => appointment.Id == id;
             if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
@@ -144,6 +142,5 @@ namespace DNBarbershop.Core.Services
                 await _appointmentRepository.Update(entity);
             }
         }
-        
     }
 }

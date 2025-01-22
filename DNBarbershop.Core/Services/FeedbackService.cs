@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using DNBarbershop.Core.Validators;
 
 namespace DNBarbershop.Core.Services
 {
@@ -52,12 +53,15 @@ namespace DNBarbershop.Core.Services
         {
             await _feedbackRepository.RemoveRange(entities);
         }
-        public async Task UpdateByName(Guid id, Feedback feedback)
+        public async Task Update(Guid id, Feedback feedback)
         {
             Expression<Func<Feedback, bool>> filter = feedback => feedback.Id == id;
-            Feedback entity = _feedbackRepository.Get(filter).Result;
-            entity = feedback;
-            await _feedbackRepository.Update(entity);
+            if (FeedbackValidator.FeedbackExists(_feedbackRepository.Get(filter).Result.Id))
+            {
+                Feedback entity = _feedbackRepository.Get(filter).Result;
+                entity = feedback;
+                await _feedbackRepository.Update(entity);
+            }
         }
     }
 }

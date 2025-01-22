@@ -15,7 +15,7 @@ namespace DNBarbershop.Core.GlobalServiceFolder
         Task Add(T entity);
         Task Delete(Guid id);
         Task RemoveRange(IEnumerable<T> entities);
-        Task UpdateByName(Guid id, T entity);
+        Task Update(Guid id, T entity);
         Task DeleteAll();
     }
 }
