@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNBarbershop.Core.GlobalService.Service
+namespace DNBarbershop.Core.Services
 {
     public class ProductService
     {

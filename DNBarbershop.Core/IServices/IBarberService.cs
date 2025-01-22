@@ -1,4 +1,5 @@
-﻿using DNBarbershop.Models.Entities;
+﻿using DNBarbershop.Core.GlobalServiceFolder;
+using DNBarbershop.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,18 +7,10 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNBarbershop.Core.GlobalService.IService
+namespace DNBarbershop.Core.IServices
 {
-    public interface IBarberService
+    public interface IBarberService:IGlobalService<Barber>
     {
-        Task<IEnumerable<Barber>> GetAll();
-        Task<Barber> Get(Expression<Func<Barber, bool>> filter);
-        Task Add(Barber appointment);
-        Task Delete(Guid id);
-        Task RemoveRange(IEnumerable<Barber> entities);
-        Task UpdateByName(string firstName,string lastName);
-        Task DeleteAll();
         Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality);
-      
     }
 }

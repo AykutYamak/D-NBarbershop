@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DNBarbershop.Core.IServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace DNBarbershop.Core.GlobalService.Service
+namespace DNBarbershop.Core.Services
 {
     public class AppointmentService : IAppointmentService
     {
@@ -24,19 +25,19 @@ namespace DNBarbershop.Core.GlobalService.Service
         }
         public bool ValidateAppointment(Appointment appointment)
         {
-            if (AppointmentValidator.AppointmentExists(appointment.Id))
+            if (!AppointmentValidator.AppointmentExists(appointment.Id))
             {
                 return false;
             }
-            if (!AppointmentValidator.UserExists(appointment.UserId))
+            if (!UserValidator.UserExists(appointment.UserId))
             {
                 return false;
             }
-            if (!AppointmentValidator.ServiceExists(appointment.ServiceId))
+            if (!ServiceValidator.ServiceExists(appointment.ServiceId))
             {
                 return false;
             }
-            if (!AppointmentValidator.BarberExists(appointment.BarberId))
+            if (!BarberValidator.BarberExists(appointment.BarberId))
             {
                 return false;
             }
@@ -133,12 +134,13 @@ namespace DNBarbershop.Core.GlobalService.Service
                 await _appointmentRepository.RemoveRange(entities);
             }
         }
-        public async Task UpdateByUserName(string[] username)
+        public async Task UpdateByName(Guid id, Appointment appointment)
         {
-            Expression<Func<Appointment, bool>> filter = appointment => appointment.User.FirstName == username[0] && appointment.User.LastName == username[1];
+            Expression<Func<Appointment, bool>> filter = appointment => appointment.Id == id;
             if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
             {
                 Appointment entity = _appointmentRepository.Get(filter).Result;
+                entity = appointment;
                 await _appointmentRepository.Update(entity);
             }
         }

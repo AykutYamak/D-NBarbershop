@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.Models.Entities;
 
-namespace DNBarbershop.Core.GlobalService
+namespace DNBarbershop.Core.GlobalServiceFolder
 {
     public interface IGlobalService<T> where T : class
     {
@@ -15,7 +15,7 @@ namespace DNBarbershop.Core.GlobalService
         Task Add(T entity);
         Task Delete(Guid id);
         Task RemoveRange(IEnumerable<T> entities);
-        Task UpdateByUserName(string[] username);
+        Task UpdateByName(Guid id, T entity);
         Task DeleteAll();
     }
 }

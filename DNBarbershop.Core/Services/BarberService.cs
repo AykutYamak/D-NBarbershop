@@ -1,4 +1,5 @@
-﻿using DNBarbershop.Core.GlobalService.IService;
+﻿using DNBarbershop.Core.IServices;
+using DNBarbershop.Core.Validators;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using System;
@@ -8,18 +9,26 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNBarbershop.Core.GlobalService.Service
+namespace DNBarbershop.Core.Services
 {
-    public class BarberService : IService.IBarberService
+    public class BarberService : IBarberService
     {
         private readonly IRepository<Barber> _barberRepository;
         public BarberService(IRepository<Barber> appointmentRepository)
         {
             _barberRepository = appointmentRepository;
         }
-
+        public bool ValidateBarber(Barber barber)
+        {
+            if (!BarberValidator.BarberExists(barber.Id)) 
+            {
+                return false;
+            }
+         return true;
+        }
         public async Task Add(Barber barber)
         {
+            
             await _barberRepository.Add(barber);
         }
 
@@ -54,10 +63,11 @@ namespace DNBarbershop.Core.GlobalService.Service
             await _barberRepository.RemoveRange(entities);
         }
 
-        public async Task UpdateByName(string firstName, string lastName)
+        public async Task UpdateByName(Guid id, Barber barber)
         {
-            Expression<Func<Barber, bool>> filter = barber => barber.FirstName == firstName && barber.LastName == lastName;
+            Expression<Func<Barber, bool>> filter = barber => barber.Id == id;
             Barber entity = _barberRepository.Get(filter).Result;
+            entity = barber;
             await _barberRepository.Update(entity);
         }
     }

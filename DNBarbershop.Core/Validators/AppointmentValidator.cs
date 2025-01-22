@@ -29,32 +29,5 @@ namespace DNBarbershop.Core.Validators
             }
             return true;
         }
-        public static bool ServiceExists(Guid id)
-        {
-            Expression<Func<Appointment, bool>> filter = a => a.ServiceId == id;
-            if (_repo.Get(filter)==null)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool BarberExists(Guid id)
-        {
-            Expression<Func<Appointment, bool>> filter = a => a.BarberId == id;
-            if (_repo.Get(filter) == null)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool UserExists(Guid id)
-        {
-            Expression<Func<Appointment, bool>> filter = a => a.UserId == id;
-            if (_repo.Get(filter) == null)
-            {
-                return false;
-            }
-            return true;
-        }
     }
 }
