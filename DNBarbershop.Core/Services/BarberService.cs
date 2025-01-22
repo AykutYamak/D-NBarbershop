@@ -1,4 +1,4 @@
-﻿using DNBarbershop.Core.IService;
+﻿using DNBarbershop.Core.GlobalService.IService;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using System;
@@ -8,9 +8,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNBarbershop.Core.Service
+namespace DNBarbershop.Core.GlobalService.Service
 {
-    public class BarberService : IBarberService
+    public class BarberService : IService.IBarberService
     {
         private readonly IRepository<Barber> _barberRepository;
         public BarberService(IRepository<Barber> appointmentRepository)

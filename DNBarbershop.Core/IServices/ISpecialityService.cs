@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNBarbershop.Core.IService
+namespace DNBarbershop.Core.GlobalService.IService
 {
     public interface ISpecialityService
     {

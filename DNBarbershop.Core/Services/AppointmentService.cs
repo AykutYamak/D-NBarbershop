@@ -1,5 +1,4 @@
-﻿using DNBarbershop.Core.IService;
-using DNBarbershop.Core.Validators;
+﻿using DNBarbershop.Core.Validators;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -12,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace DNBarbershop.Core.Service
+namespace DNBarbershop.Core.GlobalService.Service
 {
     public class AppointmentService : IAppointmentService
     {

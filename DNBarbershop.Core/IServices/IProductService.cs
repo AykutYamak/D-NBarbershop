@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.Models.Entities;
 
-namespace DNBarbershop.Core.IService
+namespace DNBarbershop.Core.GlobalService.IService
 {
     public interface IProductService
     {

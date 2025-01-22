@@ -1,4 +1,4 @@
-﻿using DNBarbershop.Core.IService;
+﻿using DNBarbershop.Core.GlobalService.IService;
 using DNBarbershop.DataAccess.Repository;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNBarbershop.Core.Service
+namespace DNBarbershop.Core.GlobalService.Service
 {
     public class ServiceService : IServiceService
     {
