@@ -29,7 +29,8 @@ namespace DNBarbershop.Models.Entities
         [ForeignKey(nameof(Category))]
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
-        
+
+        public ICollection<OrderDetail> orderDetails { get; set; } = new HashSet<OrderDetail>();
 
     }
 }
