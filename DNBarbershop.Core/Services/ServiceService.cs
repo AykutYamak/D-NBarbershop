@@ -1,5 +1,6 @@
 ﻿using DNBarbershop.Core.GlobalServiceFolder;
 using DNBarbershop.Core.IServices;
+using DNBarbershop.Core.Validators;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using System;
@@ -17,6 +18,14 @@ namespace DNBarbershop.Core.Services
         public ServiceService(IRepository<Service> serviceRepository)
         {
             _serviceRepository = serviceRepository;
+        }
+        public bool ValidateService(feedback)
+        {
+            if (!FeedbackValidator.FeedbackExists(feedback.Id))
+            {
+                return false;
+            }
+            return true;
         }
         public async Task Add(Service service)
         {
@@ -47,7 +56,7 @@ namespace DNBarbershop.Core.Services
         {
             await _serviceRepository.RemoveRange(entities);
         }
-        public async Task UpdateByName(Guid id, Service service)
+        public async Task Update(Guid id, Service service)
         {
             Expression<Func<Service, bool>> filter = service => service.Id== id;
             Service entity = _serviceRepository.Get(filter).Result;
