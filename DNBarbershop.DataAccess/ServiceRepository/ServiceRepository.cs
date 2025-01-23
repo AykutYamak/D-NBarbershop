@@ -17,10 +17,5 @@ namespace DNBarbershop.DataAccess.ServiceRepository
             db = _db;
             services = db.services;
         }
-
-        public async Task<IEnumerable<Service>> SearchByName(string name)
-        {
-            return await services.Where(s => s.ServiceName == name).ToListAsync();
-        }
     }
 }

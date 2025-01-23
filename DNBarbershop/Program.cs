@@ -17,7 +17,11 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         var connection = builder.Configuration.GetConnectionString("DefaultConnection");
-        
+
+        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
+        builder.Services.AddRazorPages();
+
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddScoped(typeof(IGlobalService<>), typeof(GlobalService<>));
@@ -28,6 +32,7 @@ internal class Program
         builder.Services.AddScoped<IServiceService, ServiceService>();
         builder.Services.AddScoped<ISpecialityService, SpecialityService>();
         builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
+
 
         var app = builder.Build();
 
@@ -42,7 +47,11 @@ internal class Program
         app.UseHttpsRedirection();
         app.UseRouting();
 
+        app.UseAuthentication();
+
         app.UseAuthorization();
+
+        app.MapRazorPages();
 
         app.MapStaticAssets();
 

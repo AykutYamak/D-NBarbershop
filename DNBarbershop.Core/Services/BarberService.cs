@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DNBarbershop.Core.Services
@@ -88,14 +89,7 @@ namespace DNBarbershop.Core.Services
         public async Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality)
         {
             Expression<Func<Barber, bool>> filter = barber => barber.Speciality.Type == speciality;
-                if (BarberValidator.BarberExists(_barberRepository.Get(filter).Result.Id))
-            {
-                return await _barberRepository.Find(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            return await _barberRepository.Find(filter);
         }
         public async Task RemoveRange(IEnumerable<Barber> entities)
         {
@@ -121,6 +115,18 @@ namespace DNBarbershop.Core.Services
             {
                 throw new ArgumentException("Barber doesn't exist.");
             }
+        }
+
+        public async Task<IEnumerable<Barber>> GetBarbersWithExperienceAbove(int minExperienceYears)
+        {
+            Expression<Func<Barber, bool>> filter = barber => barber.ExperienceYears >= minExperienceYears;
+            return await _barberRepository.Find(filter);
+        }
+
+        public async Task<IEnumerable<Barber>> SearchBarberByName(string name)
+        {
+            Expression<Func<Barber, bool>> filter = barber => barber.FirstName == name || barber.LastName == name;
+            return await _barberRepository.Find(filter);
         }
     }
 }

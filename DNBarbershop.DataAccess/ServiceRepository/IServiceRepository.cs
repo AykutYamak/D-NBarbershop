@@ -9,6 +9,5 @@ namespace DNBarbershop.DataAccess.ServiceRepository
 {
     public interface IServiceRepository<T> where T : class
     {
-        Task<IEnumerable<Service>> SearchByName(string name);
     }
 }

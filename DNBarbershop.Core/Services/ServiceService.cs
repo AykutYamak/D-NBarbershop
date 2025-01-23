@@ -89,14 +89,7 @@ namespace DNBarbershop.Core.Services
         public async Task<IEnumerable<Service>> GetServiceUnderPrice(decimal price)
         {
             Expression<Func<Service, bool>> filter = service => service.Price < price;
-            if (ServiceValidator.ServiceExists(_serviceRepository.Get(filter).Result.Id))
-            {
-                return await _serviceRepository.Find(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            return await _serviceRepository.Find(filter);
         }
         public async Task RemoveRange(IEnumerable<Service> entities)
         {

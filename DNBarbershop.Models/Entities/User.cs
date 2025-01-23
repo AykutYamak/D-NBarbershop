@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static DNBarbershop.Common.ErrorMessages;
 namespace DNBarbershop.Models.Entities
 {
-    public class User
+    public class User 
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -17,7 +18,7 @@ namespace DNBarbershop.Models.Entities
         [Required(ErrorMessage = RequiredErrorMessage)]
         [StringLength(100, ErrorMessage = nameof(MaxLengthExceededErrorMessage))]
         public string LastName { get; set; }
-        [Required(ErrorMessage = RequiredErrorMessage)]
+        [Required(ErrorMessage = RequiredErrorMessage)] 
         [EmailAddress(ErrorMessage = InvalidEmailErrorMessage)]
         public string Email { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]

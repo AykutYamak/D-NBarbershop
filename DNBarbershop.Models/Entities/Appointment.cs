@@ -21,10 +21,12 @@ namespace DNBarbershop.Models.Entities
         [ForeignKey(nameof(Barber))]
         public Guid BarberId { get; set; }
         public Barber Barber { get; set; }
-        [Required(ErrorMessage = RequiredErrorMessage)]
-        [ForeignKey(nameof(Service))]
-        public Guid ServiceId { get; set; }
-        public Service Service { get; set; }
+
+        //[Required(ErrorMessage = RequiredErrorMessage)]
+        //[ForeignKey(nameof(Service))]
+        //public Guid ServiceId { get; set; }
+        //public Service Service { get; set; }
+
         [Required(ErrorMessage = RequiredErrorMessage)]
         public DateTime AppointmentDate { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
@@ -32,7 +34,7 @@ namespace DNBarbershop.Models.Entities
         [Required]
         public AppointmentStatus Status { get; set; }
 
-        public ICollection<Service> Services { get; set; } = new HashSet<Service>();
+        public ICollection<AppointmentService> AppointmentServices { get; set; } = new HashSet<AppointmentService>();
 
     }
 }

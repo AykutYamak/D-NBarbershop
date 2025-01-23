@@ -22,29 +22,5 @@ namespace DNBarbershop.DataAccess.BarberRepository
         {
             return await barbers.ToListAsync();
         }
-
-        public async Task<IEnumerable<Barber>> GetBarbersWithExperienceAbove(int minExperienceYears)
-        {
-            return await barbers
-                .Where(b => b.ExperienceYears >= minExperienceYears).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Barber>> SearchBarberByName(string name)
-        {
-            return await barbers
-                .Where(b => b.FirstName == name || b.LastName == name).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Barber>> GetBarbersAvailableAt(DateTime date)
-        {
-            return await barbers
-                .Where(b => b.WorkSchedules
-                .Any(datetime => datetime.WorkDate == date.Date &&
-                datetime.StartTime.Hour <= date.Hour &&
-                datetime.StartTime.Minute <= date.Minute &&
-                datetime.EndTime.Hour >= date.Hour &&
-                datetime.EndTime.Minute >= date.Minute))
-                .ToListAsync();
-        }
     }
 }

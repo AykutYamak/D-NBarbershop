@@ -90,26 +90,12 @@ namespace DNBarbershop.Core.Services
         public async Task<IEnumerable<Feedback>> GetFeedbackForBarber(string[] barberName)
         {
             Expression<Func<Feedback,bool>> filter = feedback => feedback.Barber.FirstName.Equals(barberName[0]) && feedback.Barber.LastName.Equals(barberName[1]);
-            if (FeedbackValidator.FeedbackExists(_feedbackRepository.Get(filter).Result.Id))
-            {
-                return await _feedbackRepository.Find(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            return await _feedbackRepository.Find(filter);
         }
         public async Task<IEnumerable<Feedback>> GetFeedbackForService(string service)
         {
             Expression<Func<Feedback, bool>> filter = feedback => feedback.Service.ServiceName.Equals(service);
-            if (FeedbackValidator.FeedbackExists(_feedbackRepository.Get(filter).Result.Id))
-            {
-                return await _feedbackRepository.Find(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            return await _feedbackRepository.Find(filter);
         }
         public async Task RemoveRange(IEnumerable<Feedback> entities)
         {

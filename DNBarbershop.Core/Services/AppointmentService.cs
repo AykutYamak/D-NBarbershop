@@ -35,10 +35,6 @@ namespace DNBarbershop.Core.Services
             {
                 return false;
             }
-            if (!ServiceValidator.ServiceExists(appointment.ServiceId))
-            {
-                return false;
-            }
             if (!BarberValidator.BarberExists(appointment.BarberId))
             {
                 return false;
@@ -104,26 +100,12 @@ namespace DNBarbershop.Core.Services
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date)
         {
             Expression<Func<Appointment, bool>> filter = appointment => appointment.AppointmentDate == date.Date;
-            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
-            {
-                return await _appointmentRepository.Find(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            return await _appointmentRepository.Find(filter);
         }
         public async Task<IEnumerable<Appointment>> GetAppointmentsByService(string service)
         {
-            Expression<Func<Appointment, bool>> filter = appointment => appointment.Service.ServiceName == service;
-            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
-            {
-                return await _appointmentRepository.Find(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }   
+            Expression<Func<Appointment, bool>> filter = appointment => appointment.AppointmentServices.Any(s => s.Service.ServiceName == service);
+            return await _appointmentRepository.Find(filter);
         }
         public async Task RemoveRange(IEnumerable<Appointment> entities)
         {
