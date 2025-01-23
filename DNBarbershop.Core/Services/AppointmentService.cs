@@ -23,6 +23,10 @@ namespace DNBarbershop.Core.Services
         }
         public bool ValidateAppointment(Appointment appointment)
         {
+            if (!AppointmentValidator.ValidateInput(appointment.AppointmentDate))
+            {
+                return false;
+            }
             if (!AppointmentValidator.AppointmentExists(appointment.Id))
             {
                 return false;
@@ -140,6 +144,10 @@ namespace DNBarbershop.Core.Services
                 Appointment entity = _appointmentRepository.Get(filter).Result;
                 entity = appointment;
                 await _appointmentRepository.Update(entity);
+            }
+            else
+            {
+                throw new ArgumentException("Appointment doesn't exist.");
             }
         }
     }

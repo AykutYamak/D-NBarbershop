@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DNBarbershop.Core.GlobalServiceFolder;
 using DNBarbershop.Models.Entities;
 
-namespace DNBarbershop.Core.IService
+namespace DNBarbershop.Core.IServices
 {
     public interface IProductService:IGlobalService<Product>
     {

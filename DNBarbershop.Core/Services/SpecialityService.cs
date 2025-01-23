@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.Core.IService;
+using DNBarbershop.Core.Validators;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 
@@ -17,36 +18,97 @@ namespace DNBarbershop.Core.Services
         {
             _specialityRepository = specialityRepository;
         }
+        public bool ValidateSpeciality(Speciality speciality)
+        {
+            if (!SpecialityValidator.ValidateInput(speciality.Type))
+            {
+                return false;
+            }
+            if (!SpecialityValidator.SpecialityExists(speciality.Id))
+            {
+                return false;
+            }
+            return true;
+        }
         public async Task Add(Speciality speciality)
         {
-            await _specialityRepository.Add(speciality);
+            if (ValidateSpeciality(speciality))
+            {
+                await _specialityRepository.Add(speciality);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
         public async Task Delete(Guid id)
         {
-            await _specialityRepository.Delete(id);
+            if (SpecialityValidator.SpecialityExists(id))
+            {
+                await _specialityRepository.Delete(id);
+            }
+            else
+            {
+                throw new ArgumentException("This speciality doesn't exist.");
+            }
         }
         public async Task DeleteAll()
         {
-            await _specialityRepository.DeleteAll();
+            if (await _specialityRepository.GetCount() <= 0)
+            {
+                throw new ArgumentException("Nothing to delete here.");
+            }
+            else
+            {
+                await _specialityRepository.DeleteAll();
+            }
         }
         public async Task<Speciality> Get(Expression<Func<Speciality, bool>> filter)
         {
-            return await _specialityRepository.Get(filter);
+            if (SpecialityValidator.SpecialityExists(_specialityRepository.Get(filter).Result.Id))
+            {
+                return await _specialityRepository.Get(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
         public async Task<IEnumerable<Speciality>> GetAll()
         {
-            return await _specialityRepository.GetAll();
+            if (await _specialityRepository.GetCount() <= 0)
+            {
+                throw new ArgumentException("Nothing to get from here.");
+            }
+            else
+            {
+                return await _specialityRepository.GetAll();
+            }
         }
         public async Task RemoveRange(IEnumerable<Speciality> entities)
         {
-            await _specialityRepository.RemoveRange(entities);
+            if (entities.Count() <= 0)
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
+            else
+            {
+                await _specialityRepository.RemoveRange(entities);
+            }
         }
-        public async Task UpdateByName(Guid id, Speciality speciality)
+        public async Task Update(Guid id, Speciality speciality)
         {
             Expression<Func<Speciality, bool>> filter = speciality => speciality.Id == id;
-            Speciality entity = _specialityRepository.Get(filter).Result;
-            entity = speciality;
-            await _specialityRepository.Update(entity);
+            if (SpecialityValidator.SpecialityExists(_specialityRepository.Get(filter).Result.Id))
+            {
+                Speciality entity = _specialityRepository.Get(filter).Result;
+                entity = speciality;
+                await _specialityRepository.Update(entity);
+            }
+            else 
+            {
+                throw new ArgumentException("Service doesn't exist.");
+            }
         }
     }
 }

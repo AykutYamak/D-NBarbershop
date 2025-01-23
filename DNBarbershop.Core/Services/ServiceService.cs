@@ -19,9 +19,13 @@ namespace DNBarbershop.Core.Services
         {
             _serviceRepository = serviceRepository;
         }
-        public bool ValidateService(feedback)
+        public bool ValidateService(Service service)
         {
-            if (!FeedbackValidator.FeedbackExists(feedback.Id))
+            if (!ServiceValidator.ValidateInput(service.ServiceName,service.Price,service.Duration,service.Description))
+            {
+                return false;
+            }
+            if (!ServiceValidator.ServiceExists(service.Id))
             {
                 return false;
             }
@@ -29,39 +33,95 @@ namespace DNBarbershop.Core.Services
         }
         public async Task Add(Service service)
         {
-            await _serviceRepository.Add(service);
+            if (ValidateService(service))
+            {
+                await _serviceRepository.Add(service);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
         public async Task Delete(Guid id)
         {
-            await _serviceRepository.Delete(id);
+            if (ServiceValidator.ServiceExists(id))
+            {
+                await _serviceRepository.Delete(id);
+            }
+            else 
+            {
+                throw new ArgumentException("This service doesn't exist.");
+            }
         }
         public async Task DeleteAll()
         {
-            await _serviceRepository.DeleteAll();
+            if (await _serviceRepository.GetCount() <= 0)
+            {
+                throw new ArgumentException("Nothing to delete here.");
+            }
+            else 
+            {
+                await _serviceRepository.DeleteAll();
+            }
         }
         public async Task<Service> Get(Expression<Func<Service, bool>> filter)
         {
-            return await _serviceRepository.Get(filter);
+            if (ServiceValidator.ServiceExists(_serviceRepository.Get(filter).Result.Id))
+            {
+                return await _serviceRepository.Get(filter);
+            }
+            else 
+            {
+                throw new ArgumentException("Validation didn't pass.");            
+            }
         }
         public async Task<IEnumerable<Service>> GetAll()
         {
-            return await _serviceRepository.GetAll();
+            if (await _serviceRepository.GetCount()<=0)
+            {
+                throw new ArgumentException("Nothing to get from here.");
+            }
+            else
+            {
+                return await _serviceRepository.GetAll();
+            }
         }
         public async Task<IEnumerable<Service>> GetServiceUnderPrice(decimal price)
         {
             Expression<Func<Service, bool>> filter = service => service.Price < price;
-            return await _serviceRepository.Find(filter);
+            if (ServiceValidator.ServiceExists(_serviceRepository.Get(filter).Result.Id))
+            {
+                return await _serviceRepository.Find(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
         public async Task RemoveRange(IEnumerable<Service> entities)
         {
-            await _serviceRepository.RemoveRange(entities);
+            if (entities.Count() <= 0)
+            {
+                throw new ArgumentException("Validation didn't pass.");   
+            }
+            else
+            {
+                await _serviceRepository.RemoveRange(entities);
+            }
         }
         public async Task Update(Guid id, Service service)
         {
             Expression<Func<Service, bool>> filter = service => service.Id== id;
-            Service entity = _serviceRepository.Get(filter).Result;
-            entity = service;
-            await _serviceRepository.Update(entity);
+            if (ServiceValidator.ServiceExists(_serviceRepository.Get(filter).Result.Id))
+            {
+                Service entity = _serviceRepository.Get(filter).Result;
+                entity = service;
+                await _serviceRepository.Update(entity);
+            }
+            else
+            {
+                throw new ArgumentException("Service doesn't exist.");
+            }
         }
     }
 }

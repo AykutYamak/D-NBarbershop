@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using DNBarbershop.DataAccess;
 using DNBarbershop.DataAccess.Repository;
+using DNBarbershop.Core.GlobalServiceFolder;
+using DNBarbershop.Core.Services;
+using DNBarbershop.Core.IServices;
+using DNBarbershop.Core.IService;
 
 internal class Program
 {
@@ -13,8 +17,18 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        builder.Services.AddScoped(typeof(IGlobalService<>), typeof(GlobalService<>));
+        builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+        builder.Services.AddScoped<IBarberService, BarberService>();
+        builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IServiceService, ServiceService>();
+        builder.Services.AddScoped<ISpecialityService, SpecialityService>();
+        builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

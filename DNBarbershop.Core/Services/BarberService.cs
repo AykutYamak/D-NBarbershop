@@ -20,6 +20,10 @@ namespace DNBarbershop.Core.Services
         }
         public bool ValidateBarber(Barber barber)
         {
+            if (!BarberValidator.ValidateInput(barber.ExperienceYears,barber.FirstName,barber.LastName))
+            {
+                return false;
+            }
             if (!BarberValidator.BarberExists(barber.Id)) 
             {
                 return false;
@@ -84,7 +88,7 @@ namespace DNBarbershop.Core.Services
         public async Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality)
         {
             Expression<Func<Barber, bool>> filter = barber => barber.Speciality.Type == speciality;
-            if (BarberValidator.BarberExists(_barberRepository.Get(filter).Result.Id))
+                if (BarberValidator.BarberExists(_barberRepository.Get(filter).Result.Id))
             {
                 return await _barberRepository.Find(filter);
             }
@@ -112,6 +116,10 @@ namespace DNBarbershop.Core.Services
                 Barber entity = _barberRepository.Get(filter).Result;
                 entity = barber;
                 await _barberRepository.Update(entity);
+            }
+            else 
+            {
+                throw new ArgumentException("Barber doesn't exist.");
             }
         }
     }

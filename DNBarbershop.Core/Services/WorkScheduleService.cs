@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.Core.IService;
 using DNBarbershop.Core.IServices;
+using DNBarbershop.Core.Validators;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 namespace DNBarbershop.Core.Services
@@ -17,36 +18,98 @@ namespace DNBarbershop.Core.Services
         {
             _workScheduleRepository= workScheduleRepository;
         }
+        public bool ValidateWorkSchedule(WorkSchedule workSchedule)
+        {
+            if (!WorkScheduleValidator.WorkScheduleExists(workSchedule.Id))
+            {
+                return false;
+            }
+            if (!WorkScheduleValidator.ValidateInput(workSchedule.WorkDate))
+            {
+                return false;
+            }
+            return true;
+        }
         public async Task Add(WorkSchedule workSchedule)
         {
-            await _workScheduleRepository.Add(workSchedule);
+            if (ValidateWorkSchedule(workSchedule))
+            {
+                await _workScheduleRepository.Add(workSchedule);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
         public async Task Delete(Guid id)
         {
-            await _workScheduleRepository.Delete(id);
+            if (WorkScheduleValidator.WorkScheduleExists(id))
+            {
+                await _workScheduleRepository.Delete(id);
+            }
+            else
+            {
+                throw new ArgumentException("This work schedule doesn't exist.");
+            }
         }
         public async Task DeleteAll()
         {
-            await _workScheduleRepository.DeleteAll();
+            if (await _workScheduleRepository.GetCount() <= 0)
+            {
+                throw new ArgumentException("Nothing to delete here.");
+            }
+            else
+            {
+                await _workScheduleRepository.DeleteAll();
+            }
         }
         public async Task<WorkSchedule> Get(Expression<Func<WorkSchedule, bool>> filter)
         {
-            return await _workScheduleRepository.Get(filter);
+            if (WorkScheduleValidator.WorkScheduleExists(_workScheduleRepository.Get(filter).Result.Id))
+            {
+                return await _workScheduleRepository.Get(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
         }
         public async Task<IEnumerable<WorkSchedule>> GetAll()
         {
-            return await _workScheduleRepository.GetAll();
+            if (await _workScheduleRepository.GetCount() <= 0)
+            {
+                throw new ArgumentException("Nothing to get from here.");
+            }
+            else
+            {
+                return await _workScheduleRepository.GetAll();
+            }
         }
         public async Task RemoveRange(IEnumerable<WorkSchedule> entities)
         {
-            await _workScheduleRepository.RemoveRange(entities);
+            if (entities.Count() <= 0)
+            {
+                throw new ArgumentException("Validation didn't pass.");
+            }
+            else
+            {
+                await _workScheduleRepository.RemoveRange(entities);
+            }
         }
-        public async Task UpdateByName(Guid id, WorkSchedule workSchedule)
+        public async Task Update(Guid id, WorkSchedule workSchedule)
         {
             Expression<Func<WorkSchedule, bool>> filter = workSchedule => workSchedule.Id == id;
-            WorkSchedule entity = _workScheduleRepository.Get(filter).Result;
-            
-            await _workScheduleRepository.Update(entity);
+            if (WorkScheduleValidator.WorkScheduleExists(_workScheduleRepository.Get(filter).Result.Id))
+            {
+                WorkSchedule entity = _workScheduleRepository.Get(filter).Result;
+                entity = workSchedule;
+                await _workScheduleRepository.Update(entity);
+            }
+            else 
+            {
+                throw new ArgumentException("Work schedule doesn't exist.");
+            }
+
         }
     }
 }
