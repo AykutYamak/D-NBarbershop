@@ -16,7 +16,7 @@ namespace DNBarbershop.Core.GlobalServiceFolder
         {
             await _repository.Add(entity);
         }
-
+            
         public async Task Delete(Guid id)
         {
             await _repository.Delete(id);

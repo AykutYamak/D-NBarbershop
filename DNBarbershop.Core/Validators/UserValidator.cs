@@ -20,9 +20,9 @@ namespace DNBarbershop.Core.Validators
             }
             return true;
         }
-        public static bool UserExists(Guid id)
+        public static bool UserExists(string id)
         {
-            Expression<Func<User, bool>> filter = u => u.Id == id;
+            Expression<Func<User, bool>> filter = u => u.Id.Equals(id);
             if (_repo.Get(filter) == null)
             {
                 return false;

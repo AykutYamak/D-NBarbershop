@@ -23,6 +23,6 @@ namespace DNBarbershop.Models.Entities
         [Required(ErrorMessage = RequiredErrorMessage)]
         public TimeSpan Duration { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
-        public ICollection<AppointmentService> AppointmentServices { get; set; } = new HashSet<AppointmentService>();
+        public ICollection<AppointmentServices> AppointmentServices { get; set; } = new HashSet<AppointmentServices>();
     }
 }

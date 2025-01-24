@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using static DNBarbershop.Common.ErrorMessages;
 namespace DNBarbershop.Models.Entities
 {
-    public class AppointmentService
+    public class AppointmentServices
     {
         [Key]
         [Required(ErrorMessage = RequiredErrorMessage)]

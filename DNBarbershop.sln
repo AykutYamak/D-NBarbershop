@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNBarbershop.DataAccess", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNBarbershop.Common", "DNBarbershop.Common\DNBarbershop.Common.csproj", "{F1C3587E-210B-4171-82EB-589E25E68C66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNBarbershop.Utility", "DNBarbershop.Utility\DNBarbershop.Utility.csproj", "{C6A61B04-9498-4E70-8978-D975DC731A34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F1C3587E-210B-4171-82EB-589E25E68C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1C3587E-210B-4171-82EB-589E25E68C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1C3587E-210B-4171-82EB-589E25E68C66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A61B04-9498-4E70-8978-D975DC731A34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A61B04-9498-4E70-8978-D975DC731A34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A61B04-9498-4E70-8978-D975DC731A34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6A61B04-9498-4E70-8978-D975DC731A34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

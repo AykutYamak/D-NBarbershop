@@ -7,6 +7,10 @@ using DNBarbershop.Core.GlobalServiceFolder;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.IService;
+using DNBarbershop.Models.Entities;
+using DNBarbershop.Areas.Identity.Pages.Account.Manage;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using DNBarbershop.Utility;
 
 internal class Program
 {
@@ -18,21 +22,30 @@ internal class Program
         builder.Services.AddControllersWithViews();
         var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+        //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+
 
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddScoped(typeof(IGlobalService<>), typeof(GlobalService<>));
-        builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+        builder.Services.AddScoped<IAppointmentService, DNBarbershop.Core.Services.AppointmentServices>();
         builder.Services.AddScoped<IBarberService, BarberService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IServiceService, ServiceService>();
         builder.Services.AddScoped<ISpecialityService, SpecialityService>();
         builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
+        
+        builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+        builder.Services.AddIdentity<User, IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
 
         var app = builder.Build();
 

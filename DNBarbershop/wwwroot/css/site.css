@@ -18,8 +18,9 @@ html {
 }
 
 body {
-    
     margin-bottom: 60px;
+    white-space: normal; 
+
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -88,6 +89,7 @@ body {
     background-size: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    white-space: normal; /* Prevents extra spacing from text nodes */
 }
 
 .customnavbarHeader {

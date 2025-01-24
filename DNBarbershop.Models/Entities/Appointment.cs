@@ -15,7 +15,7 @@ namespace DNBarbershop.Models.Entities
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required(ErrorMessage = RequiredErrorMessage)]
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
         [ForeignKey(nameof(Barber))]
@@ -34,7 +34,7 @@ namespace DNBarbershop.Models.Entities
         [Required]
         public AppointmentStatus Status { get; set; }
 
-        public ICollection<AppointmentService> AppointmentServices { get; set; } = new HashSet<AppointmentService>();
+        public ICollection<AppointmentServices> AppointmentServices { get; set; } = new HashSet<AppointmentServices>();
 
     }
 }

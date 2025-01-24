@@ -17,7 +17,7 @@ namespace DNBarbershop.Models.Entities
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required(ErrorMessage = RequiredErrorMessage)]
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
         [DataType(DataType.Date)]

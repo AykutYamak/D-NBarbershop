@@ -14,10 +14,10 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DNBarbershop.Core.Services
 {
-    public class AppointmentService : IAppointmentService
+    public class AppointmentServices : IAppointmentService
     {
         private readonly IRepository<Appointment> _appointmentRepository;
-        public AppointmentService(IRepository<Appointment> appointmentRepository)
+        public AppointmentServices(IRepository<Appointment> appointmentRepository)
         {
             _appointmentRepository = appointmentRepository;
         }
@@ -31,7 +31,7 @@ namespace DNBarbershop.Core.Services
             {
                 return false;
             }
-            if (!UserValidator.UserExists(appointment.UserId))
+            if (!UserValidator.UserExists(appointment.User.Id))
             {
                 return false;
             }

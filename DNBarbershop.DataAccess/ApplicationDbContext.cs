@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.DataAccess
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Appointment> appointments { get; set; }    
@@ -76,15 +76,15 @@ namespace DNBarbershop.DataAccess
             .WithMany(b => b.WorkSchedules)
             .HasForeignKey(ws => ws.BarberId);
 
-            modelBuilder.Entity<AppointmentService>()
+            modelBuilder.Entity<AppointmentServices>()
             .HasKey(a => new { a.AppointmentId, a.ServiceId });
 
-            modelBuilder.Entity<AppointmentService>()
+            modelBuilder.Entity<AppointmentServices>()
             .HasOne(a => a.Appointment)
             .WithMany(a => a.AppointmentServices)
             .HasForeignKey(a => a.AppointmentId);
 
-            modelBuilder.Entity<AppointmentService>()
+            modelBuilder.Entity<AppointmentServices>()
             .HasOne(a => a.Service)
             .WithMany(s => s.AppointmentServices)
             .HasForeignKey(a => a.ServiceId);
