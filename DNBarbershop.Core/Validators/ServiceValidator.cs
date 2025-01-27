@@ -23,7 +23,7 @@ namespace DNBarbershop.Core.Validators
         public static bool ServiceExists(Guid id)
         {
             Expression<Func<Service, bool>> filter = s => s.Id == id;
-            if (_repository.Get(filter) == null)
+            if (_repository.Get(filter).Result == null)
             {
                 return false;
             }

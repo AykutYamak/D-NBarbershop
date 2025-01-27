@@ -32,7 +32,7 @@ namespace DNBarbershop.Core.Services
         }
         public async Task Add(Speciality speciality)
         {
-            if (ValidateSpeciality(speciality))
+            if (SpecialityValidator.ValidateInput(speciality.Type) == true && SpecialityValidator.SpecialityExists(speciality.Id) == false)
             {
                 await _specialityRepository.Add(speciality);
             }

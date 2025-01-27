@@ -23,7 +23,7 @@ namespace DNBarbershop.Core.Validators
         public static bool WorkScheduleExists(Guid id)
         {
             Expression<Func<WorkSchedule, bool>> filter = w => w.Id == id;
-            if (_repository.Get(filter) == null)
+            if (_repository.Get(filter).Result == null)
             {
                 return false;
             }

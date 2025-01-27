@@ -23,7 +23,7 @@ namespace DNBarbershop.Core.Validators
         public static bool FeedbackExists(Guid id)
         {
             Expression<Func<Feedback, bool>> filter = f => f.Id == id;
-            if (_repository.Get(filter) == null)
+            if (_repository.Get(filter).Result == null)
             {
                 return false;
             }

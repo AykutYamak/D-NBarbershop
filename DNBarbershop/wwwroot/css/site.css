@@ -125,3 +125,10 @@ body {
     justify-content:center;
     
 }
+.LoginView {
+    background:url('//wwwroot//Assets//Images//images.jpg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    white-space: normal;
+}

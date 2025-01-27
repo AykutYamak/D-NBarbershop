@@ -20,7 +20,7 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        var connection = builder.Configuration.GetConnectionString("HomeConnection");
 
         //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -30,9 +30,10 @@ internal class Program
 
         builder.Services.AddRazorPages();
 
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,b=>b.MigrationsAssembly("DNBarbershop.DataAccess")));
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddScoped(typeof(IGlobalService<>), typeof(GlobalService<>));
+        builder.Services.AddScoped(typeof(IRepository<Speciality>), typeof(Repository<Speciality>));
         builder.Services.AddScoped<IAppointmentService, DNBarbershop.Core.Services.AppointmentServices>();
         builder.Services.AddScoped<IBarberService, BarberService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();

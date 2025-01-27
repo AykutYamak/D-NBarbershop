@@ -23,7 +23,7 @@ namespace DNBarbershop.Core.Validators
         public static bool AppointmentExists(Guid id)
         {
             Expression<Func<Appointment, bool>> filter = a => a.Id == id;
-            if (_repo.Get(filter)==null)
+            if (_repo.Get(filter).Result == null)
             {
                 return false;
             }

@@ -23,7 +23,7 @@ namespace DNBarbershop.Core.Validators
         public static bool SpecialityExists(Guid id)
         {
             Expression<Func<Speciality, bool>> filter = s => s.Id == id;
-            if (_repository.Get(filter) == null)
+            if (_repository.Get(filter).Result == null)
             {
                 return false;
             }

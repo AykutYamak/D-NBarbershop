@@ -23,7 +23,7 @@ namespace DNBarbershop.Core.Validators
         public static bool UserExists(string id)
         {
             Expression<Func<User, bool>> filter = u => u.Id.Equals(id);
-            if (_repo.Get(filter) == null)
+            if (_repo.Get(filter).Result == null)
             {
                 return false;
             }
