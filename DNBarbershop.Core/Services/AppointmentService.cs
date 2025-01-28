@@ -21,7 +21,7 @@ namespace DNBarbershop.Core.Services
         {
             _appointmentRepository = appointmentRepository;
         }
-        public bool ValidateAppointment(Appointment appointment)
+        /*public bool ValidateAppointment(Appointment appointment)
         {
             if (!AppointmentValidator.ValidateInput(appointment.AppointmentDate))
             {
@@ -40,28 +40,14 @@ namespace DNBarbershop.Core.Services
                 return false;
             }
             return true;
-        }
+        }*/
         public async Task Add(Appointment appointment)
         {
-            if (ValidateAppointment(appointment))
-            {
-                await _appointmentRepository.Add(appointment);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            await _appointmentRepository.Add(appointment);
         }
         public async Task Delete(Guid id)
         {
-            if (AppointmentValidator.AppointmentExists(id))
-            {
-                await _appointmentRepository.Delete(id);
-            }
-            else
-            {
-                throw new ArgumentException("This appointment doesn't exist.");
-            }
+              await _appointmentRepository.Delete(id);
         }
         public async Task DeleteAll()
         {
@@ -76,14 +62,7 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<Appointment> Get(Expression<Func<Appointment, bool>> filter)
         {
-            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
-            {
-                return await _appointmentRepository.Get(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            return await _appointmentRepository.Get(filter);
         }
         public async Task<IEnumerable<Appointment>> GetAll()
         {
@@ -121,16 +100,9 @@ namespace DNBarbershop.Core.Services
         public async Task Update(Guid id, Appointment appointment)
         {
             Expression<Func<Appointment, bool>> filter = appointment => appointment.Id == id;
-            if (AppointmentValidator.AppointmentExists(_appointmentRepository.Get(filter).Result.Id))
-            {
-                Appointment entity = _appointmentRepository.Get(filter).Result;
-                entity = appointment;
-                await _appointmentRepository.Update(entity);
-            }
-            else
-            {
-                throw new ArgumentException("Appointment doesn't exist.");
-            }
+            Appointment entity = _appointmentRepository.Get(filter).Result;
+            entity = appointment;
+            await _appointmentRepository.Update(entity);
         }
     }
 }

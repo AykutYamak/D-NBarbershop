@@ -12,7 +12,7 @@ namespace DNBarbershop.DataAccess.Repository
     public class Repository<T> : IRepository<T> where T : class
     {
         private ApplicationDbContext db;
-        internal DbSet<T> dbSet;
+        public DbSet<T> dbSet;
         public Repository(ApplicationDbContext _db)
         {
             db= _db;

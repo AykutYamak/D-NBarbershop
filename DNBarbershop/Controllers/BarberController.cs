@@ -1,7 +1,9 @@
-﻿using DNBarbershop.Core.IServices;
+﻿using DNBarbershop.Core.IService;
+using DNBarbershop.Core.IServices;
 using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Runtime.CompilerServices;
 
 namespace DNBarbershop.Controllers
@@ -9,17 +11,21 @@ namespace DNBarbershop.Controllers
     public class BarberController : Controller
     {
         IBarberService barberService;
-        public BarberController(IBarberService _barberService)
+        ISpecialityService specialityService;
+        public BarberController(IBarberService _barberService, ISpecialityService _specialityService)
         {
                 barberService= _barberService;
+                specialityService =  _specialityService;
         }
         public async Task<IActionResult> Index()
         {
             var list = await barberService.GetAll();
             return View(list);
         }
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
+            var specialities = await specialityService.GetAll();
+            ViewBag.Specialities = new SelectList(specialities, "Id", "Type");
             return View();
         }
         [HttpPost]
@@ -28,9 +34,9 @@ namespace DNBarbershop.Controllers
             if (ModelState.IsValid)
             {
                 await barberService.Add(barber);
-                return RedirectToAction("ListBarbers");
+                return RedirectToAction("Index");
             }
-            return View(barber);
+            return View();
         }
         public async Task<IActionResult> Edit(Guid id)
         {

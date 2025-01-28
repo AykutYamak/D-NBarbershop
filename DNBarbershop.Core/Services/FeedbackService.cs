@@ -19,7 +19,7 @@ namespace DNBarbershop.Core.Services
         {
             _feedbackRepository = feedbackRepository;
         }
-        public bool ValidateFeedback(Feedback feedback)
+        /*public bool ValidateFeedback(Feedback feedback)
         {
             if (!FeedbackValidator.ValidateInput(feedback.Rating,feedback.FeedBackDate,feedback.Comment))
             {
@@ -30,28 +30,16 @@ namespace DNBarbershop.Core.Services
                 return false;
             }
             return true;
-        }
+        }*/
         public async Task Add(Feedback feedback)
         {
-            if (ValidateFeedback(feedback))
-            {
                 await _feedbackRepository.Add(feedback);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+          
         }
         public async Task Delete(Guid id)
         {
-            if (FeedbackValidator.FeedbackExists(id))
-            {
                 await _feedbackRepository.Delete(id);
-            }
-            else
-            {
-                throw new ArgumentException("This feedback doesn't exist.");
-            }
+            
         }
         public async Task DeleteAll()
         {
@@ -66,14 +54,9 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<Feedback> Get(Expression<Func<Feedback, bool>> filter)
         {
-            if (FeedbackValidator.FeedbackExists(_feedbackRepository.Get(filter).Result.Id))
-            {
+          
                 return await _feedbackRepository.Get(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+          
         }
         public async Task<IEnumerable<Feedback>> GetAll()
         {
@@ -111,16 +94,11 @@ namespace DNBarbershop.Core.Services
         public async Task Update(Guid id, Feedback feedback)
         {
             Expression<Func<Feedback, bool>> filter = feedback => feedback.Id == id;
-            if (FeedbackValidator.FeedbackExists(_feedbackRepository.Get(filter).Result.Id))
-            {
+           
                 Feedback entity = _feedbackRepository.Get(filter).Result;
                 entity = feedback;
                 await _feedbackRepository.Update(entity);
-            }
-            else 
-            {
-                throw new ArgumentException("Feedback doesn't exist.");
-            }
+            
         }
     }
 }

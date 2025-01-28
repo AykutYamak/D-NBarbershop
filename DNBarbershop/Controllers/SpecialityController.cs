@@ -33,7 +33,7 @@ namespace DNBarbershop.Controllers
         }
         public async Task<IActionResult> Edit(Guid id)
         {
-            var speciality = specialityService.Get(b => b.Id == id);
+            var speciality = await specialityService.Get(b => b.Id == id);
             return View(speciality);
         }
         [HttpPost]

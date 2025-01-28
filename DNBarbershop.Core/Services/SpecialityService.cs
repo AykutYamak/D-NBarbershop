@@ -14,11 +14,13 @@ namespace DNBarbershop.Core.Services
     public class SpecialityService : ISpecialityService
     {
         private readonly IRepository<Speciality> _specialityRepository;
+
+
         public SpecialityService(IRepository<Speciality> specialityRepository)
         {
             _specialityRepository = specialityRepository;
         }
-        public bool ValidateSpeciality(Speciality speciality)
+       /* public bool ValidateSpeciality(Speciality speciality)
         {
             if (!SpecialityValidator.ValidateInput(speciality.Type))
             {
@@ -29,28 +31,22 @@ namespace DNBarbershop.Core.Services
                 return false;
             }
             return true;
-        }
+        }*/
         public async Task Add(Speciality speciality)
         {
-            if (SpecialityValidator.ValidateInput(speciality.Type) == true && SpecialityValidator.SpecialityExists(speciality.Id) == false)
-            {
+            //if (ValidateSpeciality(speciality))
+            //{
                 await _specialityRepository.Add(speciality);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            //}
+            //else
+            //{
+            //    throw new ArgumentException("Validation didn't pass.");
+            //}
         }
         public async Task Delete(Guid id)
         {
-            if (SpecialityValidator.SpecialityExists(id))
-            {
                 await _specialityRepository.Delete(id);
-            }
-            else
-            {
-                throw new ArgumentException("This speciality doesn't exist.");
-            }
+           
         }
         public async Task DeleteAll()
         {
@@ -65,14 +61,8 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<Speciality> Get(Expression<Func<Speciality, bool>> filter)
         {
-            if (SpecialityValidator.SpecialityExists(_specialityRepository.Get(filter).Result.Id))
-            {
                 return await _specialityRepository.Get(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+      
         }
         public async Task<IEnumerable<Speciality>> GetAll()
         {
@@ -99,16 +89,9 @@ namespace DNBarbershop.Core.Services
         public async Task Update(Guid id, Speciality speciality)
         {
             Expression<Func<Speciality, bool>> filter = speciality => speciality.Id == id;
-            if (SpecialityValidator.SpecialityExists(_specialityRepository.Get(filter).Result.Id))
-            {
-                Speciality entity = _specialityRepository.Get(filter).Result;
-                entity = speciality;
-                await _specialityRepository.Update(entity);
-            }
-            else 
-            {
-                throw new ArgumentException("Service doesn't exist.");
-            }
+            Speciality entity = _specialityRepository.Get(filter).Result;
+            entity = speciality;
+            await _specialityRepository.Update(entity);
         }
     }
 }

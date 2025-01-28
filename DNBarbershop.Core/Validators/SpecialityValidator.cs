@@ -9,9 +9,9 @@ using DNBarbershop.Models.Entities;
 
 namespace DNBarbershop.Core.Validators
 {
-    internal class SpecialityValidator
+    public static class SpecialityValidator
     {
-        private static IRepository<Speciality> _repository;
+        private readonly static IRepository<Speciality> _repository;
         public static bool ValidateInput(string type)
         {
             if (type==null || type.Length<=0)
@@ -23,7 +23,8 @@ namespace DNBarbershop.Core.Validators
         public static bool SpecialityExists(Guid id)
         {
             Expression<Func<Speciality, bool>> filter = s => s.Id == id;
-            if (_repository.Get(filter).Result == null)
+            
+            if (_repository.Get(filter).Id == null)
             {
                 return false;
             }

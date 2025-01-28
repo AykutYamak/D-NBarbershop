@@ -19,7 +19,7 @@ namespace DNBarbershop.Core.Services
         {
             _barberRepository = appointmentRepository;
         }
-        public bool ValidateBarber(Barber barber)
+        /*public bool ValidateBarber(Barber barber)
         {
             if (!BarberValidator.ValidateInput(barber.ExperienceYears,barber.FirstName,barber.LastName))
             {
@@ -30,28 +30,15 @@ namespace DNBarbershop.Core.Services
                 return false;
             }
             return true;
-        }
+        }*/
         public async Task Add(Barber barber)
-        {
-            if (ValidateBarber(barber))
-            {
-                await _barberRepository.Add(barber);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+        { 
+              await _barberRepository.Add(barber);
         }
         public async Task Delete(Guid id)
         {
-            if (BarberValidator.BarberExists(id))
-            {
                 await _barberRepository.Delete(id);
-            }
-            else
-            {
-                throw new ArgumentException("This barber doesn't exist.");
-            }
+           
         }
         public async Task DeleteAll()
         {
@@ -66,14 +53,8 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<Barber> Get(Expression<Func<Barber, bool>> filter)
         {
-            if (BarberValidator.BarberExists(_barberRepository.Get(filter).Result.Id))
-            {
                 return await _barberRepository.Get(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            
         }
         public async Task<IEnumerable<Barber>> GetAll()
         {
@@ -105,16 +86,9 @@ namespace DNBarbershop.Core.Services
         public async Task Update(Guid id, Barber barber)
         {
             Expression<Func<Barber, bool>> filter = barber => barber.Id == id;
-            if (BarberValidator.BarberExists(_barberRepository.Get(filter).Result.Id))
-            {
-                Barber entity = _barberRepository.Get(filter).Result;
-                entity = barber;
-                await _barberRepository.Update(entity);
-            }
-            else 
-            {
-                throw new ArgumentException("Barber doesn't exist.");
-            }
+            Barber entity = _barberRepository.Get(filter).Result;
+            entity = barber;
+            await _barberRepository.Update(entity);
         }
 
         public async Task<IEnumerable<Barber>> GetBarbersWithExperienceAbove(int minExperienceYears)

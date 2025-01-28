@@ -15,11 +15,22 @@
         <label class="form-label" asp-for="LastName"></label>
         <input type="text" class="form-control" asp-for="LastName">
     </div>
-        <div class="mb-3">
-            <label class="form-label" asp-for="Speciality"></label>
-            <input type="text" class="form-control" asp-for="Speciality">
+        <div>
+            <label> Choose Speciality
+                <select asp-for="SpecialityId" asp-items="@ViewBag.Specialities">
+                    <option value="">Choose Speciality</option>    
+                </select>
+            </label>
         </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="mb-3">
+            <label class="form-label" asp-for="ExperienceYears"></label>
+            <input type="text" class="form-control" asp-for="ExperienceYears">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="ProfilePictureUrl"></label>
+            <input type="text" class="form-control" asp-for="ProfilePictureUrl">
+        </div>
+    <button type="submit" class="btn btn-primary" asp-action="Add" asp-controller="Barber">Submit</button>
 </form>
     </body>
 </html>

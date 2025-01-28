@@ -18,7 +18,7 @@ namespace DNBarbershop.Core.Services
         {
             _workScheduleRepository= workScheduleRepository;
         }
-        public bool ValidateWorkSchedule(WorkSchedule workSchedule)
+        /*public bool ValidateWorkSchedule(WorkSchedule workSchedule)
         {
             if (!WorkScheduleValidator.WorkScheduleExists(workSchedule.Id))
             {
@@ -29,28 +29,18 @@ namespace DNBarbershop.Core.Services
                 return false;
             }
             return true;
-        }
+        }*/
         public async Task Add(WorkSchedule workSchedule)
         {
-            if (ValidateWorkSchedule(workSchedule))
-            {
+            
                 await _workScheduleRepository.Add(workSchedule);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+            
         }
         public async Task Delete(Guid id)
         {
-            if (WorkScheduleValidator.WorkScheduleExists(id))
-            {
+            
                 await _workScheduleRepository.Delete(id);
-            }
-            else
-            {
-                throw new ArgumentException("This work schedule doesn't exist.");
-            }
+          
         }
         public async Task DeleteAll()
         {
@@ -65,14 +55,8 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<WorkSchedule> Get(Expression<Func<WorkSchedule, bool>> filter)
         {
-            if (WorkScheduleValidator.WorkScheduleExists(_workScheduleRepository.Get(filter).Result.Id))
-            {
                 return await _workScheduleRepository.Get(filter);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+       
         }
         public async Task<IEnumerable<WorkSchedule>> GetAll()
         {
@@ -99,17 +83,9 @@ namespace DNBarbershop.Core.Services
         public async Task Update(Guid id, WorkSchedule workSchedule)
         {
             Expression<Func<WorkSchedule, bool>> filter = workSchedule => workSchedule.Id == id;
-            if (WorkScheduleValidator.WorkScheduleExists(_workScheduleRepository.Get(filter).Result.Id))
-            {
-                WorkSchedule entity = _workScheduleRepository.Get(filter).Result;
-                entity = workSchedule;
-                await _workScheduleRepository.Update(entity);
-            }
-            else 
-            {
-                throw new ArgumentException("Work schedule doesn't exist.");
-            }
-
+            WorkSchedule entity = _workScheduleRepository.Get(filter).Result;
+            entity = workSchedule;
+            await _workScheduleRepository.Update(entity);
         }
     }
 }

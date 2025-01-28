@@ -19,7 +19,7 @@ namespace DNBarbershop.Core.Services
         {
             _serviceRepository = serviceRepository;
         }
-        public bool ValidateService(Service service)
+        /*public bool ValidateService(Service service)
         {
             if (!ServiceValidator.ValidateInput(service.ServiceName,service.Price,service.Duration,service.Description))
             {
@@ -30,28 +30,17 @@ namespace DNBarbershop.Core.Services
                 return false;
             }
             return true;
-        }
+        }*/
         public async Task Add(Service service)
         {
-            if (ValidateService(service))
-            {
                 await _serviceRepository.Add(service);
-            }
-            else
-            {
-                throw new ArgumentException("Validation didn't pass.");
-            }
+             
         }
         public async Task Delete(Guid id)
         {
-            if (ServiceValidator.ServiceExists(id))
-            {
+            
                 await _serviceRepository.Delete(id);
-            }
-            else 
-            {
-                throw new ArgumentException("This service doesn't exist.");
-            }
+            
         }
         public async Task DeleteAll()
         {
@@ -66,14 +55,9 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<Service> Get(Expression<Func<Service, bool>> filter)
         {
-            if (ServiceValidator.ServiceExists(_serviceRepository.Get(filter).Result.Id))
-            {
+            
                 return await _serviceRepository.Get(filter);
-            }
-            else 
-            {
-                throw new ArgumentException("Validation didn't pass.");            
-            }
+         
         }
         public async Task<IEnumerable<Service>> GetAll()
         {
@@ -105,16 +89,11 @@ namespace DNBarbershop.Core.Services
         public async Task Update(Guid id, Service service)
         {
             Expression<Func<Service, bool>> filter = service => service.Id== id;
-            if (ServiceValidator.ServiceExists(_serviceRepository.Get(filter).Result.Id))
-            {
+         
                 Service entity = _serviceRepository.Get(filter).Result;
                 entity = service;
                 await _serviceRepository.Update(entity);
-            }
-            else
-            {
-                throw new ArgumentException("Service doesn't exist.");
-            }
+          
         }
     }
 }
