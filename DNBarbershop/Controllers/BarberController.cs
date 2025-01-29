@@ -4,6 +4,8 @@ using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace DNBarbershop.Controllers
@@ -31,27 +33,29 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(Barber barber)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 await barberService.Add(barber);
                 return RedirectToAction("Index");
-            }
-            return View();
+            //}
+            //return View();
         }
         public async Task<IActionResult> Edit(Guid id)
         {
-            var barber = barberService.Get(b=>b.Id == id);
+            Barber barber = await barberService.Get(b=>b.Id == id);
+            var specialities = await specialityService.GetAll();
+            ViewBag.Specialities = new SelectList(specialities, "Id", "Type");
             return View(barber);
         }
         [HttpPost]
         public async Task<IActionResult> Edit(Barber barber)
         {
-            if (ModelState.IsValid)
-            {
-                await barberService.Update(barber.Id, barber);
+            //if (ModelState.IsValid)
+            //{
+                await barberService.Update(barber);
                 return RedirectToAction("Index");
-            }
-            return View(barber);
+            //}
+            //return View(barber);
         }
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)

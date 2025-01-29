@@ -91,14 +91,9 @@ namespace DNBarbershop.Core.Services
                 await _feedbackRepository.RemoveRange(entities);
             }
         }
-        public async Task Update(Guid id, Feedback feedback)
+        public async Task Update(Feedback feedback)
         {
-            Expression<Func<Feedback, bool>> filter = feedback => feedback.Id == id;
-           
-                Feedback entity = _feedbackRepository.Get(filter).Result;
-                entity = feedback;
-                await _feedbackRepository.Update(entity);
-            
+                await _feedbackRepository.Update(feedback);   
         }
     }
 }

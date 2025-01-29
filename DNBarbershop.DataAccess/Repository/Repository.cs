@@ -42,7 +42,12 @@ namespace DNBarbershop.DataAccess.Repository
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await dbSet.ToListAsync();
+            IQueryable<T> query = dbSet.AsQueryable();
+            foreach (var property in db.Model.FindEntityType(typeof(T)).GetNavigations())
+            {
+                query = query.Include(property.Name);
+            }
+            return await query.ToListAsync();           
         }
 
         public async Task Delete(Guid id)

@@ -86,12 +86,9 @@ namespace DNBarbershop.Core.Services
                 await _specialityRepository.RemoveRange(entities);
             }
         }
-        public async Task Update(Guid id, Speciality speciality)
+        public async Task Update(Speciality speciality)
         {
-            Expression<Func<Speciality, bool>> filter = speciality => speciality.Id == id;
-            Speciality entity = _specialityRepository.Get(filter).Result;
-            entity = speciality;
-            await _specialityRepository.Update(entity);
+            await _specialityRepository.Update(speciality);
         }
     }
 }

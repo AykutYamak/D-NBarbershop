@@ -20,7 +20,7 @@ namespace DNBarbershop.DataAccess.BarberRepository
 
         public async Task<IEnumerable<Barber>> GetAll()
         {
-            return await barbers.ToListAsync();
+            return await barbers.Include(b => b.Speciality).ToListAsync();
         }
     }
 }

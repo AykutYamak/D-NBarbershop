@@ -1,36 +1,48 @@
 ﻿@model DNBarbershop.Models.Entities.Barber
-<html>
-    <head>
-        
-    </head>
-    <body>
-        
-<form method="post">
-    <div class="mb-3">
-        <label class="form-label" asp-for="FirstName"></label>
-        <input  type="text" class="form-control" asp-for="FirstName" >
-       
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="LastName"></label>
-        <input type="text" class="form-control" asp-for="LastName">
-    </div>
-        <div>
-            <label> Choose Speciality
-                <select asp-for="SpecialityId" asp-items="@ViewBag.Specialities">
-                    <option value="">Choose Speciality</option>    
+
+<div class="container mt-4">
+    
+
+    <div class="card shadow-sm p-4 rounded">
+        <h3 class="text-center text-white fw-bold mb-4">Добави бръснар</h3>
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="FirstName">Име</label>
+                        <input type="text" class="form-control" asp-for="FirstName" placeholder="Въведете име">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="LastName">Фамилия</label>
+                        <input type="text" class="form-control" asp-for="LastName" placeholder="Въведете фамилия">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Специалност</label>
+                <select asp-for="SpecialityId" asp-items="@ViewBag.Specialities" class="form-select">
+                    <option value="">Изберете специалност</option>
                 </select>
-            </label>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" asp-for="ExperienceYears"></label>
-            <input type="text" class="form-control" asp-for="ExperienceYears">
-        </div>
-        <div class="mb-3">
-            <label class="form-label" asp-for="ProfilePictureUrl"></label>
-            <input type="text" class="form-control" asp-for="ProfilePictureUrl">
-        </div>
-    <button type="submit" class="btn btn-primary" asp-action="Add" asp-controller="Barber">Submit</button>
-</form>
-    </body>
-</html>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" asp-for="ExperienceYears">Години опит</label>
+                <input type="number" class="form-control" asp-for="ExperienceYears" placeholder="Въведете години опит" min="0">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" asp-for="ProfilePictureUrl">Профилна снимка</label>
+                <input type="text" class="form-control" asp-for="ProfilePictureUrl" placeholder="URL на снимката">
+            </div>
+
+            <div class="text-center">
+                <button type="submit" asp-action="Add" asp-controller="Barber" class="btn btn-success px-4 py-2 shadow-sm">
+                    <i class="bi bi-check-lg"></i> Запази
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

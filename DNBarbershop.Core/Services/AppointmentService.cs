@@ -97,12 +97,9 @@ namespace DNBarbershop.Core.Services
                 await _appointmentRepository.RemoveRange(entities);
             }
         }
-        public async Task Update(Guid id, Appointment appointment)
+        public async Task Update(Appointment appointment)
         {
-            Expression<Func<Appointment, bool>> filter = appointment => appointment.Id == id;
-            Appointment entity = _appointmentRepository.Get(filter).Result;
-            entity = appointment;
-            await _appointmentRepository.Update(entity);
+            await _appointmentRepository.Update(appointment);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Validators;
+using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using System;
@@ -15,9 +16,11 @@ namespace DNBarbershop.Core.Services
     public class BarberService : IBarberService
     {
         private readonly IRepository<Barber> _barberRepository;
-        public BarberService(IRepository<Barber> appointmentRepository)
+        private readonly IBarberRepository<Barber> _IBarberRepository;
+        public BarberService(IRepository<Barber> barberRepository)
         {
-            _barberRepository = appointmentRepository;
+            _barberRepository = barberRepository;
+
         }
         /*public bool ValidateBarber(Barber barber)
         {
@@ -58,14 +61,7 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<IEnumerable<Barber>> GetAll()
         {
-            if (await _barberRepository.GetCount() <= 0)
-            {
-                throw new ArgumentException("Nothing to get from here");
-            }
-            else
-            {
-                return await _barberRepository.GetAll();
-            }
+            return await _barberRepository.GetAll();
         }
         public async Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality)
         {
@@ -83,12 +79,9 @@ namespace DNBarbershop.Core.Services
                 await _barberRepository.RemoveRange(entities);
             }
         }
-        public async Task Update(Guid id, Barber barber)
+        public async Task Update(Barber barber)
         {
-            Expression<Func<Barber, bool>> filter = barber => barber.Id == id;
-            Barber entity = _barberRepository.Get(filter).Result;
-            entity = barber;
-            await _barberRepository.Update(entity);
+            await _barberRepository.Update(barber);
         }
 
         public async Task<IEnumerable<Barber>> GetBarbersWithExperienceAbove(int minExperienceYears)

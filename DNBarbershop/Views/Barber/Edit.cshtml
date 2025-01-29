@@ -1,0 +1,64 @@
+﻿@model DNBarbershop.Models.Entities.Barber
+<div class="container mt-4">
+
+
+    <div class="colcard d-flex justify-content-center shadow-sm p-4 rounded text-center">
+        <h3 class="text-center text-white fw-bold mb-4">Редактирай бръснар</h3>
+        <form method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <input type="hidden" asp-for="Id"/>
+                        <label class="form-label fw-semibold">Име</label>
+                        <label class="form-label fw-semibold" asp-for="FirstName">
+                            <input type="text" class="form-control" asp-for="FirstName">
+                            </label>
+                        
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Фамилия</label>
+                        <label class="form-label fw-semibold" asp-for="LastName">
+                            <input type="text" class="form-control" asp-for="LastName">
+                        </label>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 text-center">
+                <label class="form-label fw-semibold">Ниво на специализация</label>
+                <label class="form-label fw-semibold">
+                    <select asp-for="SpecialityId" asp-items="@ViewBag.Specialities" class="form-select">
+                        <option value="">Изберете специалност</option>
+                    </select>
+                </label>
+                
+            </div>
+
+            <div class="mb-3 text-center">
+                <label class="form-label fw-semibold">Години опит</label>
+                <br />
+                <label class="form-label fw-semibold" asp-for="ExperienceYears">
+                    <input type="number" class="form-control" asp-for="ExperienceYears">
+                    </label>
+                
+            </div>
+
+            <div class="mb-3 text-center">
+                <label class="form-label fw-semibold">Снимка</label>
+                <br />
+                <label class="form-label fw-semibold" asp-for="ProfilePictureUrl">
+                    <input type="text" class="form-control" asp-for="ProfilePictureUrl">
+                </label>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" asp-action="Edit" asp-controller="Barber" class="btn btn-success px-4 py-2 shadow-sm">
+                    <i class="bi bi-check-lg"></i> Запази
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

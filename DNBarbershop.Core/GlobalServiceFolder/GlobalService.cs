@@ -42,7 +42,7 @@ namespace DNBarbershop.Core.GlobalServiceFolder
             await _repository.RemoveRange(entities);
         }
 
-        public async Task Update(Guid id, T entity)
+        public async Task Update(T entity)
         {
             await _repository.Update(entity);
         }

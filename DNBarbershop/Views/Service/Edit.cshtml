@@ -1,0 +1,54 @@
+﻿@model DNBarbershop.Models.Entities.Service
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg rounded-4 p-4 bg-dark text-white">
+                <h3 class="text-center fw-bold mb-4">Редактирай услуга</h3>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- Service Name -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="ServiceName">Име на услуга</label>
+                        <input type="text" class="form-control border-0 shadow-sm" asp-for="ServiceName" placeholder="Въведете име">
+                        <span asp-validation-for="ServiceName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="Description">Описание</label>
+                        <textarea class="form-control border-0 shadow-sm" asp-for="Description" rows="3" placeholder="Въведете описание"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="Price">Цена</label>
+                        <input type="number" class="form-control border-0 shadow-sm" asp-for="Price" step="0.01" placeholder="Въведете цена">
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+                    <!-- Duration (TimeSpan) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Продължителност</label>
+                        <div class="d-flex gap-3">
+                            <input type="number" name="DurationHours" class="form-control border-0 shadow-sm text-center" placeholder="Часове" min="0" max="3" value="@Model.Duration.Hours">
+                            <input type="number" name="DurationMinutes" class="form-control border-0 shadow-sm text-center" placeholder="Минути" min="0" max="59" value="@Model.Duration.Minutes">
+                        </div>
+                        <span asp-validation-for="Duration" class="text-danger"></span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="text-center mt-4">
+                        <button type="submit" asp-action="Edit" asp-controller="Service" class="btn btn-success px-4 py-2 shadow-sm">
+                            <i class="bi bi-check-lg"></i> Запази
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-light px-4 py-2 ms-2">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

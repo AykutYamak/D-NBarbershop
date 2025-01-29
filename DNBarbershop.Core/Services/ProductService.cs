@@ -56,7 +56,7 @@ namespace DNBarbershop.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task Update(Guid id, Product entity)
+        public Task Update(Product entity)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 ﻿@using DNBarbershop.Models.Entities
-@model IEnumerable<Appointment>
+@model IEnumerable<User>
+
 
 <div class="container mt-4">
     <div class="row align-items-center mb-3">
@@ -7,8 +8,8 @@
             <h3 class="text-uppercase fw-bold text-danger">Бръснари</h3>
         </div>
         <div class="col-md-6 text-md-end">
-            <a asp-controller="Appointment" asp-action="Add" class="btn btn-dark shadow-sm px-4 py-2">
-                <i class="bi bi-person-plus"></i> Запази час
+            <a asp-controller="User" asp-action="Add" class="btn btn-dark shadow-sm px-4 py-2">
+                <i class="bi bi-person-plus"></i> Добави бръснар
             </a>
         </div>
     </div>
@@ -20,27 +21,25 @@
                     <th scope="col">#</th>
                     <th scope="col">Име</th>
                     <th scope="col">Фамилия</th>
-                    <th scope="col">Години опит</th>
-                    <th scope="col">Ниво на специализация</th>
-                    <th scope="col">Снимка</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var barber in Model)
+                @foreach (var user in Model)
                 {
                     <tr>
-                        <td>@barber.Id</td>
-                     
+                        <td>@user.Id</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
                         <td>
                             <div class="col-md-6 text-md-end">
-                                <form asp-controller="Barber" asp-action="Delete" asp-route-id="@barber.Id" method="post">
+                                <form asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" method="post">
                                     <button type="submit" class="btn btn-dark px-2 py-2">
-                                        Изтрии бръснар
+                                        Изтрии потребител
                                     </button>
                                 </form>
                             </div>
                             <div class="col-md-6 text-md-end">
-                                <a type="submit" asp-action="Edit" asp-controller="Barber" asp-route-id="@barber.Id">Edit</a>
+                                <a type="submit" asp-controller="User" asp-action="Edit" asp-route-id="@user.Id">Редактирай</a>
                             </div>
                         </td>
                     </tr>

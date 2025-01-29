@@ -41,7 +41,7 @@ namespace DNBarbershop.Controllers
         {
             if (ModelState.IsValid)
             {
-                await specialityService.Update(speciality.Id, speciality);
+                await specialityService.Update(speciality);
                 return RedirectToAction("Index");
             }
             return View(speciality);

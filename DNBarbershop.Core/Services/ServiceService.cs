@@ -61,14 +61,14 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<IEnumerable<Service>> GetAll()
         {
-            if (await _serviceRepository.GetCount()<=0)
-            {
-                throw new ArgumentException("Nothing to get from here.");
-            }
-            else
-            {
+            //if (await _serviceRepository.GetCount()<=0)
+            //{
+                //throw new ArgumentException("Nothing to get from here.");
+            //}
+            //else
+            //{
                 return await _serviceRepository.GetAll();
-            }
+            //}
         }
         public async Task<IEnumerable<Service>> GetServiceUnderPrice(decimal price)
         {
@@ -77,23 +77,11 @@ namespace DNBarbershop.Core.Services
         }
         public async Task RemoveRange(IEnumerable<Service> entities)
         {
-            if (entities.Count() <= 0)
-            {
-                throw new ArgumentException("Validation didn't pass.");   
-            }
-            else
-            {
                 await _serviceRepository.RemoveRange(entities);
-            }
         }
-        public async Task Update(Guid id, Service service)
+        public async Task Update(Service service)
         {
-            Expression<Func<Service, bool>> filter = service => service.Id== id;
-         
-                Service entity = _serviceRepository.Get(filter).Result;
-                entity = service;
-                await _serviceRepository.Update(entity);
-          
+                await _serviceRepository.Update(service); 
         }
     }
 }

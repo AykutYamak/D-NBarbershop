@@ -126,7 +126,7 @@ body {
     
 }
 .LoginView {
-    background:url('//wwwroot//Assets//Images//images.jpg');
+    background:url('/Assets//Images//Untitled design.png'); 
     background-size: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;

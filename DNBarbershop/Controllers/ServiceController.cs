@@ -2,48 +2,73 @@
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.Controllers
 {
     public class ServiceController : Controller
     {
-        ServiceService serviceService;
-        public ServiceController(ServiceService _serviceService)
+        IServiceService _serviceService;
+
+        public ServiceController(IServiceService serviceService)
         {
-            serviceService= _serviceService;
+            _serviceService = serviceService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = serviceService.GetAll();
+            var list = await _serviceService.GetAll();
             return View(list);
         }
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
+            //var services = await _serviceService.GetAll();
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Add(Service service)
+        public async Task<IActionResult> Add(Service service,int DurationHours,int DurationMinutes)
         {
-            if (ModelState.IsValid)
-            {
-                await serviceService.Add(service);
-                return RedirectToAction("ListBarbers");
-            }
-            return View(service);
+            //if (ModelState.IsValid)
+            //{
+                service.Duration = new TimeSpan(DurationHours, DurationMinutes, 0);
+                await _serviceService.Add(service);
+                return RedirectToAction("Index");
+            //}
+            //return View(service);
         }
         public async Task<IActionResult> Edit(Guid id)
         {
-            var service = serviceService.Get(b => b.Id == id);
+            var service = await _serviceService.Get(s=>s.Id == id);
+            if (service == null)
+            {
+                return NotFound();
+            }
             return View(service);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(Service service)
+        public async Task<IActionResult> Edit(Guid id,Service service,int DurationHours,int DurationMinutes)
         {
+            if (id != service.Id)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
-                await serviceService.Update(service.Id, service);
-                return RedirectToAction("Index");
+                    var existingService = await _serviceService.Get(s=>s.Id==id);
+                    if (existingService == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingService.ServiceName = service.ServiceName;
+                    existingService.Description = service.Description;
+                    existingService.Price = service.Price;
+                    existingService.Duration = new TimeSpan(DurationHours, DurationMinutes, 0);
+
+                    await _serviceService.Update(existingService);
+                    return RedirectToAction("Index");
             }
+
             return View(service);
         }
         [HttpPost]
@@ -51,7 +76,7 @@ namespace DNBarbershop.Controllers
         {
             if (ModelState.IsValid)
             {
-                await serviceService.Delete(id);
+                await _serviceService.Delete(id);
                 return RedirectToAction("Index");
             }
             return View();

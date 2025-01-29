@@ -80,12 +80,9 @@ namespace DNBarbershop.Core.Services
                 await _workScheduleRepository.RemoveRange(entities);
             }
         }
-        public async Task Update(Guid id, WorkSchedule workSchedule)
+        public async Task Update(WorkSchedule workSchedule)
         {
-            Expression<Func<WorkSchedule, bool>> filter = workSchedule => workSchedule.Id == id;
-            WorkSchedule entity = _workScheduleRepository.Get(filter).Result;
-            entity = workSchedule;
-            await _workScheduleRepository.Update(entity);
+            await _workScheduleRepository.Update(workSchedule);
         }
     }
 }
