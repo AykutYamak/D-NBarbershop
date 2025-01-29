@@ -66,14 +66,14 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<IEnumerable<Speciality>> GetAll()
         {
-            if (await _specialityRepository.GetCount() <= 0)
-            {
-                throw new ArgumentException("Nothing to get from here.");
-            }
-            else
-            {
+            //if (await _specialityRepository.GetCount() <= 0)
+            //{
+            //    throw new ArgumentException("Nothing to get from here.");
+            //}
+            //else
+            //{
                 return await _specialityRepository.GetAll();
-            }
+            //}
         }
         public async Task RemoveRange(IEnumerable<Speciality> entities)
         {

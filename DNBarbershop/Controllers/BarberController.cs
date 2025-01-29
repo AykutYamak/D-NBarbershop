@@ -2,6 +2,7 @@
 using DNBarbershop.Core.IServices;
 using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace DNBarbershop.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BarberController : Controller
     {
         IBarberService barberService;

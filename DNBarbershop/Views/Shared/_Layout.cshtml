@@ -17,6 +17,9 @@
         <nav>
             <ul class="nav nav-underline d-flex justify-content-center align-items-center text-center fs-5 customnavbar">
                 <li class="nav-item">
+                    <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Assets/Images/Untitled_design_5_-removebg-preview.png" class="block" alt="logo" width="110" height="110"/></a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-white" asp-area="" asp-controller="Appointment" asp-action="Index">Book Now</a>
                 </li>
                 <li class="nav-item">
@@ -24,9 +27,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-area="" asp-controller="Barber" asp-action="Barbers">Barbers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Assets/Images/Untitled_design_5_-removebg-preview.png" class="block" alt="logo" width="110" height="110"/></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-area="" asp-controller="Product" asp-action="Products">Products</a>
@@ -42,11 +42,11 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 main-content">
             @RenderBody()
         </main>
     </div>
-    <footer class="footer text-muted fixed-bottom p-3 customFooter">
+    <footer class="footer text-muted p-4 customFooter">
         <div class="button-container">
             <a class="button flex-center" href="https://www.instagram.com/barberhouseteam/" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg"

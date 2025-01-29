@@ -18,7 +18,7 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin-bottom: 0px;
     white-space: normal; 
 
 }
@@ -37,16 +37,16 @@ body {
     margin-right: 30px;
 }
 
-    .customnavbar li a {
-        padding: 0;
-        margin-top: 25%;
-        transition: transform .25s, visibility .25s ease-in;
-        overflow: hidden;
-    }
+.customnavbar li a {
+    padding: 0;
+    margin-top: 25%;
+    transition: transform .25s, visibility .25s ease-in;
+    overflow: hidden;
+}
 
-        .customnavbar li a:hover {
-            transform: scale(1.1);
-        }
+.customnavbar li a:hover {
+    transform: scale(1.1);
+}
 
 .button-container {
     display: flex;
@@ -67,16 +67,16 @@ body {
     transition: all 0.45s;
 }
 
-    .button:hover {
-        transform: rotate(360deg);
-        transform-origin: center center;
-        background-color: #ffff;
-        color: #2d2e32;
-    }
+.button:hover {
+    transform: rotate(360deg);
+    transform-origin: center center;
+    background-color: #ffff;
+    color: #2d2e32;
+}
 
-        .button:hover .btn-svg {
-            filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(103%) contrast(103%);
-        }
+.button:hover .btn-svg {
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(103%) contrast(103%);
+}
 
 .flex-center {
     display: flex;
@@ -93,11 +93,15 @@ body {
 }
 
 .customnavbarHeader {
-    background-color: rgb(30, 30, 30,0.3)
+    background-color: rgb(30, 30, 30,0.3);
+    top:0;
 }
 
 .customFooter {
-    background-color: rgb(30, 30, 30,0.3)
+    background-color: rgb(30, 30, 30,0.3);
+    position:absolute;
+    width:100%;
+    bottom:0;
 }
 .welcomeText {
     font-family: "Abril Fatface", serif;
@@ -127,6 +131,41 @@ body {
 }
 .LoginView {
     background:url('/Assets//Images//Untitled design.png'); 
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    white-space: normal;
+}
+.LoginDiv {
+    
+    margin-top:2px;
+    background: linear-gradient(to bottom, grey, #333); 
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.8);
+}
+.main-content {
+    flex: 1; /* Pushes the footer to the bottom when content is short */
+}
+.back-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.back-button:hover {
+    background-color: #333;
+}
+.AdminView {
+    background: url('/Assets//Images//Untitled design.png');
     background-size: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;

@@ -1,10 +1,13 @@
 ﻿using DNBarbershop.Core.IService;
 using DNBarbershop.Core.IServices;
 using DNBarbershop.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DNBarbershop.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class SpecialityController : Controller
     {
         ISpecialityService specialityService;
@@ -24,27 +27,42 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(Speciality speciality)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 await specialityService.Add(speciality);
                 return RedirectToAction("Index");
-            }
-            return View(speciality);
+            //}
+            //return View(speciality);
         }
         public async Task<IActionResult> Edit(Guid id)
         {
             var speciality = await specialityService.Get(b => b.Id == id);
+            if (speciality == null)
+            {
+                return NotFound();
+            }
             return View(speciality);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(Speciality speciality)
+        public async Task<IActionResult> Edit(Guid id,Speciality speciality)
         {
+            if (id!=speciality.Id)
+            {
+                return BadRequest();
+            }
             if (ModelState.IsValid)
             {
-                await specialityService.Update(speciality);
+                var existingSpeciality = await specialityService.Get(s => s.Id == id);
+                if (existingSpeciality == null)
+                {
+                    return NotFound();
+                }
+                existingSpeciality.Type = speciality.Type;
+                
+                await specialityService.Update(existingSpeciality);
                 return RedirectToAction("Index");
             }
-            return View(speciality);
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)

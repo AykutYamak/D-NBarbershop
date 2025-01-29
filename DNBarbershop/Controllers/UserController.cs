@@ -1,10 +1,12 @@
 ﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DNBarbershop.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         IUserService _userService;
