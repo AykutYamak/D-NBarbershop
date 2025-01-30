@@ -99,7 +99,7 @@ body {
 
 .customFooter {
     background-color: rgb(30, 30, 30,0.3);
-    position:absolute;
+    position:relative;
     width:100%;
     bottom:0;
 }
@@ -116,7 +116,7 @@ body {
     opacity: 0.45;   
 }
 .card {
-    margin: 100px 30px 0;
+    margin: 10px 30px 0;
     display: inline-block;
     width: 400px;
     height: auto;
@@ -170,4 +170,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     white-space: normal;
+}
+.container{
+    margin-top:20px;
 }

@@ -12,6 +12,7 @@ using DNBarbershop.Areas.Identity.Pages.Account.Manage;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using DNBarbershop.Utility;
 using DNBarbershop.DataAccess.BarberRepository;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 internal class Program
 {
@@ -21,7 +22,7 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("HomeConnection");
+        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
         //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -44,12 +45,17 @@ internal class Program
         builder.Services.AddScoped<ISpecialityService, SpecialityService>();
         builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<SignInManager<User>>();
+        builder.Services.AddScoped<UserManager<User>>();
 
         builder.Services.AddScoped<IEmailSender, EmailSender>();
 
         builder.Services.AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options => { options.LoginPath = "/Account/Login"; options.AccessDeniedPath = "Account/AccessDenied"; });
+        
 
         var app = builder.Build();
 

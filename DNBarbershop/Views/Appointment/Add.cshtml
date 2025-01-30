@@ -1,0 +1,59 @@
+﻿@model DNBarbershop.Models.Entities.Appointment
+
+<div class="container mt-4">
+
+
+    <div class="card shadow-sm p-4 rounded">
+        <h3 class="text-center text-white fw-bold mb-4">Запази час</h3>
+        <form method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Услуга</label>
+                    <select asp-for="ServiceId" asp-items="@ViewBag.Services" class="form-select">
+                        <option value="">Изберете услуга</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Бръснар</label>
+                    <select asp-for="BarberId" asp-items="@ViewBag.Barbers" class="form-select">
+                        <option value="">Изберете бръснар</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Потребител</label>
+                <select asp-for="UserId" asp-items="@ViewBag.Users" class="form-select">
+                    <option value="">Изберете потребител</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="selectedDate">Избери дата:</label>
+                <input type="date" asp-for="AppointmentDate" id="selectedDate" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")">
+            </div>
+
+            <div class="form-group">
+                <label for="selectedTime">Избери час:</label>
+                <select asp-for="AppointmentTime" id="selectedTime" class="form-control" required>
+                    @if (ViewBag.TimeSlots != null)
+                    {
+                        @foreach (var time in ViewBag.TimeSlots as List<string>)
+                        {
+                            <option value="@time">@time</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">No available times</option>
+                    }
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="submit" asp-action="Add" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-sm">
+                    <i class="bi bi-check-lg"></i> Запази
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace DNBarbershop.DataAccess
 {
@@ -24,57 +25,68 @@ namespace DNBarbershop.DataAccess
             modelBuilder.Entity<Appointment>()
             .HasOne(a => a.User)
             .WithMany(u => u.Appointments)
-            .HasForeignKey(a => a.UserId);
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Barber)
             .WithMany(b => b.Appointments)
-            .HasForeignKey(a => a.BarberId);
+            .HasForeignKey(a => a.BarberId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Barber>()
             .HasOne(b => b.Speciality)
             .WithMany(s => s.Barbers)
-            .HasForeignKey(b => b.SpecialityId);
+            .HasForeignKey(b => b.SpecialityId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Category>()
             .HasMany(c => c.Products)
             .WithOne(p => p.Category)
-            .HasForeignKey(p => p.CategoryId);
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Feedback>()
             .HasOne(f => f.User)
             .WithMany(u => u.Feedbacks)
-            .HasForeignKey(f => f.UserId);
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Feedback>()
             .HasOne(f => f.Barber)
             .WithMany(b => b.Feedbacks)
-            .HasForeignKey(f => f.BarberId);
+            .HasForeignKey(f => f.BarberId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Feedback>()
            .HasOne(f => f.Service)
            .WithMany(s => s.Feedbacks)
-           .HasForeignKey(f => f.ServiceId);
+           .HasForeignKey(f => f.ServiceId)
+           .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Order>()
             .HasOne(o => o.User)
             .WithMany(u => u.Orders)
-            .HasForeignKey(o => o.UserId);
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<OrderDetail>()
             .HasOne(od => od.Product)
             .WithMany(p => p.orderDetails)
-            .HasForeignKey(od => od.ProductId);
+            .HasForeignKey(od => od.ProductId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<OrderDetail>()
             .HasOne(od => od.Order)
             .WithMany(o => o.orderDetails)
-            .HasForeignKey(od => od.OrderId);
+            .HasForeignKey(od => od.OrderId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<WorkSchedule>()
             .HasOne(ws => ws.Barber)
             .WithMany(b => b.WorkSchedules)
-            .HasForeignKey(ws => ws.BarberId);
+            .HasForeignKey(ws => ws.BarberId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AppointmentServices>()
             .HasKey(a => new { a.AppointmentId, a.ServiceId });
@@ -82,12 +94,20 @@ namespace DNBarbershop.DataAccess
             modelBuilder.Entity<AppointmentServices>()
             .HasOne(a => a.Appointment)
             .WithMany(a => a.AppointmentServices)
-            .HasForeignKey(a => a.AppointmentId);
+            .HasForeignKey(a => a.AppointmentId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AppointmentServices>()
             .HasOne(a => a.Service)
             .WithMany(s => s.AppointmentServices)
-            .HasForeignKey(a => a.ServiceId);
+            .HasForeignKey(a => a.ServiceId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Speciality>()
+                .HasMany(s => s.Barbers)
+                .WithOne(b => b.Speciality)
+                .HasForeignKey(b => b.SpecialityId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

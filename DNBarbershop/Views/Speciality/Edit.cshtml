@@ -1,0 +1,27 @@
+﻿@model DNBarbershop.Models.Entities.Speciality
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6 d-flex justify-content-center">
+            <div class="card shadow-lg rounded-4 p-4 bg-dark text-white w-100">
+                <h3 class="text-center fw-bold mb-3">Редактирай ниво на специалност</h3>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="Type">Ниво на специалност</label>
+                        <input type="text" class="form-control border-0 shadow-sm" asp-for="Type" placeholder="Въведете ниво">
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" asp-action="Edit" asp-controller="Speciality" class="btn btn-success px-4 py-2 shadow-sm">
+                            <i class="bi bi-check-lg"></i> Запази
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-light px-4 py-2 ms-2">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,12 +5,18 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.Core.IServices;
+using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 
 namespace DNBarbershop.Core.Services
 {
     public class ProductService : IProductService
     {
+        private readonly IRepository<Product> _prodRepository;
+        public ProductService(IRepository<Product> prodRepository)
+        {
+            _prodRepository = prodRepository;
+        }
         public Task Add(Product entity)
         {
             throw new NotImplementedException();
@@ -33,7 +39,9 @@ namespace DNBarbershop.Core.Services
 
         public Task<IEnumerable<Product>> GetAll()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
+            return _prodRepository.GetAll();
         }
 
         public Task<IEnumerable<Product>> GetProductsFromCategory(string category)

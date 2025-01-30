@@ -1,6 +1,7 @@
 ﻿using DNBarbershop.Core.IService;
 using DNBarbershop.Core.IServices;
 using DNBarbershop.DataAccess.BarberRepository;
+using DNBarbershop.Models;
 using DNBarbershop.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

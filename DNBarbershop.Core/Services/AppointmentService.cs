@@ -66,14 +66,7 @@ namespace DNBarbershop.Core.Services
         }
         public async Task<IEnumerable<Appointment>> GetAll()
         {
-            if (await _appointmentRepository.GetCount()<=0)
-            {
-                throw new ArgumentException("Nothing to get from here");
-            }
-            else
-            {
                 return await _appointmentRepository.GetAll();
-            }
         }
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date)

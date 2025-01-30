@@ -22,15 +22,15 @@ namespace DNBarbershop.Models.Entities
         public Guid BarberId { get; set; }
         public Barber Barber { get; set; }
 
-        //[Required(ErrorMessage = RequiredErrorMessage)]
-        //[ForeignKey(nameof(Service))]
-        //public Guid ServiceId { get; set; }
-        //public Service Service { get; set; }
+        [Required(ErrorMessage = RequiredErrorMessage)]
+        [ForeignKey(nameof(Service))]
+        public Guid ServiceId { get; set; }
+        public Service Service { get; set; }
 
         [Required(ErrorMessage = RequiredErrorMessage)]
         public DateTime AppointmentDate { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
-        public DateTime AppointmentTime { get; set; }
+        public TimeSpan AppointmentTime { get; set; }
         [Required]
         public AppointmentStatus Status { get; set; }
 
