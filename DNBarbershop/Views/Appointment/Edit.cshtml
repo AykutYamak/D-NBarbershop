@@ -1,13 +1,15 @@
 ﻿@model DNBarbershop.Models.Entities.Appointment
+
 <!DOCTYPE html>
 <html>
 <head>
 </head>
 <body class="crudOperationsView">
-    <div class="container mt-4">
+    <div class="container mt-4 crudOperationsView">
         <div class="card shadow-sm p-4 rounded">
-            <h3 class="text-center text-white fw-bold mb-4">Запази час</h3>
+            <h3 class="text-center text-white fw-bold mb-4">Редактирай час</h3>
             <form method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
                 <div class="row">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Услуга</label>
@@ -35,12 +37,13 @@
                 <div class="form-group">
                     <label for="selectedTime">Изберете час:</label>
                     <select asp-for="AppointmentTime" id="selectedTime" class="form-control" required>
-
                         @if (ViewBag.TimeSlots != null)
                         {
                             @foreach (var item in ViewBag.timeSlotList)
                             {
-                                <option value="@TimeSpan.Parse(item.ToString())">@item.ToString()</option>
+                                <option value="@TimeSpan.Parse(item.ToString())" selected="@(Model.AppointmentTime == TimeSpan.Parse(item.ToString()))">
+                                    @item.ToString()
+                                </option>
                             }
                         }
                         else
@@ -50,14 +53,15 @@
                     </select>
                 </div>
                 <div class="text-center">
-                    <button type="submit" asp-action="Add" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-sm">
-                        <i class="bi bi-check-lg"></i> Запази
+                    <button type="submit" asp-action="Edit" asp-controller="Appointment" class="btn btn-primary px-4 py-2 shadow-sm">
+                        <i class="bi bi-pencil-square"></i> Обнови
                     </button>
                 </div>
             </form>
         </div>
     </div>
-
 </body>
 
 </html>
+
+

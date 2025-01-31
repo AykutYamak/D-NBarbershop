@@ -27,6 +27,11 @@ namespace DNBarbershop.Core.Services
             await _userRepository.Delete(id);
         }
 
+        public async Task DeleteStringId(Guid id)
+        {
+            await _userRepository.DeleteStringId(id);
+        }
+
         public async Task DeleteAll()
         {
             if (await _userRepository.GetCount() <= 0)

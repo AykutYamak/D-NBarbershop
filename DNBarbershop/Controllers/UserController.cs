@@ -57,7 +57,7 @@ namespace DNBarbershop.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _userService.Delete(id);
+                await _userService.DeleteStringId(id);
                 return RedirectToAction("Index");
             }
             return View();

@@ -93,7 +93,7 @@ body {
 }
 
 .customnavbarHeader {
-    background-color: rgb(30, 30, 30,0.3);
+    background-color: rgb(30, 30, 30,0.6);
     top:0;
 }
 
@@ -173,4 +173,11 @@ body {
 }
 .container{
     margin-top:20px;
+}
+.crudOperationsView {
+    background: url('/Assets//Images//pexels-nickoloui-1319460.jpg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    white-space: normal;
 }

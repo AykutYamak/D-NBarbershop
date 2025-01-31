@@ -13,10 +13,12 @@ namespace DNBarbershop.Models.Entities
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
+
         [Required(ErrorMessage = RequiredErrorMessage)]
         [ForeignKey(nameof(User))]
         public string UserId { get; set; }
         public User User { get; set; }
+
         [Required(ErrorMessage = RequiredErrorMessage)]
         [ForeignKey(nameof(Barber))]
         public Guid BarberId { get; set; }

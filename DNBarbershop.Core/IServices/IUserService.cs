@@ -10,5 +10,6 @@ namespace DNBarbershop.Core.IServices
 {
     public interface IUserService : IGlobalService<User>
     {
+        Task DeleteStringId(Guid id);
     }
 }

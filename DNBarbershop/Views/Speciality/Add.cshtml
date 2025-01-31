@@ -1,14 +1,16 @@
 ﻿@model DNBarbershop.Models.Entities.Speciality
+<!DOCTYPE html>
 <html>
 <head>
 </head>
-<body>
-    <form method="post">
+<body class="crudOperationsView">
+    <form method="post" class="bg-black rounded p-3 w-50 text-center">
         <div class="mb-3">
-            <label class="form-label" asp-for="Type"></label>
+            <label class="form-label text-white" asp-for="Type"></label>
             <input type="text" class="form-control" asp-for="Type">
         </div>
-        <button type="submit" class="btn btn-primary" asp-action="Add" asp-controller="Speciality">Submit</button>
+        <button type="submit" class="btn btn-dark border-1 border-black" asp-action="Add" asp-controller="Speciality">Submit</button>
     </form>
 </body>
 </html>
+    

@@ -3,6 +3,7 @@ using DNBarbershop.Core.IServices;
 using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.Models;
 using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,10 +23,30 @@ namespace DNBarbershop.Controllers
                 barberService= _barberService;
                 specialityService =  _specialityService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(BarberViewModel? filter)
         {
             var list = await barberService.GetAll();
-            return View(list);
+            var query = list.AsQueryable();
+            if (filter.MinExperienceYears!=null)
+            {
+                query = query.Where(b => b.ExperienceYears >= filter.MinExperienceYears);
+            }
+            if (filter.SpecialityId!=null)
+            {
+                query = query.Where(b => b.SpecialityId == filter.SpecialityId.Value);
+            }
+
+
+
+            var model = new BarberViewModel
+            {
+                SpecialityId = filter.SpecialityId,
+                MinExperienceYears = filter.MinExperienceYears,
+                Specialities = new SelectList(await specialityService.GetAll(), "Id", "Type"),
+                Barbers = query.Include(b => b.Speciality).ToList()
+            };
+
+            return View(model);
         }
         public async Task<IActionResult> Add()
         {

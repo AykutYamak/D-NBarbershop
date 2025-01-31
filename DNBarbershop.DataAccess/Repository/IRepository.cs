@@ -18,5 +18,6 @@ namespace DNBarbershop.DataAccess.Repository
         Task DeleteAll();
         Task<IEnumerable<T>> Find(Expression<Func<T, bool>> filter);
         Task<int> GetCount();
+        Task DeleteStringId(Guid id);
     }
 }

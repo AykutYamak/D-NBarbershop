@@ -1,48 +1,54 @@
 ﻿@model DNBarbershop.Models.Entities.Barber
+<!DOCTYPE html>
+<html>
+<head>
 
-<div class="container mt-4">
-    
+</head>
 
-    <div class="card shadow-sm p-4 rounded">
-        <h3 class="text-center text-white fw-bold mb-4">Добави бръснар</h3>
-        <form method="post" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" asp-for="FirstName">Име</label>
-                        <input type="text" class="form-control" asp-for="FirstName" placeholder="Въведете име">
+<body class="crudOperationsView">
+    <div class="container mt-4">
+        <div class="card shadow-sm p-4 rounded">
+            <h3 class="text-center text-white fw-bold mb-4">Добави бръснар</h3>
+            <form method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" asp-for="FirstName">Име</label>
+                            <input type="text" class="form-control" asp-for="FirstName" placeholder="Въведете име">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" asp-for="LastName">Фамилия</label>
+                            <input type="text" class="form-control" asp-for="LastName" placeholder="Въведете фамилия">
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" asp-for="LastName">Фамилия</label>
-                        <input type="text" class="form-control" asp-for="LastName" placeholder="Въведете фамилия">
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Специалност</label>
+                    <select asp-for="SpecialityId" asp-items="@ViewBag.Specialities" class="form-select">
+                        <option value="">Изберете специалност</option>
+                    </select>
                 </div>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" asp-for="ExperienceYears">Години опит</label>
+                    <input type="number" class="form-control" asp-for="ExperienceYears" placeholder="Въведете години опит" min="0">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Специалност</label>
-                <select asp-for="SpecialityId" asp-items="@ViewBag.Specialities" class="form-select">
-                    <option value="">Изберете специалност</option>
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" asp-for="ProfilePictureUrl">Профилна снимка</label>
+                    <input type="text" class="form-control" asp-for="ProfilePictureUrl" placeholder="URL на снимката">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-semibold" asp-for="ExperienceYears">Години опит</label>
-                <input type="number" class="form-control" asp-for="ExperienceYears" placeholder="Въведете години опит" min="0">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold" asp-for="ProfilePictureUrl">Профилна снимка</label>
-                <input type="text" class="form-control" asp-for="ProfilePictureUrl" placeholder="URL на снимката">
-            </div>
-
-            <div class="text-center">
-                <button type="submit" asp-action="Add" asp-controller="Barber" class="btn btn-success px-4 py-2 shadow-sm">
-                    <i class="bi bi-check-lg"></i> Запази
-                </button>
-            </div>
-        </form>
+                <div class="text-center">
+                    <button type="submit" asp-action="Add" asp-controller="Barber" class="btn btn-success px-4 py-2 shadow-sm">
+                        <i class="bi bi-check-lg"></i> Запази
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</body>
+
+</html>
+
