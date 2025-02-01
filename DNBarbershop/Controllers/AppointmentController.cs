@@ -28,12 +28,13 @@ namespace DNBarbershop.Controllers
             var list = await _appointmentService.GetAll();
             return View(list);
         }
+        
         private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
         {
             var slots = new List<string>();
             for (var time = start; time < end; time += interval)
             {
-                slots.Add(time.ToString(@"hh\:mm")); // Formats as "09:00", "09:30", etc.
+                slots.Add(time.ToString(@"hh\:mm"));
             }
             return slots;
         }
@@ -41,11 +42,15 @@ namespace DNBarbershop.Controllers
         {
             var barbers = await _barberService.GetAll();
             var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
+
             var services = await _serviceService.GetAll();
+            var servicesList = services.Select(s => new { s.Id, s.ServiceName }).ToList();
+
             var users = await _userService.GetAll();
             var usersList = users.Select(u => new { u.Id, FullName = u.FirstName + " " + u.LastName }).ToList();
+
             ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-            ViewBag.Services = new SelectList(services, "Id", "ServiceName");
+            ViewBag.Services = new SelectList(servicesList, "Id", "ServiceName");
             ViewBag.Users = new SelectList(usersList, "Id", "FullName");
             var timeSlots = GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
             ViewBag.TimeSlots = new SelectList(await timeSlots ?? new List<string>());
@@ -66,18 +71,19 @@ namespace DNBarbershop.Controllers
                 ViewBag.timeSlotList = await timeSlots;
                 return View();
             }
-
+            var existingBarber = await _barberService.Get(b=>b.Id == appointment.BarberId);
+            var existingUser = await _userService.Get(u => u.Id == appointment.UserId);
             var newAppointment = new Appointment
             {
                 UserId = appointment.UserId,
+                User = existingUser,
                 BarberId = appointment.BarberId,
-                ServiceId = appointment.ServiceId,
+                Barber = existingBarber,
+                AppointmentServices = appointment.AppointmentServices,
                 Status = AppointmentStatus.Scheduled,
                 AppointmentDate = AppointmentDate,
                 AppointmentTime = AppointmentTime
             };
-
-
 
             await _appointmentService.Add(newAppointment);
             return RedirectToAction("Index");
@@ -92,11 +98,12 @@ namespace DNBarbershop.Controllers
             var barbers = await _barberService.GetAll();
             var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
             var services = await _serviceService.GetAll();
+            var servicesList = services.Select(s => new { s.Id, s.ServiceName}).ToList();
             var users = await _userService.GetAll();
             var usersList = users.Select(u => new { u.Id, FullName = u.FirstName + " " + u.LastName }).ToList();
 
             ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName", appointment.BarberId);
-            ViewBag.Services = new SelectList(services, "Id", "ServiceName", appointment.ServiceId);
+            ViewBag.Services = new SelectList(servicesList, "Id", "ServiceName");
             ViewBag.Users = new SelectList(usersList, "Id", "FullName", appointment.UserId);
 
             var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
@@ -114,23 +121,21 @@ namespace DNBarbershop.Controllers
             {
                 return NotFound();
             }
-
-            
             var Appointment = await _appointmentService.Get(a => a.AppointmentDate == AppointmentDate && a.AppointmentTime == AppointmentTime && a.Id != appointment.Id); 
 
             if (Appointment != null)
             {
                 ViewBag.Error = "This time slot is already booked. Please choose another time.";
 
-                // Reload dropdowns in case of an error
                 var barbers = await _barberService.GetAll();
                 var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
                 var services = await _serviceService.GetAll();
+                var servicesList = services.Select(s => new { s.Id, s.ServiceName}).ToList();
                 var users = await _userService.GetAll();
                 var usersList = users.Select(u => new { u.Id, FullName = u.FirstName + " " + u.LastName }).ToList();
 
                 ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName", appointment.BarberId);
-                ViewBag.Services = new SelectList(services, "Id", "ServiceName", appointment.ServiceId);
+                ViewBag.Services = new MultiSelectList(servicesList, "Id", "Name", appointment.AppointmentServices?.Select(a => a.ServiceId));
                 ViewBag.Users = new SelectList(usersList, "Id", "FullName", appointment.UserId);
 
                 var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
@@ -142,7 +147,7 @@ namespace DNBarbershop.Controllers
 
             existingAppointment.UserId = appointment.UserId;
             existingAppointment.BarberId = appointment.BarberId;
-            existingAppointment.ServiceId = appointment.ServiceId;
+            existingAppointment.AppointmentServices = appointment.AppointmentServices;
             existingAppointment.AppointmentDate = AppointmentDate;
             existingAppointment.AppointmentTime = AppointmentTime;
             existingAppointment.Status = appointment.Status;

@@ -1,11 +1,10 @@
 ﻿@using DNBarbershop.Models.Entities
 @using Microsoft.AspNetCore.Identity
 @using DNBarbershop.DataAccess
-@inject ApplicationDbContext _context
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User) && _context.Users.Count()!=0)
+@if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
             <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>

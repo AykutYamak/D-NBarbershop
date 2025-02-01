@@ -21,11 +21,12 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Име на потребител</th>
-                        <th scope="col">Бръснар</th>
+                        <th scope="col">Id на потребител</th>
+                        <th scope="col">Id на бръснар</th>
                         <th scope="col">Услуга</th>
                         <th scope="col">Дата</th>
                         <th scope="col">Час</th>
+                        <th scope="col">Статус</th>
                         <th scope="col">Действия</th>
                     </tr>
                 </thead>
@@ -35,10 +36,11 @@
                         <tr>
                             <td>@appointment.Id</td>
                             <td>@appointment.User.FirstName @appointment.User.LastName</td>
-                            <td>@appointment.Barber.FirstName @appointment.Barber.LastName</td>
-                            <td>@appointment.Service.ServiceName</td>
-                            <td>@appointment.AppointmentDate</td>
-                            <td>@appointment.AppointmentTime</td>
+                            <td>@appointment.BarberId</td>
+                            <td>@appointment.AppointmentServices.Where(a=>a.AppointmentId == appointment.Id).Select(s=>s.Service.ServiceName.ToString())</td>
+                            <td>@appointment.AppointmentDate.ToString("dd.MM.yyyy")</td>
+                            <td>@appointment.AppointmentTime.ToString(@"hh\:mm")</td>
+                            <td>@appointment.Status.ToString()</td>
                             <td>
                                 <div class="d-flex gap-2">
                                     <a class="btn btn-dark px-3 py-2 border-1 border-black" asp-controller="Appointment" asp-action="Edit" asp-route-id="@appointment.Id">
