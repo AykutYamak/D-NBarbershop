@@ -58,15 +58,15 @@ namespace DNBarbershop.Core.Services
                 return await _workScheduleRepository.Get(filter);
        
         }
-        public async Task<IEnumerable<WorkSchedule>> GetAll()
+        public IQueryable<WorkSchedule> GetAll()
         {
-            if (await _workScheduleRepository.GetCount() <= 0)
+            if (_workScheduleRepository.GetCount().Result <= 0)
             {
                 throw new ArgumentException("Nothing to get from here.");
             }
             else
             {
-                return await _workScheduleRepository.GetAll();
+                return _workScheduleRepository.GetAll();
             }
         }
         public async Task RemoveRange(IEnumerable<WorkSchedule> entities)

@@ -59,7 +59,7 @@ namespace DNBarbershop.Core.Services
                 return await _serviceRepository.Get(filter);
          
         }
-        public async Task<IEnumerable<Service>> GetAll()
+        public IQueryable<Service> GetAll()
         {
             //if (await _serviceRepository.GetCount()<=0)
             //{
@@ -67,7 +67,7 @@ namespace DNBarbershop.Core.Services
             //}
             //else
             //{
-                return await _serviceRepository.GetAll();
+                return _serviceRepository.GetAll();
             //}
         }
         public async Task<IEnumerable<Service>> GetServiceUnderPrice(decimal price)

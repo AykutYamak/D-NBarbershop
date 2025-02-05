@@ -16,9 +16,10 @@ namespace DNBarbershop.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var list = await _userService.GetAll();
+            var list = _userService.GetAll();
             return View(list);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var user = await _userService.Get(s => s.Id.Equals(id));
@@ -28,6 +29,7 @@ namespace DNBarbershop.Controllers
             }
             return View(user);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(Guid id, User user)
         {
@@ -52,6 +54,7 @@ namespace DNBarbershop.Controllers
 
             return View(user);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {

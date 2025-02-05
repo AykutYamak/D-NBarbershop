@@ -58,15 +58,15 @@ namespace DNBarbershop.Core.Services
                 return await _feedbackRepository.Get(filter);
           
         }
-        public async Task<IEnumerable<Feedback>> GetAll()
+        public IQueryable<Feedback> GetAll()
         {
-            if (await _feedbackRepository.GetCount() <= 0)
+            if (_feedbackRepository.GetCount().Result <= 0)
             {
                 throw new ArgumentException("Nothing to get from here");
             }
             else
             {
-                return await _feedbackRepository.GetAll();
+                return _feedbackRepository.GetAll();
             }
 
         }

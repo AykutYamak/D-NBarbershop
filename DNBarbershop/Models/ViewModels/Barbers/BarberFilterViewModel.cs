@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using static DNBarbershop.Common.ErrorMessages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace DNBarbershop.Models.ViewModels
+namespace DNBarbershop.Models.ViewModels.Barbers
 {
-    public class BarberViewModel
+    public class BarberFilterViewModel
     {
         public Guid? SpecialityId { get; set; }
         public int? MinExperienceYears { get; set; }

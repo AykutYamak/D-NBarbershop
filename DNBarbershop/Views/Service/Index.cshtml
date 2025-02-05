@@ -1,6 +1,4 @@
-﻿@using DNBarbershop.Models.Entities
-@model IEnumerable<Service>
-
+﻿@model DNBarbershop.Models.ViewModels.Services.ServiceViewModel;
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var service in Model)
+                    @foreach (var service in Model.Services)
                     {
                         <tr>
                             <td>@service.Id</td>

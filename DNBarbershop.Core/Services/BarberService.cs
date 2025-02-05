@@ -59,9 +59,9 @@ namespace DNBarbershop.Core.Services
                 return await _barberRepository.Get(filter);
             
         }
-        public async Task<IEnumerable<Barber>> GetAll()
+        public IQueryable<Barber> GetAll()
         {
-            return await _barberRepository.GetAll();
+            return _barberRepository.GetAll();
         }
         public async Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality)
         {

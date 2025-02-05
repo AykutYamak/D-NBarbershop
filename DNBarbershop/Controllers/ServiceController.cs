@@ -1,6 +1,7 @@
 ﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.ViewModels.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,27 +17,44 @@ namespace DNBarbershop.Controllers
         {
             _serviceService = serviceService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ServiceViewModel? model)
         {
-            var list = await _serviceService.GetAll();
-            return View(list);
+            var list = _serviceService.GetAll();
+            var service = new ServiceViewModel
+            {
+                Id = model.Id,
+                ServiceName = model.ServiceName,
+                Services = list.ToList(),
+                Description = model.Description,
+                Price = model.Price,
+                Duration = model.Duration,
+                Feedbacks = model.Feedbacks,
+                AppointmentServices = model.AppointmentServices
+            };
+            return View(service);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add()
         {
-            //var services = await _serviceService.GetAll();
-            return View();
+            var model = new ServiceCreateViewModel();
+            return View(model);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Add(Service service,int DurationHours,int DurationMinutes)
+        public async Task<IActionResult> Add(ServiceCreateViewModel model,int DurationHours,int DurationMinutes)
         {
-            //if (ModelState.IsValid)
-            //{
-                service.Duration = new TimeSpan(DurationHours, DurationMinutes, 0);
-                await _serviceService.Add(service);
-                return RedirectToAction("Index");
-            //}
-            //return View(service);
+            model.Duration = new TimeSpan(DurationHours, DurationMinutes, 0);
+            var service = new Service
+            {
+                ServiceName = model.ServiceName,
+                Description = model.Description,
+                Price = model.Price,
+                Duration = model.Duration
+            };
+            await _serviceService.Add(service);
+            return RedirectToAction("Index");
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var service = await _serviceService.Get(s=>s.Id == id);
@@ -44,35 +62,34 @@ namespace DNBarbershop.Controllers
             {
                 return NotFound();
             }
-            return View(service);
+            var services = _serviceService.GetAll();
+            var model = new ServiceEditViewModel
+            {
+                Id = service.Id,
+                ServiceName = service.ServiceName,
+                Description = service.Description,
+                Price = service.Price,
+                Duration = service.Duration
+            };
+            return View(model);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(Guid id,Service service,int DurationHours,int DurationMinutes)
+        public async Task<IActionResult> Edit(ServiceEditViewModel service,int DurationHours,int DurationMinutes)
         {
-            if (id != service.Id)
+            service.Duration = new TimeSpan(DurationHours, DurationMinutes, 0);
+            var model = new Service
             {
-                return BadRequest();
-            }
-
-            if (ModelState.IsValid)
-            {
-                    var existingService = await _serviceService.Get(s=>s.Id==id);
-                    if (existingService == null)
-                    {
-                        return NotFound();
-                    }
-
-                    existingService.ServiceName = service.ServiceName;
-                    existingService.Description = service.Description;
-                    existingService.Price = service.Price;
-                    existingService.Duration = new TimeSpan(DurationHours, DurationMinutes, 0);
-
-                    await _serviceService.Update(existingService);
-                    return RedirectToAction("Index");
-            }
-
-            return View(service);
+                Id = service.Id,
+                ServiceName = service.ServiceName,
+                Description = service.Description,
+                Price = service.Price,
+                Duration = service.Duration
+            };
+            await _serviceService.Update(model);
+            return RedirectToAction("Index");
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {

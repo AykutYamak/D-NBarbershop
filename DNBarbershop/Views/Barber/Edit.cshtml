@@ -1,4 +1,4 @@
-﻿@model DNBarbershop.Models.Entities.Barber
+﻿@model DNBarbershop.Models.ViewModels.Barbers.BarberEditViewModel
 
 <!DOCTYPE html>
 <html>
@@ -29,12 +29,11 @@
                     </div>
                 </div>
                 <div class="mb-3 text-center">
-                    <label class="form-label fw-semibold">Ниво на специализация</label>
-                    <label class="form-label fw-semibold">
-                        <select asp-for="SpecialityId" asp-items="@ViewBag.Specialities" class="form-select">
-                            <option value="">Изберете специалност</option>
+                    <label for ="SelectedSpecialityId" class="form-label fw-semibold">Ниво на специализация</lable>
+                        <select asp-for="SelectedSpecialityId" asp-items="Model.Specialities" class="form-control">
+                            <option value="">Избери ниво на специализация</option>
                         </select>
-                    </label>
+                        
                 </div>
                 <div class="mb-3 text-center">
                     <label class="form-label fw-semibold">Години опит</label>

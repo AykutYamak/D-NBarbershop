@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using DNBarbershop.Utility;
 using DNBarbershop.DataAccess.BarberRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using AspNetCoreHero.ToastNotification;
 
 internal class Program
 {
@@ -28,7 +29,13 @@ internal class Program
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-
+        builder.Services.AddNotyf(config =>
+        {
+            config.DurationInSeconds = 5;
+            config.IsDismissable = true;
+            config.Position = NotyfPosition.TopCenter;
+        }
+);
 
         builder.Services.AddRazorPages();
 
@@ -37,17 +44,13 @@ internal class Program
         builder.Services.AddScoped(typeof(IGlobalService<>), typeof(GlobalService<>));
         builder.Services.AddScoped(typeof(IRepository<Speciality>), typeof(Repository<Speciality>));
         builder.Services.AddScoped(typeof(IBarberRepository<Barber>), typeof(BarberRepository<Barber>));
-        builder.Services.AddScoped<IAppointmentService, DNBarbershop.Core.Services.AppointmentServices>();
+        builder.Services.AddScoped<IAppointmentService, AppointmentService>();
         builder.Services.AddScoped<IBarberService, BarberService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
-        builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IServiceService, ServiceService>();
         builder.Services.AddScoped<ISpecialityService, SpecialityService>();
         builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
         builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<SignInManager<User>>();
-        builder.Services.AddScoped<UserManager<User>>();
-
         builder.Services.AddScoped<IEmailSender, EmailSender>();
 
         builder.Services.AddIdentity<User, IdentityRole>()

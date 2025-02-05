@@ -1,37 +1,34 @@
 ﻿using DNBarbershop.Models.EnumClasses;
-using System;
-using System.Collections.Generic;
+using DNBarbershop.Models.ViewModels.Services;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static DNBarbershop.Common.ErrorMessages;
-namespace DNBarbershop.Models.Entities
+namespace DNBarbershop.Models.ViewModels.Appointments
 {
-    public class Appointment
+    public class AppointmentCreateViewModel
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [Required(ErrorMessage = RequiredErrorMessage)]
+        public Guid Id { get; set; }
 
         [Required(ErrorMessage = RequiredErrorMessage)]
-        [ForeignKey(nameof(User))]
         public string UserId { get; set; }
-        public User User { get; set; }
+        public string UserFirstName { get; set; }
+        public string UserLastName { get; set; }
 
         [Required(ErrorMessage = RequiredErrorMessage)]
-        [ForeignKey(nameof(Barber))]
         public Guid BarberId { get; set; }
-        public Barber Barber { get; set; }
+        public string BarberFirstName { get; set; }
+        public string BarberLastName { get; set; }
 
         [Required(ErrorMessage = RequiredErrorMessage)]
         public DateTime AppointmentDate { get; set; }
+
         [Required(ErrorMessage = RequiredErrorMessage)]
         public TimeSpan AppointmentTime { get; set; }
         [Required]
         public AppointmentStatus Status { get; set; }
 
-        public ICollection<AppointmentServices> AppointmentServices { get; set; } = new HashSet<AppointmentServices>();
+        public List<ServiceViewModel> Services { get; set; } = new List<ServiceViewModel>();
+        public List<Guid> SelectedServiceIds { get; set; } = new List<Guid>();
 
     }
 }

@@ -10,7 +10,7 @@ namespace DNBarbershop.Core.GlobalServiceFolder
 {
     public interface IGlobalService<T> where T : class
     {
-        Task<IEnumerable<T>> GetAll();
+        IQueryable<T> GetAll();
         Task<T> Get(Expression<Func<T, bool>> filter);
         Task Add(T entity);
         Task Delete(Guid id);

@@ -49,9 +49,9 @@ namespace DNBarbershop.Core.Services
             return await _userRepository.Get(filter);
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public IQueryable<User> GetAll()
         {
-                return await _userRepository.GetAll();
+                return _userRepository.GetAll();
         }
 
         public async Task RemoveRange(IEnumerable<User> entities)

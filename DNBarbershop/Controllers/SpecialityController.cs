@@ -1,8 +1,11 @@
 ﻿using DNBarbershop.Core.IService;
 using DNBarbershop.Core.IServices;
+using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.ViewModels.Specialities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.Controllers
 {
@@ -10,69 +13,84 @@ namespace DNBarbershop.Controllers
 
     public class SpecialityController : Controller
     {
-        ISpecialityService specialityService;
-        public SpecialityController(ISpecialityService _specialityService)
+        ISpecialityService _specialityService;
+        IBarberService _barberService;
+        public SpecialityController(IBarberService barberService,ISpecialityService specialityService)
         {
-            specialityService = _specialityService;
+            _specialityService = specialityService;
+            _barberService = barberService;
         }
-        public async Task<IActionResult> Index()
+
+        //Admin View Actions
+        public async Task<IActionResult> Index(SpecialityViewModel? model)
         {
-            var list = await specialityService.GetAll();
-            return View(list);
+            var query =  _specialityService.GetAll();
+            var speciality = new SpecialityViewModel
+            {
+                Id = model.Id,
+                Type = model.Type,
+                Specialities = query.ToList(),
+                Barbers = model.Barbers
+            };
+            return View(speciality);
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Add()
         {
-            return View();
+            var model = new SpecialityCreateViewModel();
+            return View(model);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Add(Speciality speciality)
+        public async Task<IActionResult> Add(SpecialityCreateViewModel specialityModel)
         {
-            //if (ModelState.IsValid)
-            //{
-                await specialityService.Add(speciality);
-                return RedirectToAction("Index");
-            //}
-            //return View(speciality);
+            var speciality = new Speciality
+            {
+                Type = specialityModel.Type
+            };
+            await _specialityService.Add(speciality);
+            return RedirectToAction("Index");
+            
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var speciality = await specialityService.Get(b => b.Id == id);
+            Speciality speciality = await _specialityService.Get(s => s.Id == id);
             if (speciality == null)
             {
                 return NotFound();
             }
-            return View(speciality);
+            var model = new SpecialityEditViewModel
+            {
+                Id = speciality.Id,
+                Type = speciality.Type
+            };
+            return View(model);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(Guid id,Speciality speciality)
+        public async Task<IActionResult> Edit(SpecialityEditViewModel specialityModel)
         {
-            if (id!=speciality.Id)
+            var model = new Speciality
             {
-                return BadRequest();
-            }
-            if (ModelState.IsValid)
-            {
-                var existingSpeciality = await specialityService.Get(s => s.Id == id);
-                if (existingSpeciality == null)
-                {
-                    return NotFound();
-                }
-                existingSpeciality.Type = speciality.Type;
-                
-                await specialityService.Update(existingSpeciality);
-                return RedirectToAction("Index");
-            }
-            return View();
+                Id = specialityModel.Id,
+                Type = specialityModel.Type
+            };
+            await _specialityService.Update(model);
+            return RedirectToAction("Index");
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
             if (ModelState.IsValid)
             {
-                await specialityService.Delete(id);
+                await _specialityService.Delete(id);
                 return RedirectToAction("Index");
             }
             return View();
         }
+        //User View Actions
+
     }
 }

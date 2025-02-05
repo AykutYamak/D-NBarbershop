@@ -10,6 +10,7 @@ namespace DNBarbershop.DataAccess
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Appointment> appointments { get; set; }    
+        public DbSet<AppointmentServices> appointmentServices { get; set; }
         public DbSet<Barber> barbers { get; set; }
         public DbSet<Category> categories { get; set; }
         public DbSet<Feedback> feedbacks { get; set; }
@@ -32,13 +33,13 @@ namespace DNBarbershop.DataAccess
             .HasOne(a => a.Barber)
             .WithMany(b => b.Appointments)
             .HasForeignKey(a => a.BarberId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Barber>()
             .HasOne(b => b.Speciality)
             .WithMany(s => s.Barbers)
             .HasForeignKey(b => b.SpecialityId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Category>()
             .HasMany(c => c.Products)

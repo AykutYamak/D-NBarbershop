@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DNBarbershop.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,12 +40,10 @@ namespace DNBarbershop.DataAccess.Repository
         {
             return await dbSet.FirstOrDefaultAsync(filter);
         }
-
-        public async Task<IEnumerable<T>> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return await dbSet.ToListAsync();           
+            return dbSet.AsQueryable();           
         }
-
         public async Task Delete(Guid id)
         {
             var entity = dbSet.Find(id);

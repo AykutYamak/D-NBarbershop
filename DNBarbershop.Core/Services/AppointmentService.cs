@@ -14,10 +14,10 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DNBarbershop.Core.Services
 {
-    public class AppointmentServices : IAppointmentService
+    public class AppointmentService : IAppointmentService
     {
         private readonly IRepository<Appointment> _appointmentRepository;
-        public AppointmentServices(IRepository<Appointment> appointmentRepository)
+        public AppointmentService(IRepository<Appointment> appointmentRepository)
         {
             _appointmentRepository = appointmentRepository;
         }
@@ -64,11 +64,11 @@ namespace DNBarbershop.Core.Services
         {
             return await _appointmentRepository.Get(filter);
         }
-        public async Task<IEnumerable<Appointment>> GetAll()
+        public IQueryable<Appointment> GetAll()
         {
-                return await _appointmentRepository.GetAll();
+                return _appointmentRepository.GetAll();
         }
-
+        
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date)
         {
             Expression<Func<Appointment, bool>> filter = appointment => appointment.AppointmentDate == date.Date;

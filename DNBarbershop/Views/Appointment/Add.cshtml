@@ -1,4 +1,5 @@
 ﻿@model DNBarbershop.Models.Entities.Appointment
+@using static DNBarbershop.Models.Entities.Service;
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,36 +17,35 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Бръснар</label>
+                        <label asp-for="Barber" class="form-label fw-semibold">Бръснар</label>
                         <select asp-for="BarberId" asp-items="@ViewBag.Barbers" class="form-select">
                             <option value="">Изберете бръснар</option>
                         </select>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Потребител</label>
+                    <label asp-for="User" class="form-label fw-semibold">Потребител</label>
                     <select asp-for="UserId" asp-items="@ViewBag.Users" class="form-select">
                         <option value="">Изберете потребител</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="selectedDate">Изберете дата:</label>
-                    <input type="date" asp-for="AppointmentDate" id="selectedDate" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    <label asp-for="AppointmentDate">Изберете дата:</label>
+                    <input type="date" asp-for="AppointmentDate" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")">
                 </div>
                 <div class="form-group">
-                    <label for="selectedTime">Изберете час:</label>
-                    <select asp-for="AppointmentTime" id="selectedTime" class="form-control" required>
-
-                        @if (ViewBag.TimeSlots != null)
+                    <label asp-for="AppointmentTime">Изберете час:</label>
+                    <select asp-for="AppointmentTime" class="form-select">
+                        @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
                         {
-                            @foreach (var item in ViewBag.timeSlotList)
+                            @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
                             {
-                                <option value="@TimeSpan.Parse(item.ToString())">@item.ToString()</option>
+                                <option value="@item.Value">@item.Text</option>
                             }
                         }
                         else
                         {
-                            <option value="">No available times</option>
+                            <option value="">Няма свободни часове</option>
                         }
                     </select>
                 </div>

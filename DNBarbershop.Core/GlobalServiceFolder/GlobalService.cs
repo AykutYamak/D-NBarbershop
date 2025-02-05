@@ -32,9 +32,9 @@ namespace DNBarbershop.Core.GlobalServiceFolder
             return await _repository.Get(filter);
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return await _repository.GetAll();
+            return _repository.GetAll();
         }
 
         public async Task RemoveRange(IEnumerable<T> entities)

@@ -34,14 +34,7 @@ namespace DNBarbershop.Core.Services
         }*/
         public async Task Add(Speciality speciality)
         {
-            //if (ValidateSpeciality(speciality))
-            //{
                 await _specialityRepository.Add(speciality);
-            //}
-            //else
-            //{
-            //    throw new ArgumentException("Validation didn't pass.");
-            //}
         }
         public async Task Delete(Guid id)
         {
@@ -64,16 +57,9 @@ namespace DNBarbershop.Core.Services
                 return await _specialityRepository.Get(filter);
       
         }
-        public async Task<IEnumerable<Speciality>> GetAll()
+        public IQueryable<Speciality> GetAll()
         {
-            //if (await _specialityRepository.GetCount() <= 0)
-            //{
-            //    throw new ArgumentException("Nothing to get from here.");
-            //}
-            //else
-            //{
-                return await _specialityRepository.GetAll();
-            //}
+                return _specialityRepository.GetAll();
         }
         public async Task RemoveRange(IEnumerable<Speciality> entities)
         {
