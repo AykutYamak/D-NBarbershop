@@ -10,7 +10,6 @@ namespace DNBarbershop.Models.ViewModels.Appointments
         public DateTime AppointmentDates { get; set; }
         public SelectList Barbers { get; set; }
         public SelectList Users { get; set; }
-
         public List<Appointment> Appointments { get; set; }
     }
 }

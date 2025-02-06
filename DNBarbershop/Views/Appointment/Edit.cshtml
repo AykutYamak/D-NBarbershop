@@ -1,67 +1,62 @@
-﻿@model DNBarbershop.Models.Entities.Appointment
+﻿@model DNBarbershop.Models.ViewModels.Appointments.AppointmentEditViewModel
 
 <!DOCTYPE html>
 <html>
 <head>
 </head>
 <body class="crudOperationsView">
-    <div class="container mt-4 crudOperationsView">
+    <div class="container mt-4">
         <div class="card shadow-sm p-4 rounded">
-            <h3 class="text-center text-white fw-bold mb-4">Редактирай час</h3>
+            <h3 class="text-center text-white fw-bold mb-4">Запази час</h3>
             <form method="post" enctype="multipart/form-data">
-                <input type="hidden" asp-for="Id" />
-                <div class="row">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Услуга</label>
-                        <select asp-for="Id" asp-items="@ViewBag.Services" class="form-select">
-                            <option value="">Изберете услуга</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Бръснар</label>
-                        <select asp-for="BarberId" asp-items="@ViewBag.Barbers" class="form-select">
-                            <option value="">Изберете бръснар</option>
-                        </select>
+                <div class="mb-3">
+                    <input type="hidden" asp-for="UserId" class="form-control" required>
+                    <label class="form-label fw-semibold">Услуги</label>
+                    <div class="form-check">
+                        @foreach (var service in (List<SelectListItem>)ViewBag.Services)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@service.Value" id="@service.Value">
+                                <label class="form-check-label" for="@service.Value">
+                                    @service.Text
+                                </label>
+                            </div>
+                        } 
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Потребител</label>
-                    <select asp-for="UserId" asp-items="@ViewBag.Users" class="form-select">
-                        <option value="">Изберете потребител</option>
+                    <label asp-for="BarberId" class="form-label fw-semibold">Бръснар</label>
+                    <select asp-for="BarberId" asp-items="ViewBag.Barbers" class="form-select">
+                        <option value="">Изберете бръснар</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="selectedDate">Изберете дата:</label>
-                    <input type="date" asp-for="AppointmentDate" id="selectedDate" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    <label asp-for="AppointmentDate">Изберете дата:</label>
+                    <input type="date" asp-for="AppointmentDate" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")">
                 </div>
                 <div class="form-group">
-                    <label for="selectedTime">Изберете час:</label>
-                    <select asp-for="AppointmentTime" id="selectedTime" class="form-control" required>
-                        @if (ViewBag.TimeSlots != null)
+                    <label asp-for="AppointmentTime">Изберете час:</label>
+                    <select asp-for="AppointmentTime" class="form-select">
+                        @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
                         {
-                            @foreach (var item in ViewBag.timeSlotList)
+                            @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
                             {
-                                <option value="@TimeSpan.Parse(item.ToString())" selected="@(Model.AppointmentTime == TimeSpan.Parse(item.ToString()))">
-                                    @item.ToString()
-                                </option>
+                                <option value="@item.Value">@item.Text</option>
                             }
                         }
                         else
                         {
-                            <option value="">No available times</option>
+                            <option value="">Няма свободни часове</option>
                         }
                     </select>
                 </div>
                 <div class="text-center">
-                    <button type="submit" asp-action="Edit" asp-controller="Appointment" class="btn btn-primary px-4 py-2 shadow-sm">
-                        <i class="bi bi-pencil-square"></i> Обнови
+                    <button type="submit" asp-action="Edit" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-sm">
+                        <i class="bi bi-check-lg"></i> Запази
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </body>
-
 </html>
-
-

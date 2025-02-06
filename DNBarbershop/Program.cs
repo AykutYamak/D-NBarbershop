@@ -14,6 +14,7 @@ using DNBarbershop.Utility;
 using DNBarbershop.DataAccess.BarberRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using AspNetCoreHero.ToastNotification;
+using DNBarbershop.DataAccess.AppointmentServiceRepository;
 
 internal class Program
 {
@@ -21,9 +22,8 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("HomeConnection");
+        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
         //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -44,11 +44,13 @@ internal class Program
         builder.Services.AddScoped(typeof(IGlobalService<>), typeof(GlobalService<>));
         builder.Services.AddScoped(typeof(IRepository<Speciality>), typeof(Repository<Speciality>));
         builder.Services.AddScoped(typeof(IBarberRepository<Barber>), typeof(BarberRepository<Barber>));
+        builder.Services.AddScoped(typeof(IAppointmentServiceRepository<AppointmentServices>), typeof(AppointmentServiceRepository<AppointmentServices>));
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
         builder.Services.AddScoped<IBarberService, BarberService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
         builder.Services.AddScoped<IServiceService, ServiceService>();
         builder.Services.AddScoped<ISpecialityService, SpecialityService>();
+        builder.Services.AddScoped<IAppointmentServiceService, AppointmentServiceService>();
         builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IEmailSender, EmailSender>();

@@ -57,7 +57,9 @@
                             <td>@appointment.Id</td>
                             <td>@appointment.Barber.FirstName @appointment.Barber.LastName</td>
                             <td>@appointment.User.FirstName @appointment.User.LastName</td>
-                            <td></td>
+                            <td>
+                                @string.Join(", ", appointment.AppointmentServices.Select(a => a.Service.ServiceName))
+                            </td>
                             <td>@appointment.AppointmentDate.Day/@appointment.AppointmentDate.Month/@appointment.AppointmentDate.Year г.</td>
                             <td>@appointment.AppointmentTime</td>
                             <td>@appointment.Status.ToString()</td>

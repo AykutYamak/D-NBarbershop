@@ -37,6 +37,15 @@ namespace DNBarbershop.Controllers
             _notyf = notyf;
             _appointmentServiceService = appointmentServiceService;
         }
+        private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
+        {
+            var slots = new List<string>();
+            for (var time = start; time < end; time += interval)
+            {
+                slots.Add(time.ToString(@"hh\:mm"));
+            }
+            return slots;
+        }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(AppointmentFilterViewModel? filter)
@@ -56,26 +65,26 @@ namespace DNBarbershop.Controllers
             var barbersList = barbers.Select(u => new { u.Id, FullName = u.FirstName + " " + u.LastName }).ToList();
             var users = _userService.GetAll();
             var usersList = users.Select(u => new { u.Id, FullName = u.FirstName + " " + u.LastName }).ToList();
+
+            var appointments = query
+            .Include(a => a.User)
+            .Include(a => a.Barber)
+            .Include(a => a.AppointmentServices) 
+            .ThenInclude(ap => ap.Service)  
+            .ToList();
+
             var model = new AppointmentFilterViewModel
             {
                 UserId = filter.UserId,
                 BarberId = filter.BarberId,
                 Barbers = new SelectList(barbersList, "Id", "FullName"),
                 Users = new SelectList(usersList,"Id","FullName"),
-                Appointments = query.Include(a => a.User).Include(a => a.Barber).ToList()
+                Appointments = appointments
             };
             return View(model);
         }
-        private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
-        {
-            var slots = new List<string>();
-            for (var time = start; time < end; time += interval)
-            {
-                slots.Add(time.ToString(@"hh\:mm"));
-            }
-            return slots;
-        }
-        [Authorize]
+        
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Add()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -96,7 +105,11 @@ namespace DNBarbershop.Controllers
             var services = _serviceService.GetAll();
 
             ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-            ViewBag.Services = new SelectList(services, "Id", "ServiceName");
+            ViewBag.Services = services.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.ServiceName
+            }).ToList();
 
             var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
             ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
@@ -107,7 +120,8 @@ namespace DNBarbershop.Controllers
 
             return View(model);
         }
-        [Authorize]
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Add(AppointmentCreateViewModel model)
         {
@@ -118,152 +132,269 @@ namespace DNBarbershop.Controllers
             }
 
             model.UserId = currentUser.Id;
-            if (!ModelState.IsValid)
+
+            if (model.UserId != currentUser.Id)
             {
-                _notyf.Error("Моля попълнете всички полета.");
-                var barbers = _barberService.GetAll();
-                var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
-
-                var services = _serviceService.GetAll();
-
-                ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-                ViewBag.Services = new SelectList(services, "Id", "ServiceName");
-
-                var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-                ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
-                {
-                    Value = ts,
-                    Text = ts
-                }).ToList();
-                return View(model);
+                return BadRequest();
             }
-
-            var appointments = _appointmentService.GetAll();
-            bool isAlreadyBooked = appointments.Any(a => a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime); 
-            
-            if (isAlreadyBooked)
+            else
             {
-                _notyf.Error("Този час е вече запазен. Моля изберете друг час.");
-
-                var barbers = _barberService.GetAll();
-                var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
-
-                var services = _serviceService.GetAll();
-
-                ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-                ViewBag.Services = new SelectList(services, "Id", "ServiceName");
-
-                var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-                ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
+                if (!ModelState.IsValid)
                 {
-                    Value = ts,
-                    Text = ts
-                }).ToList();
-                return View(model);
-            }
+                    _notyf.Error("Моля попълнете всички полета.");
+                    var barbers = _barberService.GetAll();
+                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
-            var newAppointment = new Appointment
-            {
-                Id = Guid.NewGuid(),
-                BarberId = model.BarberId,
-                UserId = model.UserId,
-                AppointmentDate = model.AppointmentDate,
-                AppointmentTime = model.AppointmentTime,
-                Status = AppointmentStatus.Scheduled
-            };
-            
-            await _appointmentService.Add(newAppointment);
-            _notyf.Success("Успешно записахте час.");
+                    var services = _serviceService.GetAll();
 
-            foreach (var serviceId in model.SelectedServiceIds)
-            {
-                var appointmentService = new AppointmentServices
+                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
+                    ViewBag.Services = services.Select(s => new SelectListItem
+                    {
+                        Value = s.Id.ToString(),
+                        Text = s.ServiceName
+                    }).ToList();
+                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
+                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
+                    {
+                        Value = ts,
+                        Text = ts
+                    }).ToList();
+                    return View(model);
+                }
+
+                var appointments = _appointmentService.GetAll();
+                bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
+                if (isAlreadyBooked)
                 {
-                    AppointmentId = newAppointment.Id,
-                    ServiceId = serviceId
+                    _notyf.Error("Този час е вече запазен. Моля изберете друг час.");
+
+                    var barbers = _barberService.GetAll();
+                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
+
+                    var services = _serviceService.GetAll();
+
+                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
+                    ViewBag.Services = services.Select(s => new SelectListItem
+                    {
+                        Value = s.Id.ToString(),
+                        Text = s.ServiceName
+                    }).ToList();
+                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
+                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
+                    {
+                        Value = ts,
+                        Text = ts
+                    }).ToList();
+                    return View(model);
+                }
+
+                var newAppointment = new Appointment
+                {
+                    Id = Guid.NewGuid(),
+                    BarberId = model.BarberId,
+                    UserId = model.UserId,
+                    AppointmentDate = model.AppointmentDate,
+                    AppointmentTime = model.AppointmentTime,
+                    Status = AppointmentStatus.Scheduled
                 };
-                await _appointmentServiceService.Add(appointmentService);
+
+                await _appointmentService.Add(newAppointment);
+                _notyf.Success("Успешно записахте час.");
+
+                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+                {
+                    _notyf.Error("Моля, изберете поне една услуга.");
+                    return View(model);
+                }
+
+                foreach (var serviceId in model.SelectedServiceIds)
+                {
+                    var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
+                    if (!serviceExists)
+                    {
+                        _notyf.Error($"Услугата с ID {serviceId} не съществува.");
+                        return View(model);
+                    }
+
+                    var appointmentService = new AppointmentServices
+                    {
+                        Id = Guid.NewGuid(),
+                        AppointmentId = newAppointment.Id,
+                        ServiceId = serviceId
+                    };
+                    await _appointmentServiceService.Add(appointmentService);
+                }
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var appointment = await _appointmentService.Get(a => a.Id == id);
-            if (appointment == null)
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            
+            if (currentUser == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
+
+            appointment.UserId = currentUser.Id;
+
+            if (appointment.UserId != currentUser.Id)
+            {
+                return Unauthorized();
+            }
+
             var barbers = _barberService.GetAll();
             var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
             var services = _serviceService.GetAll();
 
-            var users = _userService.GetAll();
-            var usersList = users.Select(u => new { u.Id, FullName = u.FirstName + " " + u.LastName }).ToList();
-
             ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-            ViewBag.Services = new SelectList(services, "Id", "ServiceName");
-            ViewBag.Users = new SelectList(usersList, "Id", "FullName");
-
+            ViewBag.Services = services.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.ServiceName
+            }).ToList();
             var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-            ViewBag.TimeSlots = new SelectList(timeSlots, "AppointmentTime");
-            ViewBag.timeSlotList = timeSlots;
+            ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
+            {
+            Value = ts,
+            Text = ts
+            }).ToList();
 
-            return View(appointment);
+            var model = new AppointmentEditViewModel()
+            {
+                Id = appointment.Id,
+                UserId = appointment.UserId,
+                BarberId = appointment.BarberId,
+                AppointmentDate = appointment.AppointmentDate,
+                AppointmentTime = appointment.AppointmentTime,
+                Status = AppointmentStatus.Scheduled,
+                SelectedServiceIds = appointment.AppointmentServices.Select(asv => asv.ServiceId).ToList()
+            };
+
+            return View(model);
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(Appointment appointment, DateTime AppointmentDate, TimeSpan AppointmentTime)
-        {
-            var existingAppointment = await _appointmentService.Get(a => a.Id == appointment.Id);
-            if (existingAppointment == null)
+        public async Task<IActionResult> Edit(AppointmentEditViewModel model)
+       {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
-            var Appointment = await _appointmentService.Get(a => a.AppointmentDate == AppointmentDate && a.AppointmentTime == AppointmentTime && a.Id != appointment.Id); 
 
-            if (Appointment != null)
+            model.UserId = currentUser.Id;
+
+            if (model.UserId != currentUser.Id)
             {
-                ViewBag.Error = "Този час е вече запазен. Моля изберете друг час.";
+                return BadRequest();
+            }
+            else
+            {
+                if (!ModelState.IsValid)
+                {
+                    _notyf.Error("Моля попълнете всички полета.");
+                    var barbers = _barberService.GetAll();
+                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
-                var barbers = _barberService.GetAll();
-                var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
+                    var services = _serviceService.GetAll();
 
-                var services = _serviceService.GetAll();
+                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
+                    ViewBag.Services = services.Select(s => new SelectListItem
+                    {
+                        Value = s.Id.ToString(),
+                        Text = s.ServiceName
+                    }).ToList();
+                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
+                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
+                    {
+                        Value = ts,
+                        Text = ts
+                    }).ToList();
+                    return View(model);
+                }
+
+                var appointments = _appointmentService.GetAll();
+                bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
+                if (isAlreadyBooked)
+                {
+                    _notyf.Error("Този час е вече запазен. Моля изберете друг час.");
+
+                    var barbers = _barberService.GetAll();
+                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
+
+                    var services = _serviceService.GetAll();
+
+                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
+                    ViewBag.Services = services.Select(s => new SelectListItem
+                    {
+                        Value = s.Id.ToString(),
+                        Text = s.ServiceName
+                    }).ToList();
+                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
+                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
+                    {
+                        Value = ts,
+                        Text = ts
+                    }).ToList();
+                    return View(model);
+                }
+
+                var newAppointment = new Appointment
+                {
+                    Id = model.Id,
+                    BarberId = model.BarberId,
+                    UserId = model.UserId,
+                    AppointmentDate = model.AppointmentDate,
+                    AppointmentTime = model.AppointmentTime,
+                    Status = AppointmentStatus.Scheduled,
+                };
+
+                foreach (var serviceId in model.SelectedServiceIds)
+                {
+                    var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
+                    if (!serviceExists)
+                    {
+                        _notyf.Error($"Услугата с ID {serviceId} не съществува.");
+                        return View(model);
+                    }
+
+                    var appointmentService = new AppointmentServices
+                    {
+                        AppointmentId = newAppointment.Id,
+                        ServiceId = serviceId
+                    };
+                    await _appointmentServiceService.Update(appointmentService);
+                }
+
+                await _appointmentService.Update(newAppointment);
+                _notyf.Success("Успешно редактирахте час.");
+
+                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+                {
+                    _notyf.Error("Моля, изберете поне една услуга.");
+                    return View(model);
+                }
+
                 
-                var users = _userService.GetAll();
-                var usersList = users.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
-
-
-                ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-                ViewBag.Services = new SelectList(services, "Id", "ServiceName");
-                ViewBag.Users = new SelectList(usersList, "Id", "FullName");
-
-                var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-                ViewBag.TimeSlots = new SelectList(timeSlots, "AppointmentTime");
-                ViewBag.timeSlotList = timeSlots;
-
-                return View(appointment);
+                return RedirectToAction("Index");
             }
-
-            existingAppointment.UserId = appointment.UserId;
-            existingAppointment.BarberId = appointment.BarberId;
-            existingAppointment.AppointmentServices = appointment.AppointmentServices;
-            existingAppointment.AppointmentDate = AppointmentDate;
-            existingAppointment.AppointmentTime = AppointmentTime;
-            existingAppointment.Status = appointment.Status;
-
-            await _appointmentService.Update(existingAppointment);
-            return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id,Guid serviceId)
         {
             if(ModelState.IsValid)
             {
-                await _appointmentService.Delete(id);
+                if (ModelState.IsValid)
+                {
+                    await _appointmentServiceService.Delete(id, serviceId);
+                    await _appointmentService.Delete(id);
+                }
                 return RedirectToAction("Index");
             }
             return View();

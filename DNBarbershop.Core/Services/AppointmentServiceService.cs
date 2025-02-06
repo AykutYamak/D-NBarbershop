@@ -1,4 +1,5 @@
 ﻿using DNBarbershop.Core.IServices;
+using DNBarbershop.DataAccess.AppointmentServiceRepository;
 using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
@@ -8,24 +9,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DNBarbershop.Core.Services
 {
-    internal class AppointmentServiceService:IAppointmentServiceService
+    public class AppointmentServiceService:IAppointmentServiceService
     {
 
         private readonly IRepository<AppointmentServices> _Repository;
+        private readonly IAppointmentServiceRepository<AppointmentServices> appointmentServiceRepository;
 
-        public AppointmentServiceService(IRepository<AppointmentServices> Repository)
+        public AppointmentServiceService(IRepository<AppointmentServices> Repository,IAppointmentServiceRepository<AppointmentServices> _appointmentServiceRepository)
         {
                 _Repository = Repository;
+            appointmentServiceRepository = _appointmentServiceRepository;
         }
 
         public async Task Add(AppointmentServices entity)
         {
             await _Repository.Add(entity);
         }
+        public async Task Delete(Guid id,Guid serviceId)
+        {
+            await appointmentServiceRepository.Delete(id,serviceId);
+        }
+
         public Task Delete(Guid id)
         {
             throw new NotImplementedException();
@@ -51,9 +60,9 @@ namespace DNBarbershop.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task Update(AppointmentServices entity)
+        public async Task Update(AppointmentServices entity)
         {
-            throw new NotImplementedException();
+            await _Repository.Update(entity);
         }
     }
 }
