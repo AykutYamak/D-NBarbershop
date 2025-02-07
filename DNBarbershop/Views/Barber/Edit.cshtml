@@ -1,61 +1,57 @@
 ﻿@model DNBarbershop.Models.ViewModels.Barbers.BarberEditViewModel
-
 <!DOCTYPE html>
 <html>
 <head>
 </head>
 <body class="crudOperationsView">
-    <div class="container mt-4">
-        <div class="colcard d-flex justify-content-center shadow-sm p-4 rounded text-center">
-            <h3 class="text-center text-white fw-bold mb-4">Редактирай бръснар</h3>
-            <form method="post">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <input type="hidden" asp-for="Id" />
-                            <label class="form-label fw-semibold">Име</label>
-                            <label class="form-label fw-semibold" asp-for="FirstName">
-                                <input type="text" class="form-control" asp-for="FirstName">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-6 d-flex justify-content-center">
+                <div class="card shadow-lg rounded-4 p-4 bg-dark text-white w-100">
+                    <h3 class="text-center fw-bold mb-3">Редактирай бръснар</h3>
+                    <form method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="mb-3 text-center">
+                            <label class="form-label fw-semibold" asp-for="FirstName">Име на бръснар</label>
+                            <input type="text" class="form-control border-0 shadow-sm" asp-for="FirstName" placeholder="Въведете име">
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <label class="form-label fw-semibold" asp-for="LastName">Фамилия</label>
+                            <input type="text" class="form-control border-0 shadow-sm" asp-for="LastName" placeholder="Въведете име">
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <label for="SelectedSpecialityId" class="form-label fw-semibold">Ниво на специализация</label>
+                            <select asp-for="SelectedSpecialityId" asp-items="Model.Specialities" class="form-control">
+                                <option value="">Избери ниво на специализация</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <label class="form-label fw-semibold">Години опит</label>
+                            <br />
+                            <label class="form-label fw-semibold" asp-for="ExperienceYears">
+                                <input type="number" class="form-control" asp-for="ExperienceYears">
                             </label>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Фамилия</label>
-                            <label class="form-label fw-semibold" asp-for="LastName">
-                                <input type="text" class="form-control" asp-for="LastName">
+                        <div class="mb-3 text-center">
+                            <label class="form-label fw-semibold">Снимка</label>
+                            <br />
+                            <label class="form-label fw-semibold" asp-for="ProfilePictureUrl">
+                                <input type="text" class="form-control" asp-for="ProfilePictureUrl">
                             </label>
                         </div>
-                    </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" asp-action="Edit" asp-controller="Barber" class="btn btn-success px-4 py-2 shadow-sm">
+                                <i class="bi bi-check-lg"></i> Запази
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-light px-4 py-2 ms-2">Отказ</a>
+                        </div>
+                    </form>
                 </div>
-                <div class="mb-3 text-center">
-                    <label for ="SelectedSpecialityId" class="form-label fw-semibold">Ниво на специализация</lable>
-                        <select asp-for="SelectedSpecialityId" asp-items="Model.Specialities" class="form-control">
-                            <option value="">Избери ниво на специализация</option>
-                        </select>
-                        
-                </div>
-                <div class="mb-3 text-center">
-                    <label class="form-label fw-semibold">Години опит</label>
-                    <br />
-                    <label class="form-label fw-semibold" asp-for="ExperienceYears">
-                        <input type="number" class="form-control" asp-for="ExperienceYears">
-                    </label>
-                </div>
-                <div class="mb-3 text-center">
-                    <label class="form-label fw-semibold">Снимка</label>
-                    <br />
-                    <label class="form-label fw-semibold" asp-for="ProfilePictureUrl">
-                        <input type="text" class="form-control" asp-for="ProfilePictureUrl">
-                    </label>
-                </div>
-                <div class="text-center">
-                    <button type="submit" asp-action="Edit" asp-controller="Barber" class="btn btn-success px-4 py-2 shadow-sm">
-                        <i class="bi bi-check-lg"></i> Запази
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+
 </body>
 </html>

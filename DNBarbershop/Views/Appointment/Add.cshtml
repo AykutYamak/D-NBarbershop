@@ -3,57 +3,60 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body class="crudOperationsView">
-    <div class="container mt-4">
-        <div class="card shadow-sm p-4 rounded">
-            <h3 class="text-center text-white fw-bold mb-4">Запази час</h3>
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 p-4 rounded">
+            <h3 class="text-center text-dark fw-bold mb-4">Запази час</h3>
+
             <form method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <input type="hidden" asp-for="UserId" class="form-control" required>
-                    <label class="form-label fw-semibold">Услуги</label>
-                    <div class="form-check">
-                        @foreach (var service in (List<SelectListItem>)ViewBag.Services)
-                        {
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@service.Value" id="@service.Value">
-                                <label class="form-check-label" for="@service.Value">
-                                    @service.Text
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="BarberId" class="form-label fw-semibold">Бръснар</label>
-                    <select asp-for="BarberId" asp-items="ViewBag.Barbers" class="form-select">
-                        <option value="">Изберете бръснар</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AppointmentDate">Изберете дата:</label>
-                    <input type="date" asp-for="AppointmentDate" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")">
-                </div>
-                <div class="form-group">
-                    <label asp-for="AppointmentTime">Изберете час:</label>
-                    <select asp-for="AppointmentTime" class="form-select">
-                        @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
-                        {
-                            @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
+                <div class="card-body">
+                    <input type="hidden" asp-for="UserId">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold fs-5">Услуги</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach (var service in (List<SelectListItem>)ViewBag.Services)
                             {
-                                <option value="@item.Value">@item.Text</option>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@service.Value" id="@service.Value">
+                                    <label class="form-check-label" for="@service.Value">
+                                        @service.Text
+                                    </label>
+                                </div>
                             }
-                        }
-                        else
-                        {
-                            <option value="">Няма свободни часове</option>
-                        }
-                    </select>
-                </div>
-                <div class="text-center">
-                    <button type="submit" asp-action="Add" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-sm">
-                        <i class="bi bi-check-lg"></i> Запази
-                    </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="BarberId" class="form-label fw-semibold">Бръснар</label>
+                        <select asp-for="BarberId" asp-items="ViewBag.Barbers" class="form-select shadow-sm">
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="AppointmentDate" class="form-label fw-semibold">Изберете дата</label>
+                        <input type="date" asp-for="AppointmentDate" class="form-control shadow-sm" required value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="AppointmentTime" class="form-label fw-semibold">⏰ Изберете час</label>
+                        <select asp-for="AppointmentTime" class="form-select shadow-sm">
+                            @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
+                            {
+                                @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="">Няма свободни часове</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" asp-action="Add" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-lg">
+                            <i class="bi bi-check-lg"></i> Запази
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -218,7 +218,6 @@ namespace DNBarbershop.Controllers
 
                     var appointmentService = new AppointmentServices
                     {
-                        Id = Guid.NewGuid(),
                         AppointmentId = newAppointment.Id,
                         ServiceId = serviceId
                     };
@@ -354,6 +353,14 @@ namespace DNBarbershop.Controllers
                     Status = AppointmentStatus.Scheduled,
                 };
 
+                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+                {
+                    _notyf.Error("Моля, изберете поне една услуга.");
+                    return View(model);
+                }
+
+                await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
+
                 foreach (var serviceId in model.SelectedServiceIds)
                 {
                     var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
@@ -362,25 +369,16 @@ namespace DNBarbershop.Controllers
                         _notyf.Error($"Услугата с ID {serviceId} не съществува.");
                         return View(model);
                     }
-
-                    var appointmentService = new AppointmentServices
+                    var appointmentServiceEntity = new AppointmentServices
                     {
                         AppointmentId = newAppointment.Id,
-                        ServiceId = serviceId
+                        ServiceId = serviceId,
                     };
-                    await _appointmentServiceService.Update(appointmentService);
+                    await _appointmentServiceService.Add(appointmentServiceEntity);
                 }
 
-                await _appointmentService.Update(newAppointment);
                 _notyf.Success("Успешно редактирахте час.");
 
-                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
-                {
-                    _notyf.Error("Моля, изберете поне една услуга.");
-                    return View(model);
-                }
-
-                
                 return RedirectToAction("Index");
             }
         }

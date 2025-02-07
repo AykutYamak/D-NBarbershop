@@ -94,5 +94,6 @@ namespace DNBarbershop.Core.Services
         {
             await _appointmentRepository.Update(appointment);
         }
+
     }
 }

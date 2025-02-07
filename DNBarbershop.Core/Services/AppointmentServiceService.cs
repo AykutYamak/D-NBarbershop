@@ -14,15 +14,15 @@ using System.Threading.Tasks;
 
 namespace DNBarbershop.Core.Services
 {
-    public class AppointmentServiceService:IAppointmentServiceService
+    public class AppointmentServiceService : IAppointmentServiceService
     {
 
         private readonly IRepository<AppointmentServices> _Repository;
         private readonly IAppointmentServiceRepository<AppointmentServices> appointmentServiceRepository;
 
-        public AppointmentServiceService(IRepository<AppointmentServices> Repository,IAppointmentServiceRepository<AppointmentServices> _appointmentServiceRepository)
+        public AppointmentServiceService(IRepository<AppointmentServices> Repository, IAppointmentServiceRepository<AppointmentServices> _appointmentServiceRepository)
         {
-                _Repository = Repository;
+            _Repository = Repository;
             appointmentServiceRepository = _appointmentServiceRepository;
         }
 
@@ -30,10 +30,15 @@ namespace DNBarbershop.Core.Services
         {
             await _Repository.Add(entity);
         }
-        public async Task Delete(Guid id,Guid serviceId)
+        public async Task Delete(Guid id, Guid serviceId)
         {
-            await appointmentServiceRepository.Delete(id,serviceId);
+            await appointmentServiceRepository.Delete(id, serviceId);
         }
+        public async Task DeleteByAppointmentId(Guid appointmentId)
+        {
+            await appointmentServiceRepository.DeleteByAppointmentId(appointmentId);
+        }
+
 
         public Task Delete(Guid id)
         {
@@ -64,5 +69,6 @@ namespace DNBarbershop.Core.Services
         {
             await _Repository.Update(entity);
         }
+        
     }
 }

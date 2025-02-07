@@ -31,5 +31,14 @@ namespace DNBarbershop.DataAccess.AppointmentServiceRepository
             dbSet.Remove(entity);
             await db.SaveChangesAsync();
         }
+        public async Task DeleteByAppointmentId(Guid appointmentId)
+        {
+            var entities = await dbSet.Where(s => s.AppointmentId == appointmentId).ToListAsync();
+            if (entities.Any())
+            {
+                dbSet.RemoveRange(entities);
+                await db.SaveChangesAsync();
+            }
+        }
     }
 }

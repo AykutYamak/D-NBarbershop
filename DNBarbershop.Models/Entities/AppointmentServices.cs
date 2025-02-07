@@ -10,9 +10,10 @@ namespace DNBarbershop.Models.Entities
 {
     public class AppointmentServices
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         [Required(ErrorMessage = RequiredErrorMessage)]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         [Required(ErrorMessage = RequiredErrorMessage)]
         [ForeignKey(nameof(Appointment))]
         public Guid AppointmentId { get; set; }

@@ -12,5 +12,6 @@ namespace DNBarbershop.Core.IServices
     public interface IAppointmentServiceService : IGlobalService<AppointmentServices>
     {
         Task Delete(Guid id, Guid serviceId);
+        Task DeleteByAppointmentId(Guid appointmentId);
     }
 }

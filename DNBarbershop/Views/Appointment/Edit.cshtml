@@ -9,10 +9,12 @@
         <div class="card shadow-sm p-4 rounded">
             <h3 class="text-center text-white fw-bold mb-4">Запази час</h3>
             <form method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <input type="hidden" asp-for="UserId" class="form-control" required>
-                    <label class="form-label fw-semibold">Услуги</label>
-                    <div class="form-check">
+                <div class="card-body">
+                    <input type="hidden" asp-for="UserId">
+
+                    <label class="form-label fw-semibold fs-5">Услуги</label>
+
+                    <div class="d-flex flex-wrap gap-2">
                         @foreach (var service in (List<SelectListItem>)ViewBag.Services)
                         {
                             <div class="form-check">
@@ -21,18 +23,17 @@
                                     @service.Text
                                 </label>
                             </div>
-                        } 
+                        }
                     </div>
                 </div>
                 <div class="mb-3">
                     <label asp-for="BarberId" class="form-label fw-semibold">Бръснар</label>
                     <select asp-for="BarberId" asp-items="ViewBag.Barbers" class="form-select">
-                        <option value="">Изберете бръснар</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label asp-for="AppointmentDate">Изберете дата:</label>
-                    <input type="date" asp-for="AppointmentDate" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    <input type="date" asp-for="AppointmentDate" class="form-control" required value="@Model.AppointmentDate.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")">
                 </div>
                 <div class="form-group">
                     <label asp-for="AppointmentTime">Изберете час:</label>

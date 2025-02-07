@@ -9,5 +9,7 @@ namespace DNBarbershop.DataAccess.AppointmentServiceRepository
     public interface IAppointmentServiceRepository<T> where T : class
     {
         Task Delete(Guid appointmentId, Guid serviceId);
+        Task DeleteByAppointmentId(Guid appointmentId);
+
     }
 }
