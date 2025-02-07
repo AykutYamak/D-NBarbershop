@@ -16,12 +16,11 @@ namespace DNBarbershop.Models.Entities
         [ForeignKey(nameof(User))]
         public string UserId { get; set; }
         public User User { get; set; }
+
         [ForeignKey(nameof(Barber))]
-        public Guid? BarberId { get; set; }
-        public Barber? Barber { get; set; }
-        [ForeignKey(nameof(Service))]
-        public Guid? ServiceId { get; set; }
-        public Service Service { get; set; }
+        public Guid BarberId { get; set; }
+        public Barber Barber { get; set; }
+
         [Required(ErrorMessage=RequiredErrorMessage)]
         [Range(0,5, ErrorMessage = "Rating should be in the range [0;5]")]
         public int Rating { get; set; }

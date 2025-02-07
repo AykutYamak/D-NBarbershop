@@ -37,6 +37,27 @@ namespace DNBarbershop.Controllers
             _notyf = notyf;
             _appointmentServiceService = appointmentServiceService;
         }
+        private async Task PopulateViewBags()
+        {
+            var barbers = _barberService.GetAll();
+            var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
+
+            var services = _serviceService.GetAll();
+
+            ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
+            ViewBag.Services = services.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.ServiceName
+            }).ToList();
+
+            var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
+            ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
+            {
+                Value = ts,
+                Text = ts
+            }).ToList();
+        }
         private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
         {
             var slots = new List<string>();
@@ -99,25 +120,7 @@ namespace DNBarbershop.Controllers
                 Status = AppointmentStatus.Scheduled
             };
 
-            var barbers = _barberService.GetAll();
-            var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
-
-            var services = _serviceService.GetAll();
-
-            ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-            ViewBag.Services = services.Select(s => new SelectListItem
-            {
-                Value = s.Id.ToString(),
-                Text = s.ServiceName
-            }).ToList();
-
-            var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-            ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
-            {
-                Value = ts,
-                Text = ts
-            }).ToList();
-
+            await PopulateViewBags();
             return View(model);
         }
 
@@ -142,23 +145,9 @@ namespace DNBarbershop.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notyf.Error("Моля попълнете всички полета.");
-                    var barbers = _barberService.GetAll();
-                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
-                    var services = _serviceService.GetAll();
-
-                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-                    ViewBag.Services = services.Select(s => new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = s.ServiceName
-                    }).ToList();
-                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
-                    {
-                        Value = ts,
-                        Text = ts
-                    }).ToList();
+                    await PopulateViewBags();
+                    
                     return View(model);
                 }
 
@@ -168,23 +157,8 @@ namespace DNBarbershop.Controllers
                 {
                     _notyf.Error("Този час е вече запазен. Моля изберете друг час.");
 
-                    var barbers = _barberService.GetAll();
-                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
+                    await PopulateViewBags();
 
-                    var services = _serviceService.GetAll();
-
-                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-                    ViewBag.Services = services.Select(s => new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = s.ServiceName
-                    }).ToList();
-                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
-                    {
-                        Value = ts,
-                        Text = ts
-                    }).ToList();
                     return View(model);
                 }
 
@@ -245,23 +219,7 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
-            var barbers = _barberService.GetAll();
-            var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
-
-            var services = _serviceService.GetAll();
-
-            ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-            ViewBag.Services = services.Select(s => new SelectListItem
-            {
-                Value = s.Id.ToString(),
-                Text = s.ServiceName
-            }).ToList();
-            var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-            ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
-            {
-            Value = ts,
-            Text = ts
-            }).ToList();
+            await PopulateViewBags();
 
             var model = new AppointmentEditViewModel()
             {
@@ -297,23 +255,9 @@ namespace DNBarbershop.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notyf.Error("Моля попълнете всички полета.");
-                    var barbers = _barberService.GetAll();
-                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
-                    var services = _serviceService.GetAll();
-
-                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-                    ViewBag.Services = services.Select(s => new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = s.ServiceName
-                    }).ToList();
-                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
-                    {
-                        Value = ts,
-                        Text = ts
-                    }).ToList();
+                    await PopulateViewBags();
+                    
                     return View(model);
                 }
 
@@ -323,23 +267,8 @@ namespace DNBarbershop.Controllers
                 {
                     _notyf.Error("Този час е вече запазен. Моля изберете друг час.");
 
-                    var barbers = _barberService.GetAll();
-                    var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
+                    await PopulateViewBags();
 
-                    var services = _serviceService.GetAll();
-
-                    ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
-                    ViewBag.Services = services.Select(s => new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = s.ServiceName
-                    }).ToList();
-                    var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
-                    ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
-                    {
-                        Value = ts,
-                        Text = ts
-                    }).ToList();
                     return View(model);
                 }
 
@@ -384,18 +313,14 @@ namespace DNBarbershop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id,Guid serviceId)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    await _appointmentServiceService.Delete(id, serviceId);
-                    await _appointmentService.Delete(id);
-                }
-                return RedirectToAction("Index");
+                await _appointmentServiceService.DeleteByAppointmentId(id);
+                await _appointmentService.Delete(id);
             }
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

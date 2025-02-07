@@ -3,6 +3,7 @@ using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.ViewModels.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,7 @@ namespace DNBarbershop.Controllers
     [Authorize(Roles = "Admin")]
     public class ServiceController : Controller
     {
-        IServiceService _serviceService;
+        private readonly IServiceService _serviceService;
 
         public ServiceController(IServiceService serviceService)
         {

@@ -6,6 +6,7 @@ using DNBarbershop.Models;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.ViewModels.Barbers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +19,8 @@ namespace DNBarbershop.Controllers
 
     public class BarberController : Controller
     {
-        IBarberService _barberService;
-        ISpecialityService _specialityService;
+        private readonly IBarberService _barberService;
+        private readonly ISpecialityService _specialityService;
         public BarberController(IBarberService barberService, ISpecialityService specialityService)
         {
             _barberService = barberService;

@@ -60,26 +60,14 @@ namespace DNBarbershop.Core.Services
         }
         public IQueryable<Feedback> GetAll()
         {
-            if (_feedbackRepository.GetCount().Result <= 0)
-            {
-                throw new ArgumentException("Nothing to get from here");
-            }
-            else
-            {
-                return _feedbackRepository.GetAll();
-            }
-
+            return _feedbackRepository.GetAll();
         }
         public async Task<IEnumerable<Feedback>> GetFeedbackForBarber(string[] barberName)
         {
             Expression<Func<Feedback,bool>> filter = feedback => feedback.Barber.FirstName.Equals(barberName[0]) && feedback.Barber.LastName.Equals(barberName[1]);
             return await _feedbackRepository.Find(filter);
         }
-        public async Task<IEnumerable<Feedback>> GetFeedbackForService(string service)
-        {
-            Expression<Func<Feedback, bool>> filter = feedback => feedback.Service.ServiceName.Equals(service);
-            return await _feedbackRepository.Find(filter);
-        }
+        
         public async Task RemoveRange(IEnumerable<Feedback> entities)
         {
             if (entities.Count() < 0)

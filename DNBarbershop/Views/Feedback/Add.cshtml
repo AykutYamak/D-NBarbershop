@@ -1,0 +1,47 @@
+﻿@model DNBarbershop.Models.ViewModels.Feedbacks.FeedbackCreateViewModel
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<body class="crudOperationsView">
+    <div class="container mt-4">
+        <div class="card shadow-sm p-4 rounded">
+            <h3 class="text-center text-white fw-bold mb-4">Добави отзив</h3>
+            <form method="post" enctype="multipart/form-data">
+                <div class="row">
+                        <div class="mb-3">
+                            <label for="SelectedBarberId" class="form-label fw-semibold">Бръснар</label>
+                            <select asp-for="SelectedBarberId" asp-items="Model.Barbers" class="form-control">
+                                <option value="">Избери бръснар</option>
+                            </select>
+                        </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" asp-for="Rating">⭐ Рейтинг</label>
+                    <select class="form-select shadow-sm" asp-for="Rating">
+                        <option value="1">⭐ 1</option>
+                        <option value="2">⭐⭐ 2</option>
+                        <option value="3">⭐⭐⭐ 3</option>
+                        <option value="4">⭐⭐⭐⭐ 4</option>
+                        <option value="5">⭐⭐⭐⭐⭐ 5</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" asp-for="Comment">Коментар</label>
+                    <textarea type="text" class="form-control" asp-for="Comment" placeholder="Коментар"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" asp-action="Add" asp-controller="Feedback" class="btn btn-success px-4 py-2 shadow-sm">
+                        <i class="bi bi-check-lg"></i> Запази
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+

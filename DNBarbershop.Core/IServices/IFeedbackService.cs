@@ -11,6 +11,5 @@ namespace DNBarbershop.Core.IServices
     public interface IFeedbackService: IGlobalService<Feedback>
     {
         Task<IEnumerable<Feedback>> GetFeedbackForBarber(string[] barberName);
-        Task<IEnumerable<Feedback>> GetFeedbackForService(string service);
     }
 }

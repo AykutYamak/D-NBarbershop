@@ -59,12 +59,6 @@ namespace DNBarbershop.DataAccess
             .HasForeignKey(f => f.BarberId)
             .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Feedback>()
-           .HasOne(f => f.Service)
-           .WithMany(s => s.Feedbacks)
-           .HasForeignKey(f => f.ServiceId)
-           .OnDelete(DeleteBehavior.NoAction);
-
             modelBuilder.Entity<Order>()
             .HasOne(o => o.User)
             .WithMany(u => u.Orders)

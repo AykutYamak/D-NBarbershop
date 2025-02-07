@@ -1,0 +1,77 @@
+﻿@model DNBarbershop.Models.ViewModels.Feedbacks.FeedbackFilterViewModel
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body class="crudOperationsView">
+    <div class="container mt-4">
+        <div class="row align-items-center mb-3">
+            <div class="col-md-6">
+                <h3 class="text-uppercase fw-bold text-danger">Отзиви и коментари</h3>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a asp-controller="Feedback" asp-action="ADd" class="btn btn-dark shadow-sm px-4 py-2">
+                    <i class="bi bi-person-plus"></i> Добави отзив
+                </a>
+            </div>
+        </div>
+        <form method="get" class="mb-3 bg-black bg-opacity-75 text-white p-3 rounded">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label asp-for="BarberId" class="form-label">Бръснар</label>
+                    <select asp-for="BarberId" asp-items="Model.Barbers" class="form-select">
+                        <option value="">Всички</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button asp-action="Index" asp-controller="Feedback" type="submit" class="btn btn-secondary">
+                        <i class="bi bi-filter"></i> Филтрирай
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover shadow-sm rounded">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Име на потребител</th>
+                        <th scope="col">Име на бръснар</th>
+                        <th scope="col">Коментар</th>
+                        <th scope="col">Рейтинг</th>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var feedback in Model.Feedbacks)
+                    {
+                        <tr>
+                            <td>@feedback.Id</td>
+                            <td>@feedback.User.FirstName @feedback.User.LastName</td>
+                            <td>@feedback.Barber.FirstName @feedback.Barber.LastName</td>
+                            <td>@feedback.Comment</td>
+                            <td>@feedback.Rating</td>
+                            <td>@feedback.FeedBackDate.Day/@feedback.FeedBackDate.Month/@feedback.FeedBackDate.Year г.</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-dark px-3 py-2" asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.Id">
+                                        <i class="bi bi-pencil"></i> Редактирай
+                                    </a>
+                                    <form asp-controller="Feedback" asp-action="Delete" asp-route-id="@feedback.Id" method="post">
+                                        <button type="submit" class="btn btn-danger px-3 py-2">
+                                            <i class="bi bi-trash"></i> Изтрий
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>
