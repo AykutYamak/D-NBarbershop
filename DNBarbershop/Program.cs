@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using DNBarbershop.Utility;
 using DNBarbershop.DataAccess.BarberRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using AspNetCoreHero.ToastNotification;
 using DNBarbershop.DataAccess.AppointmentServiceRepository;
 
 internal class Program
@@ -23,19 +22,12 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        var connection = builder.Configuration.GetConnectionString("HomeConnection");
 
         //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-        builder.Services.AddNotyf(config =>
-        {
-            config.DurationInSeconds = 5;
-            config.IsDismissable = true;
-            config.Position = NotyfPosition.TopCenter;
-        }
-);
 
         builder.Services.AddRazorPages();
 

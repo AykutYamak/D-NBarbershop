@@ -1,5 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using DNBarbershop.Core.IServices;
+﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
 using DNBarbershop.Models.ViewModels.Appointments;
@@ -15,19 +14,17 @@ namespace DNBarbershop.Controllers
 {
     public class FeedbackController : Controller
     {
-        private readonly INotyfService _notyf;
         private readonly IFeedbackService _feedbackService;
         private readonly IBarberService _barberService;
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
 
-        public FeedbackController(INotyfService notyf,UserManager<User> userManager,IFeedbackService feedbackService, IBarberService barberService, IUserService userService)
+        public FeedbackController(UserManager<User> userManager,IFeedbackService feedbackService, IBarberService barberService, IUserService userService)
         {
             _feedbackService = feedbackService;
             _barberService = barberService;
             _userService = userService;
             _userManager = userManager;
-            _notyf = notyf;
         }
         [Authorize(Roles = "Admin")]
         public IActionResult Index(FeedbackFilterViewModel? filter)
@@ -65,10 +62,7 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
-            var model = new FeedbackCreateViewModel()
-            {
-                UserId = currentUser.Id,
-            };
+            var model = new FeedbackCreateViewModel();
 
             var barbers = _barberService.GetAll();
             model.Barbers = barbers.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.FirstName.ToString() + " " + b.LastName.ToString()}).ToList();
@@ -92,14 +86,6 @@ namespace DNBarbershop.Controllers
             }
             else
             {
-                if (!ModelState.IsValid)
-                {
-                    _notyf.Error("Моля попълнете всички полета.");
-
-
-                    return View(feedbackModel);
-                }
-
                 var feedback = new Feedback
                 {
                     Id = Guid.NewGuid(),
@@ -110,7 +96,6 @@ namespace DNBarbershop.Controllers
                     FeedBackDate = feedbackModel.FeedBackDate
                 };
                 await _feedbackService.Add(feedback);
-                _notyf.Success("Успешно добавихте коментар.");
             }
             return RedirectToAction("Index");
         }

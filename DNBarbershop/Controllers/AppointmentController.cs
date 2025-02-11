@@ -1,5 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using DNBarbershop.Core.IServices;
+﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
@@ -14,14 +13,13 @@ namespace DNBarbershop.Controllers
 {
     public class AppointmentController : Controller
     {
-        private readonly INotyfService _notyf;
         private readonly IAppointmentServiceService _appointmentServiceService;   
         private readonly IAppointmentService _appointmentService;
         private readonly IBarberService _barberService;
         private readonly IServiceService _serviceService;
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
-        public AppointmentController(INotyfService notyf, 
+        public AppointmentController(
             UserManager<User> userManager, 
             IAppointmentService appointmentService,
             IBarberService barberService, 
@@ -34,7 +32,6 @@ namespace DNBarbershop.Controllers
             _serviceService = serviceService;
             _userService = userService;
             _userManager = userManager;
-            _notyf = notyf;
             _appointmentServiceService = appointmentServiceService;
         }
         private async Task PopulateViewBags()
@@ -144,7 +141,6 @@ namespace DNBarbershop.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    _notyf.Error("Моля попълнете всички полета.");
 
                     await PopulateViewBags();
                     
@@ -155,7 +151,6 @@ namespace DNBarbershop.Controllers
                 bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
                 if (isAlreadyBooked)
                 {
-                    _notyf.Error("Този час е вече запазен. Моля изберете друг час.");
 
                     await PopulateViewBags();
 
@@ -173,11 +168,9 @@ namespace DNBarbershop.Controllers
                 };
 
                 await _appointmentService.Add(newAppointment);
-                _notyf.Success("Успешно записахте час.");
 
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
                 {
-                    _notyf.Error("Моля, изберете поне една услуга.");
                     return View(model);
                 }
 
@@ -186,7 +179,6 @@ namespace DNBarbershop.Controllers
                     var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
                     if (!serviceExists)
                     {
-                        _notyf.Error($"Услугата с ID {serviceId} не съществува.");
                         return View(model);
                     }
 
@@ -254,7 +246,6 @@ namespace DNBarbershop.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    _notyf.Error("Моля попълнете всички полета.");
 
                     await PopulateViewBags();
                     
@@ -265,7 +256,6 @@ namespace DNBarbershop.Controllers
                 bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
                 if (isAlreadyBooked)
                 {
-                    _notyf.Error("Този час е вече запазен. Моля изберете друг час.");
 
                     await PopulateViewBags();
 
@@ -284,7 +274,6 @@ namespace DNBarbershop.Controllers
 
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
                 {
-                    _notyf.Error("Моля, изберете поне една услуга.");
                     return View(model);
                 }
 
@@ -295,7 +284,6 @@ namespace DNBarbershop.Controllers
                     var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
                     if (!serviceExists)
                     {
-                        _notyf.Error($"Услугата с ID {serviceId} не съществува.");
                         return View(model);
                     }
                     var appointmentServiceEntity = new AppointmentServices
@@ -306,7 +294,6 @@ namespace DNBarbershop.Controllers
                     await _appointmentServiceService.Add(appointmentServiceEntity);
                 }
 
-                _notyf.Success("Успешно редактирахте час.");
 
                 return RedirectToAction("Index");
             }
