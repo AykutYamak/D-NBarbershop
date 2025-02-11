@@ -102,6 +102,12 @@ namespace DNBarbershop.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+
             var feedback = await _feedbackService.Get(f => f.Id == id);
             if (feedback == null)
             {
@@ -111,12 +117,12 @@ namespace DNBarbershop.Controllers
             var model = new FeedbackEditViewModel
             {
                 Id = feedback.Id,
-                UserId = feedback.UserId,
+                UserId = currentUser.Id,
                 Barbers = barbers.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.FirstName.ToString() + " " + b.LastName.ToString() }).ToList(),
                 SelectedBarberId = feedback.BarberId,
                 Rating = feedback.Rating,
                 Comment = feedback.Comment,
-                FeedBackDate = feedback.FeedBackDate
+                FeedBackDate = DateTime.UtcNow
             };
             return View(model);
         }
@@ -124,19 +130,25 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(FeedbackEditViewModel feedbackModel)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+
             var model = new Feedback
             {
                 Id = feedbackModel.Id,
-                UserId = feedbackModel.UserId,
+                UserId = currentUser.Id,
                 BarberId = feedbackModel.SelectedBarberId,
                 Rating = feedbackModel.Rating,
                 Comment = feedbackModel.Comment,
-                FeedBackDate = feedbackModel.FeedBackDate
+                FeedBackDate = DateTime.UtcNow
             };
             await _feedbackService.Update(model);
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = "Index")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid Id)
         {

@@ -17,7 +17,7 @@ using DNBarbershop.DataAccess.AppointmentServiceRepository;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +55,12 @@ internal class Program
         
 
         var app = builder.Build();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var serviceProvider = scope.ServiceProvider;
+            await RoleSeeder.Initialize(serviceProvider);
+        }
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

@@ -2,6 +2,7 @@
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DNBarbershop.Controllers
@@ -9,10 +10,15 @@ namespace DNBarbershop.Controllers
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
-        IUserService _userService;
-        public UserController(IUserService userService)
+
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserService _userService;
+        public UserController(IUserService userService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             _userService = userService;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -20,40 +26,30 @@ namespace DNBarbershop.Controllers
             return View(list);
         }
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(Guid id)
+        [HttpPost]
+        public async Task<IActionResult> MakeAdmin(string userId)
         {
-            var user = await _userService.Get(s => s.Id.Equals(id));
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return NotFound();
             }
-            return View(user);
-        }
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<IActionResult> Edit(Guid id, User user)
-        {
-            if (!id.Equals(user.Id))
+
+            if (!await _roleManager.RoleExistsAsync("Admin"))
             {
-                return BadRequest();
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
-            if (ModelState.IsValid)
-            {
-                var existingUser = await _userService.Get(s => s.Id.Equals(id));
-                if (existingUser == null)
-                {
-                    return NotFound();
-                }
+            var result = await _userManager.AddToRoleAsync(user, "Admin");
 
-                existingUser.FirstName= user.FirstName;
-                existingUser.LastName = user.LastName;
-                await _userService.Update(existingUser);
+            if (result.Succeeded)
+            {
                 return RedirectToAction("Index");
             }
 
-            return View(user);
+            return BadRequest("Failed to assign admin role");
         }
+       
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
