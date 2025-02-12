@@ -26,17 +26,17 @@ namespace DNBarbershop.Controllers
         }
         public async Task<IActionResult> Index(WorkScheduleFilterViewModel? filter)
         {
-            var list = _workScheduleService.GetAll();
+            var list =  _workScheduleService.GetAll();
             var query = list.AsQueryable();
             if (filter.BarberId != null)
             {
-                query = query.Where(b => b.BarberId == filter.BarberId);
+                query = query.Include(b => b.BarberId == filter.BarberId);
             }
             var model = new WorkScheduleFilterViewModel
             {
+                WorkSchedules = query.Include(b => b.Barber).ToList(),
                 BarberId = filter.BarberId,
-                Barbers = new SelectList(_barberService.GetAll(), "Id", "FirstName" + "LastName"),
-                WorkSchedules = query.Include(b => b.Barber).ToList()
+                Barbers = new SelectList(_barberService.GetAll(), "Id", "FirstName")
             };
             return View(model);
         }
@@ -45,7 +45,7 @@ namespace DNBarbershop.Controllers
         {
             var model = new WorkScheduleCreateViewModel();
             var barbers = _barberService.GetAll();
-            model.Barbers = barbers.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.FirstName + " " + b.LastName }).ToList();
+            model.Barbers = barbers.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.FirstName.ToString()}).ToList();
             return View(model);
         }
         [Authorize(Roles = "Admin")]

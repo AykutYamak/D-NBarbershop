@@ -60,14 +60,8 @@ namespace DNBarbershop.Core.Services
         }
         public IQueryable<WorkSchedule> GetAll()
         {
-            if (_workScheduleRepository.GetCount().Result <= 0)
-            {
-                throw new ArgumentException("Nothing to get from here.");
-            }
-            else
-            {
-                return _workScheduleRepository.GetAll();
-            }
+            return _workScheduleRepository.GetAll();
+            
         }
         public async Task RemoveRange(IEnumerable<WorkSchedule> entities)
         {

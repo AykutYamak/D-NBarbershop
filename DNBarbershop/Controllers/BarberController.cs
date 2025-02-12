@@ -45,7 +45,7 @@ namespace DNBarbershop.Controllers
                 SpecialityId = filter.SpecialityId,
                 MinExperienceYears = filter.MinExperienceYears,
                 Specialities = new SelectList(_specialityService.GetAll(), "Id", "Type"),
-                Barbers = query.Include(b => b.Speciality).ToList()
+                Barbers = query.Include(b => b.Speciality).ToList() 
             };
             return View(model);
         }

@@ -7,7 +7,7 @@ namespace DNBarbershop.Models.ViewModels.WorkSchedules
     {
 
         public Guid? BarberId { get; set; }
-        public SelectList Barbers { get; set; }
-        public List<WorkSchedule> WorkSchedules { get; set; }
+        public SelectList? Barbers { get; set; }
+        public List<WorkSchedule>? WorkSchedules { get; set; }
     }
 }

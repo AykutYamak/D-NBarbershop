@@ -39,29 +39,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var workSchedule in Model.WorkSchedules)
-                    {
-                        <tr>
-                            <td>@workSchedule.Id</td>
-                            <td>@workSchedule.Barber.FirstName @workSchedule.Barber.LastName</td>
-                            <td>@workSchedule.WorkDate.DayOfWeek</td>
-                            <td>@workSchedule.StartTime</td>
-                            <td>@workSchedule.EndTime</td>
-                            <td>@workSchedule.WorkTimeDuration</td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <a class="btn btn-dark px-3 py-2" asp-controller="WorkSchedule" asp-action="Edit" asp-route-id="@workSchedule.Id">
-                                        <i class="bi bi-pencil"></i> Редактирай
-                                    </a>
-                                    <form asp-controller="WorkSchedule" asp-action="Delete" asp-route-id="@workSchedule.Id" method="post">
-                                        <button type="submit" class="btn btn-danger px-3 py-2">
-                                            <i class="bi bi-trash"></i> Изтрий
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    }
+                        @foreach (var workSchedule in Model.WorkSchedules)
+                        {
+                            <tr>
+                                <td>@workSchedule.Id</td>
+                                <td>@workSchedule.Barber.FirstName @workSchedule.Barber.LastName</td>
+                                <td>@workSchedule.WorkDate.DayOfWeek</td>
+                                <td>@workSchedule.StartTime</td>
+                                <td>@workSchedule.EndTime</td>
+                                <td>@workSchedule.WorkTimeDuration</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a class="btn btn-dark px-3 py-2" asp-controller="WorkSchedule" asp-action="Edit" asp-route-id="@workSchedule.Id">
+                                            <i class="bi bi-pencil"></i> Редактирай
+                                        </a>
+                                        <form asp-controller="WorkSchedule" asp-action="Delete" asp-route-id="@workSchedule.Id" method="post">
+                                            <button type="submit" class="btn btn-danger px-3 py-2">
+                                                <i class="bi bi-trash"></i> Изтрий
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                 </tbody>
             </table>
         </div>
