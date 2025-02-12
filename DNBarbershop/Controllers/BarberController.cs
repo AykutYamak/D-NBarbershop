@@ -54,10 +54,16 @@ namespace DNBarbershop.Controllers
         {
             var model = new BarberCreateViewModel();
             var specialities = _specialityService.GetAll();
+            if (!specialities.Any())
+            {
+                TempData["error"] = "Няма налични специалности.";
+                return RedirectToAction("Index");
+            }
             model.Specialities = specialities.Select(s => new SelectListItem { Value =s.Id.ToString(), Text = s.Type.ToString() }).ToList();
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Add(BarberCreateViewModel barberModel)
         {
@@ -98,9 +104,17 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(BarberEditViewModel barberModel)
         {
+            var barber = await _barberService.Get(b => b.Id == barberModel.Id);
+            if (barber == null)
+            {
+                TempData["error"] = "Няма такъв бръснар.";
+                return NotFound();
+            }
+
             var model = new Barber
             {
                 Id = barberModel.Id,
@@ -110,15 +124,30 @@ namespace DNBarbershop.Controllers
                 ProfilePictureUrl = barberModel.ProfilePictureUrl,
                 SpecialityId = barberModel.SelectedSpecialityId
             };
+
             await _barberService.Update(model);
             TempData["success"] = "Упсешно редактиран бръснар.";
             return RedirectToAction("Index");
 
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["error"] = "Невалиден идентификатор.";
+                return RedirectToAction("Index");
+            }
+
+            var barber = await _barberService.Get(b => b.Id == id);
+            if (barber == null)
+            {
+                TempData["error"] = "Няма такъв бръснар.";
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _barberService.Delete(id);
@@ -132,18 +161,18 @@ namespace DNBarbershop.Controllers
         {
             var list = _barberService.GetAll();
             var query = list.AsQueryable();
-            if (filter.MinExperienceYears != null)
+            if (filter?.MinExperienceYears != null)
             {
                 query = query.Where(b => b.ExperienceYears >= filter.MinExperienceYears);
             }
-            if (filter.SpecialityId != null)
+            if (filter?.SpecialityId != null)
             {
                 query = query.Where(b => b.SpecialityId == filter.SpecialityId.Value);
             }
             var model = new BarberFilterViewModel
             {
-                SpecialityId = filter.SpecialityId,
-                MinExperienceYears = filter.MinExperienceYears,
+                SpecialityId = filter?.SpecialityId,
+                MinExperienceYears = filter?.MinExperienceYears,
                 Specialities = new SelectList(_specialityService.GetAll(), "Id", "Type"),
                 Barbers = query.Include(b => b.Speciality).ToList()
             };

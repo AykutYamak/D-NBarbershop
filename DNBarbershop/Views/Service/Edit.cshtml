@@ -10,6 +10,7 @@
                 <div class="card shadow-lg rounded-4 p-4 bg-dark text-white w-100">
                     <h3 class="text-center fw-bold mb-3">Редактирай услуга</h3>
                     <form method="post">
+                        @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Id" />
                         <div class="mb-3">
                             <label class="form-label fw-semibold" asp-for="ServiceName">Име на услуга</label>
@@ -32,7 +33,6 @@
                                 <input type="number" name="DurationHours" class="form-control border-0 shadow-sm text-center" placeholder="Часове" min="0" max="3" value="@Model.Duration.Hours">
                                 <input type="number" name="DurationMinutes" class="form-control border-0 shadow-sm text-center" placeholder="Минути" min="0" max="59" value="@Model.Duration.Minutes">
                             </div>
-                            <span asp-validation-for="Duration" class="text-danger"></span>
                         </div>
                         <div class="text-center mt-4">
                             <button type="submit" asp-action="Edit" asp-controller="Service" class="btn btn-success px-4 py-2 shadow-sm">

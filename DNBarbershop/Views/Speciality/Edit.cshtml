@@ -10,6 +10,8 @@
             <div class="card shadow-lg rounded-4 p-4 bg-dark text-white w-100">
                 <h3 class="text-center fw-bold mb-3">Редактирай ниво на специалност</h3>
                 <form method="post">
+                        @Html.ValidationSummary(true)
+                        @Html.ValidationMessageFor(m => m.Type)
                     <input type="hidden" asp-for="Id" />
                     <div class="mb-3">
                         <label class="form-label fw-semibold" asp-for="Type">Ниво на специалност</label>

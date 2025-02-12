@@ -123,6 +123,7 @@ namespace DNBarbershop.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Add(AppointmentCreateViewModel model)
         {
@@ -150,14 +151,29 @@ namespace DNBarbershop.Controllers
                     return RedirectToAction("Index");
                 }
 
+                if (model.AppointmentDate < DateTime.Now.Date ||
+                    (model.AppointmentDate.Date == DateTime.Now.Date && 
+                     model.AppointmentTime < DateTime.Now.TimeOfDay))
+                {
+                    TempData["error"] = "Часът не може да бъде в миналото.";
+                    await PopulateViewBags();
+                    return View(model);
+                }
+
                 var appointments = _appointmentService.GetAll();
                 bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
                 if (isAlreadyBooked)
                 {
-
-                    await PopulateViewBags();
                     TempData["error"] = "Този час е вече резервиран.";
+                    await PopulateViewBags();
                     return RedirectToAction("Index");
+                }
+
+                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+                {
+                    TempData["error"] = "Моля, изберете поне една услуга.";
+                    await PopulateViewBags();
+                    return View(model);
                 }
 
                 var newAppointment = new Appointment
@@ -172,12 +188,6 @@ namespace DNBarbershop.Controllers
 
                 await _appointmentService.Add(newAppointment);
                 TempData["success"] = "Успешно резервиран час!";
-
-                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
-                {
-                    TempData["error"] = "Няма такава услуга!";
-                    return RedirectToAction("Index");
-                }
 
                 foreach (var serviceId in model.SelectedServiceIds)
                 {
@@ -202,6 +212,8 @@ namespace DNBarbershop.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var appointment = await _appointmentService.Get(a => a.Id == id);
+
+
 
             var currentUser = await _userManager.GetUserAsync(User);
             

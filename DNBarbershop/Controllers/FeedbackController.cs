@@ -33,7 +33,14 @@ namespace DNBarbershop.Controllers
             var query = list.AsQueryable();
             if (filter.BarberId != null)
             {
-                query = query.Where(b => b.BarberId == filter.BarberId);
+                if (_barberService.GetAll().Any(b => b.Id == filter.BarberId))
+                {
+                    query = query.Where(b => b.BarberId == filter.BarberId);
+                }
+                else
+                {
+                    TempData["error"] = "Невалиден бръснар.";
+                }
             }
 
             var users = _userService.GetAll();
@@ -63,13 +70,23 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
+
+
             var model = new FeedbackCreateViewModel();
 
             var barbers = _barberService.GetAll();
+            
+            if (!barbers.Any())
+            {
+                TempData["error"] = "Няма налични бръснари.";
+                return RedirectToAction("Index");
+            }
+            
             model.Barbers = barbers.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.FirstName.ToString() + " " + b.LastName.ToString()}).ToList();
             return View(model);
         }
         [Authorize(Roles="Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Add(FeedbackCreateViewModel feedbackModel)
         {
@@ -78,6 +95,12 @@ namespace DNBarbershop.Controllers
             {
                 TempData["error"] = "Не сте регистриран/a.";
                 return Unauthorized();
+            }
+
+            if (!_barberService.GetAll().Any(b => b.Id == feedbackModel.SelectedBarberId))
+            {
+                TempData["error"]= "Избраният бръснар не съществува.";
+                return View(feedbackModel);
             }
 
             feedbackModel.UserId = currentUser.Id;
@@ -118,6 +141,13 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Не е намерен такъв отзив.";
                 return NotFound();
             }
+
+            if (feedback.UserId != currentUser.Id)
+            {
+                TempData["error"] = "Нямате право да редактирате този отзив.";
+                return Forbid();
+            }
+
             var barbers = _barberService.GetAll();
             var model = new FeedbackEditViewModel
             {
@@ -132,6 +162,7 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(FeedbackEditViewModel feedbackModel)
         {
@@ -140,6 +171,19 @@ namespace DNBarbershop.Controllers
             {
                 TempData["error"] = "Не сте регистриран/a.";
                 return Unauthorized();
+            }
+
+            var feedback = await _feedbackService.Get(f => f.Id == feedbackModel.Id);
+            if (feedback == null || feedback.UserId != currentUser.Id)
+            {
+                TempData["error"] = "Отзивът не съществува или нямате право да го редактирате.";
+                return NotFound();
+            }
+
+            if (!_barberService.GetAll().Any(b => b.Id == feedbackModel.SelectedBarberId))
+            {
+                TempData["error"] = "Избраният бръснар не съществува.";
+                return View(feedbackModel);
             }
 
             var model = new Feedback
@@ -157,9 +201,17 @@ namespace DNBarbershop.Controllers
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid Id)
         {
+            var feedback = await _feedbackService.Get(f => f.Id == Id);
+            if (feedback == null)
+            {
+                TempData["error"] = "Отзивът не съществува.";
+                return NotFound();
+            }
+
             if (ModelState.IsValid) 
             {
                 await _feedbackService.Delete(Id);

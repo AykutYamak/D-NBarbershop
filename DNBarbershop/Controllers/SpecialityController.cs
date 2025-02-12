@@ -27,10 +27,10 @@ namespace DNBarbershop.Controllers
             var query =  _specialityService.GetAll();
             var speciality = new SpecialityViewModel
             {
-                Id = model.Id,
-                Type = model.Type,
+                Id = model?.Id ?? Guid.Empty,
+                Type = model?.Type ?? string.Empty,
                 Specialities = query.ToList(),
-                Barbers = model.Barbers
+                Barbers = model?.Barbers
             };
             return View(speciality);
         }
@@ -41,9 +41,17 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Add(SpecialityCreateViewModel specialityModel)
         {
+            var existingSpeciality = await _specialityService.Get(s => s.Type == specialityModel.Type);
+            if (existingSpeciality != null)
+            {
+                TempData["error"] = "Ниво на специализиране с този тип вече съществува.";
+                return RedirectToAction("Index");
+            }
+
             var speciality = new Speciality
             {
                 Type = specialityModel.Type
@@ -56,12 +64,19 @@ namespace DNBarbershop.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            Speciality speciality = await _specialityService.Get(s => s.Id == id);
+            if (id == Guid.Empty)
+            {
+                TempData["error"] = "Невалиден идентификатор на специализация.";
+                return RedirectToAction("Index");
+            }
+
+            var speciality = await _specialityService.Get(s => s.Id == id);
             if (speciality == null)
             {
                 TempData["error"] = "Няма намерено такова ниво на специализиране.";
                 return NotFound();
             }
+
             var model = new SpecialityEditViewModel
             {
                 Id = speciality.Id,
@@ -70,9 +85,24 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(SpecialityEditViewModel specialityModel)
         {
+            var speciality = await _specialityService.Get(s => s.Id == specialityModel.Id);
+            if (speciality == null)
+            {
+                TempData["error"] = "Няма намерено такова ниво на специализиране.";
+                return NotFound();
+            }
+
+            var duplicate = await _specialityService.Get(s => s.Type == specialityModel.Type && s.Id != specialityModel.Id);
+            if (duplicate != null)
+            {
+                TempData["error"] = "Ниво на специализиране с този тип вече съществува.";
+                return RedirectToAction("Index");
+            }
+
             var model = new Speciality
             {
                 Id = specialityModel.Id,
@@ -83,16 +113,35 @@ namespace DNBarbershop.Controllers
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
-            if (ModelState.IsValid)
+            if (id == Guid.Empty)
             {
-                await _specialityService.Delete(id);
-                TempData["success"] = "Успешно изтрито ниво на специализиране.";
+                TempData["error"] = "Невалиден идентификатор на специализация.";
                 return RedirectToAction("Index");
             }
-            return View();
+
+            var speciality = await _specialityService.Get(s => s.Id == id);
+            if (speciality == null)
+            {
+                TempData["error"] = "Няма намерено такова ниво на специализиране.";
+                return NotFound();
+            }
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _specialityService.Delete(id);
+                    TempData["success"] = "Успешно изтрито ниво на специализиране.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Възникна грешка при изтриването на нивото на специализиране.";
+            }
+            return RedirectToAction("Index");
         }
         //User View Actions
 
