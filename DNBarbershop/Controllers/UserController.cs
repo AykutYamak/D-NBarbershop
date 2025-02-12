@@ -32,6 +32,7 @@ namespace DNBarbershop.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
+                TempData["error"] = "Не е намерен такъв потребител.";
                 return NotFound();
             }
 
@@ -44,6 +45,7 @@ namespace DNBarbershop.Controllers
 
             if (result.Succeeded)
             {
+                TempData["success"] = $"Успешно направихте {user.FirstName} {user.LastName} админ!";
                 return RedirectToAction("Index");
             }
 
@@ -57,6 +59,7 @@ namespace DNBarbershop.Controllers
             if (ModelState.IsValid)
             {
                 await _userService.DeleteStringId(id);
+                TempData["success"] = "Успешно изтрит потребител.";
                 return RedirectToAction("Index");
             }
             return View();

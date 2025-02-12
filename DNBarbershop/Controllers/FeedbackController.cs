@@ -59,6 +59,7 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
@@ -75,6 +76,7 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/a.";
                 return Unauthorized();
             }
 
@@ -96,6 +98,7 @@ namespace DNBarbershop.Controllers
                     FeedBackDate = feedbackModel.FeedBackDate
                 };
                 await _feedbackService.Add(feedback);
+                TempData["success"] = "Успешно добавен отзив.";
             }
             return RedirectToAction("Index");
         }
@@ -105,12 +108,14 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/a.";
                 return Unauthorized();
             }
 
             var feedback = await _feedbackService.Get(f => f.Id == id);
             if (feedback == null)
             {
+                TempData["error"] = "Не е намерен такъв отзив.";
                 return NotFound();
             }
             var barbers = _barberService.GetAll();
@@ -133,6 +138,7 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/a.";
                 return Unauthorized();
             }
 
@@ -146,6 +152,8 @@ namespace DNBarbershop.Controllers
                 FeedBackDate = DateTime.UtcNow
             };
             await _feedbackService.Update(model);
+            TempData["success"] = "Успешно редактиран отзив.";
+
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
@@ -155,6 +163,7 @@ namespace DNBarbershop.Controllers
             if (ModelState.IsValid) 
             {
                 await _feedbackService.Delete(Id);
+                TempData["success"] = "Успешно изтрит отзив";
                 return RedirectToAction("Index");
             }
             return View();

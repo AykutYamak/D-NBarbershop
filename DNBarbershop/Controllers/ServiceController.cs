@@ -53,6 +53,7 @@ namespace DNBarbershop.Controllers
                 Duration = model.Duration
             };
             await _serviceService.Add(service);
+            TempData["success"] = "Успешно добавена услуга.";
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
@@ -61,6 +62,7 @@ namespace DNBarbershop.Controllers
             var service = await _serviceService.Get(s=>s.Id == id);
             if (service == null)
             {
+                TempData["error"] = "Не е намерена такава услуга.";
                 return NotFound();
             }
             var services = _serviceService.GetAll();
@@ -88,6 +90,7 @@ namespace DNBarbershop.Controllers
                 Duration = service.Duration
             };
             await _serviceService.Update(model);
+            TempData["success"] = "Успешно редактирана услуга.";
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
@@ -97,6 +100,7 @@ namespace DNBarbershop.Controllers
             if (ModelState.IsValid)
             {
                 await _serviceService.Delete(id);
+                TempData["success"] = "Успешно изтрита услуга.";
                 return RedirectToAction("Index");
             }
             return View();

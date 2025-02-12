@@ -70,6 +70,8 @@ namespace DNBarbershop.Controllers
                 SpecialityId = barberModel.SelectedSpecialityId 
             };
             await _barberService.Add(barber);
+            TempData["success"] = "Упсешно добавен бръснар.";
+
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
@@ -78,6 +80,7 @@ namespace DNBarbershop.Controllers
             var barber = await _barberService.Get(b=>b.Id == id);
             if (barber == null)
             {
+                TempData["error"] = "Няма такъв бръснар.";
                 return NotFound();
             }
             var specialities = _specialityService.GetAll();
@@ -108,6 +111,7 @@ namespace DNBarbershop.Controllers
                 SpecialityId = barberModel.SelectedSpecialityId
             };
             await _barberService.Update(model);
+            TempData["success"] = "Упсешно редактиран бръснар.";
             return RedirectToAction("Index");
 
         }
@@ -118,6 +122,7 @@ namespace DNBarbershop.Controllers
             if (ModelState.IsValid)
             {
                 await _barberService.Delete(id);
+                TempData["success"] = "Упсешно изтрит бръснар.";
                 return RedirectToAction("Index");
             }
             return View();

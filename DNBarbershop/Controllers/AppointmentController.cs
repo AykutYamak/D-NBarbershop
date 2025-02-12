@@ -108,6 +108,7 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
@@ -128,6 +129,7 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
@@ -143,8 +145,9 @@ namespace DNBarbershop.Controllers
                 {
 
                     await PopulateViewBags();
-                    
-                    return View(model);
+                    TempData["error"] = "Неуспешно премината валидация.";
+
+                    return RedirectToAction("Index");
                 }
 
                 var appointments = _appointmentService.GetAll();
@@ -153,8 +156,8 @@ namespace DNBarbershop.Controllers
                 {
 
                     await PopulateViewBags();
-
-                    return View(model);
+                    TempData["error"] = "Този час е вече резервиран.";
+                    return RedirectToAction("Index");
                 }
 
                 var newAppointment = new Appointment
@@ -168,10 +171,12 @@ namespace DNBarbershop.Controllers
                 };
 
                 await _appointmentService.Add(newAppointment);
+                TempData["success"] = "Успешно резервиран час!";
 
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
                 {
-                    return View(model);
+                    TempData["error"] = "Няма такава услуга!";
+                    return RedirectToAction("Index");
                 }
 
                 foreach (var serviceId in model.SelectedServiceIds)
@@ -179,7 +184,8 @@ namespace DNBarbershop.Controllers
                     var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
                     if (!serviceExists)
                     {
-                        return View(model);
+                        TempData["error"] = "Няма такава услуга!";
+                        return RedirectToAction("Index");
                     }
 
                     var appointmentService = new AppointmentServices
@@ -201,6 +207,7 @@ namespace DNBarbershop.Controllers
             
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
@@ -208,6 +215,7 @@ namespace DNBarbershop.Controllers
 
             if (appointment.UserId != currentUser.Id)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
@@ -233,6 +241,7 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
@@ -240,6 +249,7 @@ namespace DNBarbershop.Controllers
 
             if (model.UserId != currentUser.Id)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return BadRequest();
             }
             else
@@ -248,19 +258,19 @@ namespace DNBarbershop.Controllers
                 {
 
                     await PopulateViewBags();
-                    
-                    return View(model);
+                    TempData["error"] = "Неуспешно премината валидация.";
+                    return RedirectToAction("Index");
                 }
 
-                var appointments = _appointmentService.GetAll();
-                bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
-                if (isAlreadyBooked)
-                {
+                //var appointments = _appointmentService.GetAll();
+                //bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
+                //if (isAlreadyBooked)
+                //{
 
-                    await PopulateViewBags();
-
-                    return View(model);
-                }
+                //    await PopulateViewBags();
+                //    TempData["error"] = "Този час е вече резервиран.";
+                //    return RedirectToAction("Index");
+                //}
 
                 var newAppointment = new Appointment
                 {
@@ -272,19 +282,26 @@ namespace DNBarbershop.Controllers
                     Status = AppointmentStatus.Scheduled,
                 };
 
+                await _appointmentService.Update(newAppointment);
+                TempData["success"] = "Упсешно редактирана резервация.";
+
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
                 {
-                    return View(model);
+                    TempData["error"] = "Няма такава услуга.";
+                    return RedirectToAction("Index");
                 }
+                // E339D5B2 - 8C4F - 43B7 - A55B - 255C0FD5E3F9
 
                 await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
+
 
                 foreach (var serviceId in model.SelectedServiceIds)
                 {
                     var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
                     if (!serviceExists)
                     {
-                        return View(model);
+                        TempData["error"] = "Няма такава услуга.";
+                        return RedirectToAction("Index");
                     }
                     var appointmentServiceEntity = new AppointmentServices
                     {
@@ -306,6 +323,7 @@ namespace DNBarbershop.Controllers
             {
                 await _appointmentServiceService.DeleteByAppointmentId(id);
                 await _appointmentService.Delete(id);
+                TempData["success"] = "Упсешно изтрита резервация.";
             }
             return RedirectToAction("Index");
         }

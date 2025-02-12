@@ -49,6 +49,7 @@ namespace DNBarbershop.Controllers
                 Type = specialityModel.Type
             };
             await _specialityService.Add(speciality);
+            TempData["success"] = "Успешно добавено ниво на специализиране.";
             return RedirectToAction("Index");
             
         }
@@ -58,6 +59,7 @@ namespace DNBarbershop.Controllers
             Speciality speciality = await _specialityService.Get(s => s.Id == id);
             if (speciality == null)
             {
+                TempData["error"] = "Няма намерено такова ниво на специализиране.";
                 return NotFound();
             }
             var model = new SpecialityEditViewModel
@@ -77,6 +79,7 @@ namespace DNBarbershop.Controllers
                 Type = specialityModel.Type
             };
             await _specialityService.Update(model);
+            TempData["success"] = "Успешно редактирано ниво на специализиране.";
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
@@ -86,6 +89,7 @@ namespace DNBarbershop.Controllers
             if (ModelState.IsValid)
             {
                 await _specialityService.Delete(id);
+                TempData["success"] = "Успешно изтрито ниво на специализиране.";
                 return RedirectToAction("Index");
             }
             return View();

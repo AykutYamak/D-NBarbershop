@@ -23,6 +23,12 @@
                         <option value="">Всички</option>
                     </select>
                 </div>
+
+                <div class="col-md-4">
+                    <button asp-action="Index" asp-controller="WorkSchedule" type="submit" class="btn btn-secondary">
+                        <i class="bi bi-filter"></i> Филтрирай
+                    </button>
+                </div>
             </div>
         </form>
         <div class="table-responsive">
@@ -53,7 +59,7 @@
                                         <a class="btn btn-dark px-3 py-2" asp-controller="WorkSchedule" asp-action="Edit" asp-route-id="@workSchedule.Id">
                                             <i class="bi bi-pencil"></i> Редактирай
                                         </a>
-                                        <form asp-controller="WorkSchedule" asp-action="Delete" asp-route-id="@workSchedule.Id" method="post">
+                                        <form asp-action="Delete" asp-controller="WorkSchedule" asp-route-id="@workSchedule.Id" method="post">
                                             <button type="submit" class="btn btn-danger px-3 py-2">
                                                 <i class="bi bi-trash"></i> Изтрий
                                             </button>
