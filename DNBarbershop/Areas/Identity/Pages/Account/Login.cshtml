@@ -2,7 +2,7 @@
 @model LoginModel
 @{
     Layout = null;
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Вход";
 }
 <html>
 <head>
@@ -13,11 +13,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body class="LoginView">
-    <div class="text-center d-flex justify-content-center align-items-center text-white m-3">
+    <div class="LoginContainer text-center d-flex justify-content-center align-items-center text-white">
         <div class="text-center w-50 LoginDiv">
             <form id="account" method="post">
                 <h1 class="m-4">@ViewData["Title"]</h1>
-                <h2 class="p-3">Use a local account to log in.</h2>
+                <h2 class="p-3">Влезте в акаунта си.</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
@@ -37,14 +37,14 @@
                     </label>
                 </div>
                 <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-dark">Log in</button>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-light">Log in</button>
                 </div>
                 <div>
                     <p class="m-3">
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        <a class="text-light" id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                     </p>
                     <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                        <a class="text-light"  asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
                     </p>
                 </div>
             </form>

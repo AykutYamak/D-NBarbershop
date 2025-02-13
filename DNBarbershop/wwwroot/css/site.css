@@ -130,20 +130,27 @@ body {
     
 }
 .LoginView {
-    background:url('/Assets//Images//Untitled design.png'); 
-    background-size: 100%;
+    background: url('/Assets//Images//Untitled design.png') no-repeat center center fixed;
+    background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     white-space: normal;
 }
+.LoginContainer{
+    height:100%;
+    font-size:100%;
+}
 .LoginDiv {
-    
-    margin-top:2px;
-    background: linear-gradient(to bottom, grey, #333); 
+    margin: auto;
     color: white;
-    padding: 20px;
+    padding: 1%;
     border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.8);
+    font-size: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
 }
 .main-content {
     flex: 1; /* Pushes the footer to the bottom when content is short */
