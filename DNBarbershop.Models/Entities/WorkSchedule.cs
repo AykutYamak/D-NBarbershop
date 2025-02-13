@@ -17,7 +17,7 @@ namespace DNBarbershop.Models.Entities
         public Guid BarberId { get; set; }
         public Barber Barber { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
-        public DateTime WorkDate { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
         public TimeSpan StartTime { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]

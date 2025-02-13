@@ -25,10 +25,10 @@ namespace DNBarbershop.Controllers
             _workScheduleService = workScheduleService;
             _barberService = barberService;
         }
-        public async Task<bool> IsDayOfWeekAlreadyScheduled(Guid barberId, DateTime dayOfWeek)
+        public async Task<bool> IsDayOfWeekAlreadyScheduled(Guid barberId, DayOfWeek dayOfWeek)
         {
             var schedules = await _workScheduleService.GetAll().Where(ws => ws.BarberId == barberId).ToListAsync();
-            var exists = schedules.Any(ws => ws.WorkDate.DayOfWeek == dayOfWeek.DayOfWeek);
+            var exists = schedules.Any(ws => ws.DayOfWeek == dayOfWeek);
             return exists;
         }
 
@@ -62,7 +62,7 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(WorkScheduleCreateViewModel schedule)
         {
-            if (await IsDayOfWeekAlreadyScheduled(schedule.BarberId, schedule.WorkDate))
+            if (await IsDayOfWeekAlreadyScheduled(schedule.BarberId, schedule.DayOfWeek))
             {
                 TempData["error"] = "Този ден е вече създаден.";
                 return RedirectToAction("Index");
@@ -71,7 +71,7 @@ namespace DNBarbershop.Controllers
             var workSchedule = new WorkSchedule
             {
                 BarberId = schedule.BarberId,
-                WorkDate = schedule.WorkDate,
+                DayOfWeek = schedule.DayOfWeek,
                 StartTime = schedule.StartTime,
                 EndTime = schedule.EndTime
             };
@@ -93,7 +93,7 @@ namespace DNBarbershop.Controllers
             {
                 Id = workSchedule.Id,
                 BarberId = workSchedule.BarberId,
-                WorkDate = workSchedule.WorkDate,
+                DayOfWeek = workSchedule.DayOfWeek,
                 StartTime = workSchedule.StartTime,
                 EndTime = workSchedule.EndTime,
                 Barbers = barbers.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.FirstName + " " + b.LastName }).ToList()
@@ -102,7 +102,7 @@ namespace DNBarbershop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(Guid id, WorkSchedule schedule)
+        public async Task<IActionResult> Edit(Guid id, WorkScheduleEditViewModel schedule)
         {
             if (id != schedule.Id)
             {
@@ -114,7 +114,7 @@ namespace DNBarbershop.Controllers
             {
                 Id = schedule.Id,
                 BarberId = schedule.BarberId,
-                WorkDate = schedule.WorkDate,
+                DayOfWeek = schedule.DayOfWeek,
                 StartTime = schedule.StartTime,
                 EndTime = schedule.EndTime
             };
