@@ -59,12 +59,19 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Add(WorkScheduleCreateViewModel schedule)
         {
             if (await IsDayOfWeekAlreadyScheduled(schedule.BarberId, schedule.WorkDate))
             {
                 TempData["error"] = "Този ден е вече създаден.";
+                return RedirectToAction("Index");
+            }
+
+            if (schedule.StartTime >= schedule.EndTime)
+            {
+                TempData["error"] = "Началният час трябва да бъде по-рано от крайния.";
                 return RedirectToAction("Index");
             }
 
@@ -101,6 +108,7 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(Guid id, WorkSchedule schedule)
         {
@@ -109,7 +117,14 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Не е намерен такъв график.";
                 return NotFound();
             }
-            
+
+            if(schedule.StartTime >= schedule.EndTime)
+            {
+                TempData["error"] = "Началният час трябва да бъде по-рано от крайния.";
+                return RedirectToAction("Index");
+            }
+
+
             var model = new WorkSchedule
             {
                 Id = schedule.Id,
@@ -126,13 +141,20 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var workSchedule = await _workScheduleService.Get(w => w.Id == id);
+            if (workSchedule == null)
+            {
+                TempData["error"] = "Графикът не съществува.";
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 await _workScheduleService.Delete(id);
                 TempData["success"] = "Успешно изтрит график.";
                 return RedirectToAction("Index");
             }
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

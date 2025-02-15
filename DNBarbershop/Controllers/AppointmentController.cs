@@ -213,7 +213,11 @@ namespace DNBarbershop.Controllers
         {
             var appointment = await _appointmentService.Get(a => a.Id == id);
 
-
+            if (appointment == null)
+            {
+                TempData["error"] = "Резервацията не е намерена.";
+                return RedirectToAction("Index");
+            }
 
             var currentUser = await _userManager.GetUserAsync(User);
             
@@ -247,6 +251,7 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(AppointmentEditViewModel model)
        {
@@ -264,25 +269,30 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Не сте регистриран/а.";
                 return BadRequest();
             }
+            if (model.AppointmentDate < DateTime.Now.Date ||
+                (model.AppointmentDate.Date == DateTime.Now.Date &&
+                model.AppointmentTime < DateTime.Now.TimeOfDay))
+            {
+                TempData["error"] = "Часът не може да бъде в миналото.";
+                await PopulateViewBags();
+                return View(model);
+            }
             else
             {
                 if (!ModelState.IsValid)
                 {
-
                     await PopulateViewBags();
                     TempData["error"] = "Неуспешно премината валидация.";
                     return RedirectToAction("Index");
                 }
 
-                //var appointments = _appointmentService.GetAll();
-                //bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
-                //if (isAlreadyBooked)
-                //{
+                var appointment = await _appointmentService.Get(a => a.Id == model.Id);
+                if (appointment == null)
+                {
+                    TempData["error"] = "Резервацията не е намерена.";
+                    return RedirectToAction("Index");
+                }
 
-                //    await PopulateViewBags();
-                //    TempData["error"] = "Този час е вече резервиран.";
-                //    return RedirectToAction("Index");
-                //}
 
                 var newAppointment = new Appointment
                 {
@@ -299,10 +309,10 @@ namespace DNBarbershop.Controllers
 
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
                 {
-                    TempData["error"] = "Няма такава услуга.";
-                    return RedirectToAction("Index");
+                    TempData["error"] = "Моля, изберете поне една услуга.";
+                    await PopulateViewBags();
+                    return View(model);
                 }
-                // E339D5B2 - 8C4F - 43B7 - A55B - 255C0FD5E3F9
 
                 await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
 
@@ -328,6 +338,7 @@ namespace DNBarbershop.Controllers
             }
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {

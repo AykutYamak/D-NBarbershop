@@ -8,11 +8,13 @@
         <div class="card shadow-sm p-4 rounded">
             <h3 class="text-center text-white fw-bold mb-4">Добави бръснар</h3>
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label asp-for="BarberId" class="form-label fw-semibold">Избери бръснар</label>
                     <select asp-for="BarberId" asp-items="Model.Barbers" class="form-control">
                         <option value=""></option>
                     </select>
+                    <span asp-validation-for="BarberId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label>Day of the Week</label>
@@ -23,14 +25,17 @@
                             <option value="@((int)day)">@day</option>
                         }
                     </select>
+                    <span asp-validation-for="WorkDate" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" asp-for="StartTime">Начален час</label>
                     <input type="time" asp-for="StartTime" class="form-control" required />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" asp-for="EndTime">Краен час</label>
                     <input type="time" asp-for="EndTime" class="form-control" required />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
                 </div>
                 <div class="text-center">
                     <button type="submit" asp-action="Add" asp-controller="WorkSchedule" class="btn btn-success px-4 py-2 shadow-sm">
@@ -38,6 +43,12 @@
                     </button>
                 </div>
             </form>
+
+            @section Scripts {
+                @{
+                    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                }
+            }
         </div>
     </div>
 </body>

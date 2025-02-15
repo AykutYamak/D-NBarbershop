@@ -14,6 +14,11 @@
         </div>
         <button type="submit" class="btn btn-dark border-1 border-black" asp-action="Add" asp-controller="Speciality">Submit</button>
     </form>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
 </body>
 </html>
     

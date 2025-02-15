@@ -25,6 +25,11 @@
                         <a asp-action="Index" class="btn btn-outline-light px-4 py-2 ms-2">Отказ</a>
                     </div>
                 </form>
+                    @section Scripts {
+                        @{
+                            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                        }
+                    }
             </div>
         </div>
     </div>
