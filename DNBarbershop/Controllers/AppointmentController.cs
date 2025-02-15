@@ -205,16 +205,11 @@ namespace DNBarbershop.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var appointment = await _appointmentService.Get(a => a.Id == id);
-
-<<<<<<< HEAD
             if (appointment == null)
             {
                 TempData["error"] = "Резервацията не е намерена.";
                 return RedirectToAction("Index");
             }
-
-=======
->>>>>>> 794eddd8f4c77ac3241629189d819c8c01e8c003
             var currentUser = await _userManager.GetUserAsync(User);
             
             if (currentUser == null)
@@ -281,18 +276,12 @@ namespace DNBarbershop.Controllers
                     TempData["error"] = "Неуспешно премината валидация.";
                     return RedirectToAction("Index");
                 }
-
-<<<<<<< HEAD
                 var appointment = await _appointmentService.Get(a => a.Id == model.Id);
                 if (appointment == null)
                 {
                     TempData["error"] = "Резервацията не е намерена.";
                     return RedirectToAction("Index");
                 }
-
-
-=======
->>>>>>> 794eddd8f4c77ac3241629189d819c8c01e8c003
                 var newAppointment = new Appointment
                 {
                     Id = model.Id,

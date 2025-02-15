@@ -87,20 +87,57 @@ body {
 .welcomeText {
     font-family: "Abril Fatface", serif;
     font-style: normal;
-    margin-top:5rem;
+    margin-top: 5rem;
 }
+
 .whyUsSection {
-    margin-top:10rem;
-    background: rgb(130, 79, 35) no-repeat fixed;
+    margin-top: 12rem;
+    background: rgb(67, 24, 4, 1);
     background-size: 100%;
+    opacity: 0.8;
+    padding-top:30px;
     white-space: normal; /* Prevents extra spacing from text nodes */
 }
-.whyUsSection .title{
-    font-size:80px;
+
+    .whyUsSection .subtitle {
+        font-family: "Abril Fatface",serif;
+        padding: 2rem;
+        font-size: 3rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        color: #FFFFFF;
+    }
+    .whyUsSection .section-title {
+        font-family:"Abril Fatface",serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        color: #d4a657;
+        font-size: 10rem;
+        font-weight: bold;
+        text-align: center;
+        position: relative;
+    }
+        .whyUsSection .section-title::before,
+        .whyUsSection .section-title::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #d4a657;
+            margin: 0px 1rem;
+        }
+
+
+
+.introduction {
+    position: relative;
 }
-.introduction{
-    position:relative;
+.reservation-button{
+    padding:4rem;
 }
+.reservation-button a{
+    font-size:2rem;
+}
+
 .card {
     margin: 10px 30px 0;
     display: inline-block;
@@ -269,6 +306,7 @@ body {
         float: none;
         display: inline-block;
     }
+
     .navbar-nav {
         flex-direction: row;
     }
@@ -297,4 +335,171 @@ nav {
 
 .page-title {
     opacity: 0.75 !important;
+}
+
+.features-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding:20px;
+}
+
+.feature-item {
+    text-align: center;
+    max-width: 250px;
+    max-width: 250px;
+}
+
+    .feature-item svg {
+        width: 80px;
+        height: 80px;
+        fill: #d4a657;
+    }
+
+.feature-title {
+    font-size: 18px;
+    color: #fff;
+    margin-top: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.feature-description {
+    font-size: 14px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    color: #b0b0b0;
+}
+.home-sections-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 0px; 
+    height:600px;
+
+}
+.left-home-section,
+.right-home-section {
+    flex: 1;
+    padding: 20px;
+}
+.left-home-section {
+    position: relative;
+    background-color: rgb(96, 52, 32);
+    color: #FFFFFF;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+.left-home-section-title
+{
+    display:flex;
+    justify-content:center;
+    font-family:"Abril Fatface",serif;
+    position:relative;
+    padding:1rem;
+}
+.left-home-section-title h1{
+    font-size:4rem;
+}
+.left-home-section-worktime{
+    display:grid;
+    justify-content:inherit;
+    padding-top:1.5rem;
+}
+.left-home-section-worktime h3 {
+    display: flex;
+    justify-content: center;
+    font-size:1.6rem;
+    font-family: "Abril Fatface",serif;
+    padding: 0.5rem;
+    flex: 1;
+    border-bottom: 1px solid #FFFFFF;
+    margin: 0px 1rem;
+}
+.right-home-section{
+    position:relative;
+    background-image:url('/Assets//Images//Image(2).jpg');
+    
+}
+.barbers-section-container {
+    display: flex;
+    justify-content: space-between;
+    align-content:center;
+    gap: 0px;
+    height: 733px;
+}
+.left-barbers-section,
+.right-barbers-section {
+    flex: 1;
+    padding: 20px;
+    opacity: 0.8;
+}
+.right-barbers-section {
+    background-color: rgb(67, 24, 4, 1);
+}
+.right-barbers-section-title {
+    display: grid;
+    justify-content: center;
+    font-family: "Abril Fatface",serif;
+    font-weight: 400;
+}
+
+    .right-barbers-section-title h1 {
+        font-size: 4rem;
+        padding-top: 6rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        color: #FFFFFF;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+.right-barbers-section-description {
+    padding: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    color: #FFFFFF;
+}
+
+.right-barbers-section-description p{
+    padding-top:5rem;
+    padding-left:2rem;
+    padding-right:2rem;
+    font-family: "Bad Script",serif;
+    font-size:2rem;
+    font-weight:400;
+}
+.left-barbers-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: rgb(67, 24, 4, 1);
+}
+.image-container {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    grid-template-rows: 1fr 1fr; /* Two rows */
+    width: 100%;
+    height: 733px; /* Adjust the height as needed */
+}
+
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.top-left {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.bottom-left {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.top-right {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.bottom-right {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
 }
