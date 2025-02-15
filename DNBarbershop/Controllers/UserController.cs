@@ -4,6 +4,7 @@ using DNBarbershop.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.Controllers
 {
@@ -22,8 +23,16 @@ namespace DNBarbershop.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var list = _userService.GetAll();
-            return View(list);
+            var users = await _userManager.Users.ToListAsync();
+            var userRoles = new List<(User User, List<string> Roles)>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userRoles.Add((user, roles.ToList()));
+            }
+
+            return View(userRoles);
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]

@@ -15,46 +15,36 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 </head>
 <body>
-    <header class="customnavbarHeader">
-        <nav>
-            <ul class="nav nav-underline d-flex justify-content-center align-items-center text-center fs-5 customnavbar">
-                <li class="nav-item">
-                    <a class="navbar-brand text-white" asp-controller="Home" asp-action="Index">
-                        <img src="~/Assets/Images/Untitled_design_5_-removebg-preview.png" class="block" alt="logo" width="110" height="110" />
-                    </a>
-                </li>
-                @if (User.IsInRole(SD.AdminRole))
-                {
-                    <li class="nav-item"><a class="nav-link text-white m-1 p-0" asp-controller="Appointment" asp-action="Index">Appointments</a></li>
-                    <li class="nav-item"><a class="nav-link text-white m-1 p-0" asp-controller="Service" asp-action="Index">Services</a></li>
-                    <li class="nav-item"><a class="nav-link text-white m-1 p-0" asp-controller="Feedback" asp-action="Index">Feedbacks</a></li>
-                    <li class="nav-item"><a class="nav-link text-white m-1 p-0" asp-controller="Barber" asp-action="Index">Barbers</a></li>
-                    <li class="nav-item"><a class="nav-link text-white m-1 p-0" asp-controller="WorkSchedule" asp-action="Index">WorkSchedules</a></li>
-                    <li class="nav-item"><a class="nav-link text-white m-1 p-0" asp-controller="Speciality" asp-action="Index">Specialities</a></li>
-                    <li class="nav-item"><a class="nav-link text-white m-1 p-0" asp-controller="User" asp-action="Index">Users</a></li>
-                    <li class="nav-item">
+    <header class="customHeader">
+        <div class="container-fluid" style="padding-top:1rem;">
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav">
+                        @if (User.IsInRole(SD.AdminRole))
+                        {
+                            <li><a id="len1" class="hoverable" asp-controller="Appointment" asp-action="Index">Резервации</a></li>
+                            <li><a id="len2" class="hoverable" asp-controller="Service" asp-action="Index">Услуги</a></li>
+                            <li><a id="len3" class="hoverable" asp-controller="Feedback" asp-action="Index">Отзиви</a></li>
+                            <li><a id="len4" class="hoverable" asp-controller="Barber" asp-action="Index">Бръснари</a></li>
+                            <li><a id="len4" class="hoverable" asp-controller="WorkSchedule" asp-action="Index">Работно време</a></li>
+                            <li><a id="len3" class="hoverable" asp-controller="Speciality" asp-action="Index">Специализации</a></li>
+                            <li><a id="len4" class="hoverable" asp-controller="User" asp-action="Index">Потребители</a></li>
+                            <partial name="_LoginPartial" />
+                        }
+                        else
+                        {
+                        <li><a id="len4" class="hoverable" asp-controller="Service" asp-action="Services">Услуги</a></li>
+                        <li><a id="len4" class="hoverable" asp-controller="Barber" asp-action="Barbers">Бръснари</a></li>
+                        <li><a id="len4" class="hoverable" asp-controller="Home" asp-action="AboutUs">За нас</a></li>
                         <partial name="_LoginPartial" />
-                    </li>
-                }
-                else
-                {
-
-                    <li class="nav-item"><a class="nav-link text-white" asp-controller="Appointment" asp-action="Index">Book Now</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" asp-controller="Service" asp-action="Services">Services</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" asp-controller="Barber" asp-action="Barbers">Barbers</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" asp-controller="Product" asp-action="Products">Products</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" asp-controller="AboutUs" asp-action="Index">About Us</a></li>
-
-                    <li class="nav-item">
-                        <partial name="_LoginPartial" />
-                    </li>
-                }
-            </ul>
-            
-        </nav>
+                        }
+                        
+                    </ul>
+                </div>
+            </nav>
+            </div>
     </header>
-
-    <div class="container">
+    <div >
         <main role="main" class="pd-flex align-items-center justify-content-center min-vh-100">
             @RenderBody()
         </main>
@@ -193,6 +183,7 @@
         </div>
     </footer>
     <partial name="_Notification"></partial>
+    <script src="~/js/navbar.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

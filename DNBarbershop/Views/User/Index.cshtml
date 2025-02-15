@@ -1,6 +1,7 @@
 ﻿@using DNBarbershop.Models.Entities
-@model IEnumerable<User>
-
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+@model IEnumerable<(User User, List<string> Roles)>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,7 @@
                         <th scope="col">Име</th>
                         <th scope="col">Фамилия</th>
                         <th scope="col">Е-mail</th>
+                        <th scope="col">Роля</th>
                         <th scope="col">Действия</th>
                     </tr>
                 </thead>
@@ -22,17 +24,30 @@
                     @foreach (var user in Model)
                     {
                         <tr>
-                            <td>@user.Id</td>
-                            <td>@user.FirstName</td>
-                            <td>@user.LastName</td>
-                            <td>@user.Email</td>
+                            <td>@user.User.Id</td>
+                            <td>@user.User.FirstName</td>
+                            <td>@user.User.LastName</td>
+                            <td>@user.User.Email</td>
+                            <td>
+                                @{
+                                    var roles = await UserManager.GetRolesAsync(user.User);
+                                    if (roles.Contains("Admin"))
+                                    {
+                                        <span class="badge bg-success">Админ</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Потребител</span>
+                                    }
+                                }
+                            </td>
                             <td>
                                 <div class="d-flex gap-2">
                                     <form asp-controller="User" asp-action="MakeAdmin" method="post">
-                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <input type="hidden" name="userId" value="@user.User.Id" />
                                         <button type="submit" class="btn btn-primary">Make Admin</button>
                                     </form>
-                                    <form asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" method="post">
+                                    <form asp-controller="User" asp-action="Delete" asp-route-id="@user.User.Id" method="post">
                                         <button type="submit" class="btn btn-danger px-3 py-2">
                                             <i class="bi bi-trash"></i> Изтрий
                                         </button>

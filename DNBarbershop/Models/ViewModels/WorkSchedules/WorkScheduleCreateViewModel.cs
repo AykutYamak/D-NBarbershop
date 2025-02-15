@@ -15,7 +15,7 @@ namespace DNBarbershop.Models.ViewModels.WorkSchedules
         public Guid BarberId { get; set; }
 
         [Required(ErrorMessage = RequiredErrorMessage)]
-        public DateTime WorkDate { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
 
         [Required(ErrorMessage = RequiredErrorMessage)]
         public TimeSpan StartTime { get; set; }
