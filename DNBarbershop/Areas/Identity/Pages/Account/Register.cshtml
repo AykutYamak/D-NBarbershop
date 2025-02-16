@@ -17,45 +17,45 @@
         <div class="text-center w-50 LoginDiv">
             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                 <h1 class="m-3">@ViewData["Title"]</h1>
-                <h2 class="p-1">Create a new account.</h2>
+                <h2 class="p-1">Създайте си акаунт.</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-2">
-                    <label asp-for="Input.Email" class="form-label">Email</label>
+                    <label asp-for="Input.Email" class="form-label">E-mail</label>
                     <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-2">
-                    <label asp-for="Input.FirstName" class="form-label">First Name</label>
+                    <label asp-for="Input.FirstName" class="form-label">Име</label>
                     <input asp-for="Input.FirstName" class="form-control" aria-required="true" placeholder="Alex" />
                     <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-2">
-                    <label asp-for="Input.LastName" class="form-label">Last Name</label>
+                    <label asp-for="Input.LastName" class="form-label">Фамилия</label>
                     <input asp-for="Input.LastName" class="form-control" aria-required="true" placeholder="Ivanov" />
                     <span asp-validation-for="Input.LastName" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-2">
-                    <label asp-for="Input.Password" class="form-label">Password</label>
+                    <label asp-for="Input.Password" class="form-label">Парола</label>
                     <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-2">
-                    <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
+                    <label asp-for="Input.ConfirmPassword" class="form-label">Потвърдете паролата</label>
                     <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
                 <div class="mb-2">
-                    <label asp-for="Input.Role" class="form-label">Role</label>
+                    <label asp-for="Input.Role" class="form-label">Роля</label>
                     <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
                         <option disabled selected>- Select Role -</option>
                     </select>
                 </div>
-                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-dark">Register</button>
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-dark">Регистрация</button>
             </form>
         </div>
     </div>
-    <a href="/" class="back-button">← Back to Home</a>
+    <a href="/" class="back-button">← Към началната страница</a>
 </body>
 </html>
 @section Scripts {

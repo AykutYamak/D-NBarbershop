@@ -91,7 +91,7 @@ body {
 }
 
 .whyUsSection {
-    margin-top: 12rem;
+    margin-top: 2rem;
     background: rgb(67, 24, 4, 1);
     background-size: 100%;
     opacity: 0.8;
@@ -427,8 +427,7 @@ nav {
 .left-barbers-section,
 .right-barbers-section {
     flex: 1;
-    padding: 20px;
-    opacity: 0.8;
+    padding: 0;
 }
 .right-barbers-section {
     background-color: rgb(67, 24, 4, 1);
@@ -466,8 +465,8 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    background-color: rgb(67, 24, 4, 1);
+    padding: 0;
+    background-color: #a0a0a0;
 }
 .image-container {
 
@@ -503,3 +502,82 @@ nav {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
 }
+
+.feedback-section h2 {
+    font-family: "Abril Fatface",serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    color: #FFFFFF;
+    padding: 1rem;
+    font-size: 3rem;
+    border-bottom: 1px solid white;
+}
+
+.feedback-section h1 {
+    font-family: "Abril Fatface",serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    color: #FFFFFF;
+    font-size: 4rem;
+    padding-bottom: 3rem;
+}
+
+.feedback-section-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+    padding: 2rem;
+}
+
+.feedback-section {
+    max-width: 1200px;
+    width: 90%;
+    text-align: center;
+}
+
+.elementor-widget-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.testimonial-group {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+.widget-testimonial-wrap {
+    flex: 1 1 300px;
+    max-width: 30%;
+    min-width: 280px;
+    background: darkgray;
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.testimonial .avatar{
+    padding:1rem;
+}
+.testimonial .content {
+    text-shadow: 0px 1px 6px rgba(0, 0, 0, 0.6);
+    color: #FFFFFF;
+    padding: 1rem;
+    text-align: center;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    font-size: 1.03rem;
+}
+.role,
+.name {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        color: #FFFFFF;
+        text-align: center;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        hyphens: auto;
+        font-size: 1rem;
+    }

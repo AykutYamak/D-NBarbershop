@@ -1,7 +1,108 @@
-﻿.aboutUsPage {
+﻿.aboutus-container {
     background: url('/Assets//Images//1142039.jpg') no-repeat center center fixed;
     background-size: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
     white-space: normal;
+}
+.aboutus-section-info{
+    margin:1rem;
+}
+.aboutus-information{
+    background-color:rgb(177, 177, 177,0.7);
+    margin:5rem;
+    border-radius:10px;
+}
+    .aboutus-information h2 {
+        text-align: center;
+        font-family: "Abril Fatface",serif;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.6);
+        color: #d4a657;
+        font-weight:400;
+        font-size: 4rem;
+        padding: 1rem;
+    }
+    .aboutus-information p {
+        font-family: "Abril Fatface",serif;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.6);
+        color: white;
+        font-size: 1.5rem;
+        padding: 1.2rem;
+        
+    }
+.aboutus-section-foundation {
+    display: flex;
+    justify-content: space-between;
+    margin: 5rem;
+    padding: 1.2rem;
+}
+.aboutus-foundation-img {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+}
+.aboutus-foundation-img img{
+    border-radius:10px;
+}
+.aboutus-foundation-text {
+    margin:1rem;
+    border-radius:10px;
+    background-color: rgb(177, 177, 177,0.7);
+    height:500px;
+}
+    .aboutus-foundation-text h1 {
+        text-align: center;
+        font-family: "Abril Fatface",serif;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.6);
+        color: #d4a657;
+        font-weight: 400;
+        font-size: 3rem;
+        padding: 0.2rem;
+    }
+    .aboutus-foundation-text p {
+        font-family: "Abril Fatface",serif;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.6);
+        color: white;
+        font-size: 1.2rem;
+        padding: 2rem;
+    }
+.aboutus-section-contacts {
+    padding: 20px;
+    background-color: rgb(177,177,177,0.7);
+}
+
+.contacts-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-box {
+    flex: 1;
+    min-width: 250px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+}
+
+    .contact-box h3 {
+        font-family: "Abril Fatface",serif;
+        font-weight:1000;
+        font-size:2rem;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .contact-box p {
+        font-family: "Abril Fatface",serif;
+        font-size:1.2rem;
+        color: #777;
+        margin: 5px 0;
+    }
+.aboutus-section-maps {
+    display:flex;
+    justify-content:flex-end;
 }
