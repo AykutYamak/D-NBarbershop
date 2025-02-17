@@ -9,7 +9,7 @@
     margin:1rem;
 }
 .aboutus-information{
-    background-color:rgb(177, 177, 177,0.7);
+    background-color:rgb(177, 177, 177,1);
     margin:5rem;
     border-radius:10px;
 }
@@ -33,7 +33,7 @@
 .aboutus-section-foundation {
     display: flex;
     justify-content: space-between;
-    margin: 5rem;
+    margin: 3rem;
     padding: 1.2rem;
 }
 .aboutus-foundation-img {
@@ -45,9 +45,10 @@
     border-radius:10px;
 }
 .aboutus-foundation-text {
-    margin:1rem;
+    margin-top:3.5rem;
+    margin-left:1rem;
     border-radius:10px;
-    background-color: rgb(177, 177, 177,0.7);
+    background-color: rgb(177, 177, 177,1);
     height:500px;
 }
     .aboutus-foundation-text h1 {
@@ -68,7 +69,7 @@
     }
 .aboutus-section-contacts {
     padding: 20px;
-    background-color: rgb(177,177,177,0.7);
+    background-color: rgb(177,177,177,0.5);
 }
 
 .contacts-row {
@@ -104,5 +105,52 @@
     }
 .aboutus-section-maps {
     display:flex;
-    justify-content:flex-end;
+    justify-content:space-around;
+    margin:1rem;
 }
+.maps iframe{
+    border-radius:20px;
+    padding:1rem;
+}
+.contact-form {
+    width: 45%;
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+    .contact-form h2 {
+        font-family: 'Abril Fatface', serif;
+        font-weight:600;
+        margin-bottom: 20px;
+        color:black;
+    }
+
+    .contact-form form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .contact-form button {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .contact-form button:hover {
+            background-color: #555;
+        }
