@@ -1,26 +1,33 @@
 ﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.ViewModels.Appointments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //
     public class UserController : Controller
     {
 
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserService _userService;
-        public UserController(IUserService userService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        private readonly IAppointmentService _appointmentService;
+        private readonly IBarberService _barberService;
+        public UserController(IAppointmentService appointmentService,IBarberService barberService,IUserService userService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             _userService = userService;
             _roleManager = roleManager;
             _userManager = userManager;
+            _appointmentService = appointmentService;
+            _barberService = barberService;
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -72,6 +79,25 @@ namespace DNBarbershop.Controllers
                 return RedirectToAction("Index");
             }
             return View();
+        }
+        //User's View
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> Details(AppointmentFilterViewModel? filter)
+        {
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
+            }
+
+            var model = new AppointmentFilterViewModel
+            {
+                UserId = currentUser.Id,
+                Appointments = currentUser.Appointments.ToList(),
+            };
+            return View(model);
         }
     }
 }

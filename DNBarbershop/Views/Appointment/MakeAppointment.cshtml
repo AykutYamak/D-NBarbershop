@@ -1,0 +1,100 @@
+﻿@model DNBarbershop.Models.ViewModels.Appointments.AppointmentCreateViewModel
+@{
+    ViewData["Title"] = "Make an Appointment";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <script type="module" src="../date-carousel.js"></script>
+
+    <custom-style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
+    </custom-style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="text-center">Book Your Appointment</h2>
+        <form asp-action="MakeAppointment" method="post">
+            <div class="mb-3">
+                <label class="form-label">Select Barber:</label>
+                <select id="barberSelect" asp-for="BarberId" class="form-select" required>
+                    <option value="">Choose a barber...</option>
+                    @foreach (var barber in ViewBag.Barbers)
+                    {
+                        <option value="@barber.Value">@barber.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Select Date:</label>
+                <input id="dateInput" asp-for="AppointmentDate" type="date" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Select Time:</label>
+                <select id="timeSelect" asp-for="AppointmentTime" class="form-select" required>
+                    <option value="">Select a time slot</option>
+                    @foreach (var time in ViewBag.TimeSlots)
+                    {
+                        <option value="@time.Value">@time.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Select Services:</label>
+                <div class="form-check-container border rounded p-3">
+                    @foreach (var service in ViewBag.Services)
+                    {
+                        <div class="form-check">
+                            <input type="checkbox" name="SelectedServiceIds" value="@service.Value" class="form-check-input" id="service_@service.Value">
+                            <label class="form-check-label" for="service_@service.Value">@service.Text</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3" asp-action="Add" asp-controller="Appointment">Book Appointment</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const barberSelect = document.getElementById("barberSelect");
+            const dateInput = document.getElementById("dateInput");
+            const timeSelect = document.getElementById("timeSelect");
+
+            async function updateAvailableTimeSlots() {
+                const barberId = barberSelect.value;
+                const appointmentDate = dateInput.value;
+
+                if (!barberId || !appointmentDate) return;
+
+                try {
+                    const response = await fetch(`/Appointment/GetAvailableTimeSlots?barberId=${barberId}&appointmentDate=${appointmentDate}`);
+                    const availableSlots = await response.json();
+
+                    timeSelect.innerHTML = '<option value="">Select a time slot</option>';
+                    availableSlots.forEach(slot => {
+                        const option = document.createElement("option");
+                        option.value = slot;
+                        option.textContent = slot;
+                        timeSelect.appendChild(option);
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching available time slots:", error);
+                }
+            }
+
+            barberSelect.addEventListener("change", updateAvailableTimeSlots);
+            dateInput.addEventListener("change", updateAvailableTimeSlots);
+        });
+    </script>
+</body>
+</html> 

@@ -8,8 +8,8 @@ namespace DNBarbershop.Models.ViewModels.Appointments
         public string? UserId { get; set; }
         public Guid? BarberId { get; set; }
         public DateTime AppointmentDates { get; set; }
-        public SelectList Barbers { get; set; }
-        public SelectList Users { get; set; }
-        public List<Appointment> Appointments { get; set; }
+        public SelectList? Barbers { get; set; }
+        public SelectList? Users { get; set; }
+        public List<Appointment>? Appointments { get; set; }
     }
 }

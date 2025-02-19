@@ -34,6 +34,30 @@ namespace DNBarbershop.Controllers
             _userManager = userManager;
             _appointmentServiceService = appointmentServiceService;
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableTimeSlots(Guid barberId, DateTime appointmentDate)
+        {
+            var allSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
+
+            var bookedSlots = _appointmentService
+                .GetAll()
+                .Where(a => a.BarberId == barberId && a.AppointmentDate == appointmentDate)
+                .Select(a => a.AppointmentTime.ToString(@"hh\:mm"))
+                .ToList();
+
+            var availableSlots = allSlots.Except(bookedSlots).ToList();
+
+            return Json(availableSlots);
+        }
+        private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
+        {
+            var slots = new List<string>();
+            for (var time = start; time < end; time += interval)
+            {
+                slots.Add(time.ToString("hh\\:mm"));
+            }
+            return slots;
+        }
         private async Task PopulateViewBags()
         {
             var barbers = _barberService.GetAll();
@@ -57,15 +81,6 @@ namespace DNBarbershop.Controllers
             var statuses = Enum.GetValues(typeof(AppointmentStatus));
             ViewBag.Statuses = statuses; 
 
-        }
-        private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
-        {
-            var slots = new List<string>();
-            for (var time = start; time < end; time += interval)
-            {
-                slots.Add(time.ToString(@"hh\:mm"));
-            }
-            return slots;
         }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
@@ -105,7 +120,6 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
         
-        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Add()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -125,7 +139,6 @@ namespace DNBarbershop.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Add(AppointmentCreateViewModel model)
         {
@@ -337,6 +350,103 @@ namespace DNBarbershop.Controllers
                 TempData["success"] = "Упсешно изтрита резервация.";
             }
             return RedirectToAction("Index");
+        }
+
+        //User's View
+        
+        public async Task<IActionResult> MakeAppointment()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
+            }
+
+            var model = new AppointmentCreateViewModel
+            {
+                UserId = currentUser.Id,
+                Status = AppointmentStatus.Scheduled
+            };
+
+            await PopulateViewBags();
+            return View(model);
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> MakeAppointment(AppointmentCreateViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
+            }
+
+            model.UserId = currentUser.Id;
+
+            if (model.UserId != currentUser.Id)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                if (!ModelState.IsValid)
+                {
+
+                    await PopulateViewBags();
+                    TempData["error"] = "Неуспешно премината валидация.";
+
+                    return RedirectToAction("Index");
+                }
+
+                var appointments = _appointmentService.GetAll();
+                bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
+                if (isAlreadyBooked)
+                {
+
+                    await PopulateViewBags();
+                    TempData["error"] = "Този час е вече резервиран.";
+                    return RedirectToAction("Index");
+                }
+
+                var newAppointment = new Appointment
+                {
+                    Id = Guid.NewGuid(),
+                    BarberId = model.BarberId,
+                    UserId = model.UserId,
+                    AppointmentDate = model.AppointmentDate,
+                    AppointmentTime = model.AppointmentTime,
+                    Status = AppointmentStatus.Scheduled
+                };
+
+                await _appointmentService.Add(newAppointment);
+                TempData["success"] = "Успешно резервиран час!";
+
+                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+                {
+                    TempData["error"] = "Няма такава услуга!";
+                    return RedirectToAction("Index");
+                }
+
+                foreach (var serviceId in model.SelectedServiceIds)
+                {
+                    var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
+                    if (!serviceExists)
+                    {
+                        TempData["error"] = "Няма такава услуга!";
+                        return RedirectToAction("Index");
+                    }
+
+                    var appointmentService = new AppointmentServices
+                    {
+                        AppointmentId = newAppointment.Id,
+                        ServiceId = serviceId
+                    };
+                    await _appointmentServiceService.Add(appointmentService);
+                }
+                return RedirectToAction("User/Index");
+            }
         }
     }
 }

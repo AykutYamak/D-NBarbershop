@@ -89,18 +89,21 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(SpecialityEditViewModel specialityModel)
         {
-            var speciality = await _specialityService.Get(s => s.Id == specialityModel.Id);
-            if (speciality == null)
+            if (false)
             {
-                TempData["error"] = "Няма намерено такова ниво на специализиране.";
-                return NotFound();
-            }
+                var speciality = await _specialityService.Get(s => s.Id == specialityModel.Id);
+                if (speciality == null)
+                {
+                    TempData["error"] = "Няма намерено такова ниво на специализиране.";
+                    return NotFound();
+                }
 
-            var duplicate = await _specialityService.Get(s => s.Type == specialityModel.Type && s.Id != specialityModel.Id);
-            if (duplicate != null)
-            {
-                TempData["error"] = "Ниво на специализиране с този тип вече съществува.";
-                return RedirectToAction("Index");
+                var duplicate = await _specialityService.Get(s => s.Type == specialityModel.Type && s.Id != specialityModel.Id);
+                if (duplicate != null)
+                {
+                    TempData["error"] = "Ниво на специализиране с този тип вече съществува.";
+                    return RedirectToAction("Index");
+                }
             }
 
             var model = new Speciality

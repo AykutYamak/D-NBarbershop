@@ -14,5 +14,6 @@ namespace DNBarbershop.Core.IServices
         Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality);
         Task<IEnumerable<Barber>> GetBarbersWithExperienceAbove(int minExperienceYears);
         Task<IEnumerable<Barber>> SearchBarberByName(string name);
+        Task<IEnumerable<WorkSchedule>> GetWorkSchedules(Guid barberId);
     }
 }

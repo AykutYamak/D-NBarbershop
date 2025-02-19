@@ -71,6 +71,7 @@ namespace DNBarbershop.DataAccess.Repository
         }
         public async Task Update(T entity)
         {
+            var en = entity;
             dbSet.Update(entity);
             await db.SaveChangesAsync();
         }
