@@ -108,13 +108,15 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(BarberEditViewModel barberModel)
         {
-            var barber = await _barberService.Get(b => b.Id == barberModel.Id);
-            if (barber == null)
+            if (false)
             {
-                TempData["error"] = "Няма такъв бръснар.";
-                return NotFound();
+                var barber = await _barberService.Get(b => b.Id == barberModel.Id);
+                if (barber == null)
+                {
+                    TempData["error"] = "Няма такъв бръснар.";
+                    return NotFound();
+                }
             }
-
             var model = new Barber
             {
                 Id = barberModel.Id,

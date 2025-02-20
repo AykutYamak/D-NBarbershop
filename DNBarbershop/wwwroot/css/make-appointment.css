@@ -1,0 +1,103 @@
+﻿
+body {
+    background-color: #f5f5f5;
+    font-family: 'Abril Fatface', sans-serif;
+}
+
+.appointment-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #3d2b1f;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+h2.text-center {
+    color: #d4af37;
+    font-family: 'Abril Fatface', serif;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 1rem;
+}
+
+.form-label {
+    color: #d4af37 !important;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-select, .form-control {
+    background-color: #ffffff;
+    border: 2px solid #d4af37;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+    .form-select:focus, .form-control:focus {
+        border-color: #b5942e;
+        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    }
+
+.form-check-container {
+    border-color: #d4af37 !important;
+    background-color: rgba(212, 175, 55, 0.05);
+}
+
+.form-check-input:checked {
+    background-color: #d4af37;
+    border-color: #d4af37;
+}
+
+.form-check-label {
+    color: #ffffff;
+    margin-left: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #d4af37;
+    border-color: #d4af37;
+    color: #3d2b1f;
+    font-weight: 600;
+    padding: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #b5942e;
+        border-color: #b5942e;
+        transform: translateY(-2px);
+    }
+
+/* Custom time slot styling */
+#timeSelect option {
+    padding: 0.5rem;
+    background: #ffffff;
+}
+
+/* Hover effects for form elements */
+.form-check:hover {
+    background-color: rgba(212, 175, 55, 0.1);
+    border-radius: 5px;
+}
+
+/* Responsive adjustments */
+@@media (max-width: 768px) {
+    .appointment-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    h2.text-center {
+        font-size: 2rem;
+    }
+}
+
+/* Icon styling */
+.form-icon {
+    color: #d4af37;
+    margin-right: 0.5rem;
+}

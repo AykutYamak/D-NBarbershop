@@ -157,14 +157,14 @@ namespace DNBarbershop.Controllers
             }
             else
             {
-                if (!ModelState.IsValid)
-                {
+                //if (!ModelState.IsValid)
+                //{
 
-                    await PopulateViewBags();
-                    TempData["error"] = "Неуспешно премината валидация.";
+                //    await PopulateViewBags();
+                //    TempData["error"] = "Неуспешно премината валидация.";
 
-                    return RedirectToAction("Index");
-                }
+                //    return RedirectToAction("Index");
+                //}
 
                 var appointments = _appointmentService.GetAll();
                 bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
@@ -223,6 +223,7 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Резервацията не е намерена.";
                 return RedirectToAction("Index");
             }
+            
             var currentUser = await _userManager.GetUserAsync(User);
             
             if (currentUser == null)
@@ -289,11 +290,14 @@ namespace DNBarbershop.Controllers
                     TempData["error"] = "Неуспешно премината валидация.";
                     return RedirectToAction("Index");
                 }
-                var appointment = await _appointmentService.Get(a => a.Id == model.Id);
-                if (appointment == null)
+                if (false)
                 {
-                    TempData["error"] = "Резервацията не е намерена.";
-                    return RedirectToAction("Index");
+                    var appointment = await _appointmentService.Get(a => a.Id == model.Id);
+                    if (appointment == null)
+                    {
+                        TempData["error"] = "Резервацията не е намерена.";
+                        return RedirectToAction("Index");
+                    }
                 }
                 var newAppointment = new Appointment
                 {

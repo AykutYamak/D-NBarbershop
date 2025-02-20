@@ -3,7 +3,7 @@
     $(document).ready(function () {
         var i, stop;
         i = 1;
-        stop = 4; //num elements
+        stop = 7; //num elements
         setInterval(function () {
             if (i > stop) {
                 return;
