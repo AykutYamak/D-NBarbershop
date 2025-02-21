@@ -1,10 +1,13 @@
-﻿using DNBarbershop.Core.IServices;
+﻿using System.Text;
+using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.ViewModels.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.Controllers
@@ -146,5 +149,23 @@ namespace DNBarbershop.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        //public async Task<string> RenderServiceSnippet()
+        //{
+        //    var services = _serviceService.GetAll().Select(s => new ServiceViewModel
+        //    {
+        //        Id = s.Id,
+        //        ServiceName = s.ServiceName,
+        //        Description = s.Description,
+        //        Price = s.Price,
+        //        Duration = s.Duration
+        //    }).ToList();
+
+        //    var serviceViewModel = new ServiceViewModel();
+
+        //    var view =  PartialView("_ServicePartial", serviceViewModel);
+
+        //    return view.ToString();
+        //}
     }
 }

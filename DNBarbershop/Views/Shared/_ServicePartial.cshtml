@@ -1,0 +1,12 @@
+﻿@model DNBarbershop.Models.ViewModels.Services.ServiceViewModel;
+<ul>	
+		@foreach (var service in Model.Services)
+		{
+			<li>
+				<h3>@service.ServiceName</h3>
+				<p>@service.Description</p>
+				<h5>@service.Price</h5>
+				<h6>@service.Duration</h6>
+			</li>
+		}
+</ul>

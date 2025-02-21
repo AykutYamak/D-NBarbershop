@@ -3,6 +3,7 @@ using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
 using DNBarbershop.Models.ViewModels.Appointments;
+using DNBarbershop.Models.ViewModels.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +64,18 @@ namespace DNBarbershop.Controllers
             var barbers = _barberService.GetAll();
             var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
+            //var services = _serviceService.GetAll().Select(s => new ServiceViewModel
+            //{
+            //    Id = s.Id,
+            //    ServiceName = s.ServiceName,
+            //    Description = s.Description,
+            //    Price = s.Price,
+            //    Duration = s.Duration
+            //}).ToList();
+
+            //var serviceController   = new ServiceController(_serviceService);
+
+            //var services = serviceController.RenderServiceSnippet();
             var services = _serviceService.GetAll();
 
             ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
@@ -71,6 +84,7 @@ namespace DNBarbershop.Controllers
                 Value = s.Id.ToString(),
                 Text = s.ServiceName
             }).ToList();
+            //ViewData["Services"] = services;
 
             var timeSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
             ViewBag.TimeSlots = timeSlots.Select(ts => new SelectListItem
@@ -119,7 +133,7 @@ namespace DNBarbershop.Controllers
             };
             return View(model);
         }
-        
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -138,7 +152,7 @@ namespace DNBarbershop.Controllers
             await PopulateViewBags();
             return View(model);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Add(AppointmentCreateViewModel model)
         {
@@ -357,7 +371,8 @@ namespace DNBarbershop.Controllers
         }
 
         //User's View
-        
+        [Authorize(Roles = "User")]
+
         public async Task<IActionResult> MakeAppointment()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -367,15 +382,19 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
+
             var model = new AppointmentCreateViewModel
             {
                 UserId = currentUser.Id,
-                Status = AppointmentStatus.Scheduled
+                Status = AppointmentStatus.Scheduled,
+                Services = _serviceService.GetAll().ToList(),
+                Barbers = _barberService.GetAll().ToList()
             };
 
             await PopulateViewBags();
             return View(model);
         }
+        [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> MakeAppointment(AppointmentCreateViewModel model)

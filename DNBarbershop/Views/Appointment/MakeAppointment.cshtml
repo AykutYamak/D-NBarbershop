@@ -9,136 +9,34 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-    <script type="module" src="../date-carousel.js"></script>
     <link rel="stylesheet" href="~/css/make-appointment.css">
-
-    <custom-style>
-        <style is="custom-style" include="demo-pages-shared-styles">
-        </style>
-    </custom-style>
-    <style>
-        .services-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .service-card {
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-            .service-card:hover {
-                border-color: #007bff;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            }
-
-            .service-card.selected {
-                border-color: #007bff;
-                background-color: #f8f9fa;
-            }
-
-        .checkbox-input {
-            position: absolute;
-            opacity: 0;
-            height: 0;
-            width: 0;
-        }
-
-        .checkmark {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 20px;
-            height: 20px;
-            background-color: #fff;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .checkbox-input:checked ~ .checkmark {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .checkmark:after {
-            content: "✓";
-            color: white;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-        }
-
-        .checkbox-input:checked ~ .checkmark:after {
-            display: block;
-        }
-
-        .service-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .service-price {
-            color: #007bff;
-            font-size: 1.1em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .service-duration {
-            color: #666;
-            font-size: 0.9em;
-        }
-    </style>
 </head>
 <body>
-    <form method="POST">
-        <div class="services-container"> 
-            @foreach (var item in (List<SelectListItem>)ViewBag.Services)
-            {
-                    <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@item.Value" id="@item.Value">
-                    <label class="form-check-label" for="@item.Value">
-                        @item.Text
-                    </label>
-            }
-        </div>
-    </form>
-
-
-
-
-    <div class="appointment-container">
-        <h2 class="text-center"><i class="fas fa-scissors form-icon"></i>Book Your Appointment</h2>
+    <div class="container mt-4 " style="background-color: gray;border-radius: 20px;padding: 2rem; margin:1rem;">
+        <h2 class="text-center">Book Your Appointment</h2>
         <form asp-action="MakeAppointment" method="post">
-            <div class="mb-4">
-                <label class="form-label"><i class="fas fa-user-tie form-icon"></i>Select Barber:</label>
-                <select id="barberSelect" asp-for="BarberId" class="form-select" required>
-                    <option value="">Choose a barber...</option>
-                    @foreach (var barber in ViewBag.Barbers)
+            <div class="barber-container mb-3">
+                <label class="form-label">Select Barber:</label>
+                <div class="row g-3">
+                    @foreach (var barber in Model.Barbers)
                     {
-                        <option value="@barber.Value">@barber.Text</option>
+                        <div class="col-md-4 col-sm-6">
+                            <input type="radio" name="BarberId" value="@barber.Id" class="btn-check" id="barber_@barber.Id" required>
+                            <label class="btn btn-outline-dark w-100 text-center p-3 barber-card" for="barber_@barber.Id">
+                                <strong>@barber.FirstName @barber.LastName</strong>
+                                <p>Experience: @barber.ExperienceYears years</p>
+                            </label>
+                        </div>
                     }
-                </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Select Date:</label>
+                <input id="dateInput" asp-for="AppointmentDate" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
             </div>
 
-            <div class="mb-4">
-                <label class="form-label"><i class="fas fa-calendar-alt form-icon"></i>Select Date:</label>
-                <input id="dateInput" asp-for="AppointmentDate" type="date" class="form-control" required
-                       value="@DateTime.Today.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
-            </div>
-
-            <div class="mb-4">
-                <label class="form-label"><i class="fas fa-clock form-icon"></i>Select Time:</label>
+            <div class="mb-3">
+                <label class="form-label">Select Time:</label>
                 <select id="timeSelect" asp-for="AppointmentTime" class="form-select" required>
                     <option value="">Select a time slot</option>
                     @foreach (var time in ViewBag.TimeSlots)
@@ -148,34 +46,38 @@
                 </select>
             </div>
 
-            <div class="mb-4">
-                <label class="form-label"><i class="fas fa-concierge-bell form-icon"></i>Select Services:</label>
-                <div class="form-check-container p-3">
-                    @foreach (var service in ViewBag.Services)
+            <div class="mb-3 text-center">
+                <label class="form-label">Select Services:</label>
+                <div class="row g-3 justify-content-center">
+                    @foreach (var service in Model.Services)
                     {
-                        <div class="form-check py-2">
-                            <input type="checkbox" name="SelectedServiceIds" value="@service.Value"
-                                   class="form-check-input" id="service_@service.Value">
-                            <label class="form-check-label" for="service_@service.Value">@service.Text</label>
+                        <div class="col-md-4 col-sm-6">
+                            <input type="checkbox" name="SelectedServiceIds" value="@service.Id" class="btn-check" id="service_@service.Id">
+                            <label class="btn btn-outline-primary w-100 text-center p-3 service-card" for="service_@service.Id">
+                                <strong>@service.ServiceName</strong>
+                                <p>@service.Description</p>
+                                <p>Price: $@service.Price</p>
+                                <p>Duration: @service.Duration mins</p>
+                            </label>
                         </div>
                     }
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-3">
-                <i class="fas fa-calendar-check"></i> Book Appointment
-            </button>
+            <button type="submit" class="btn btn-primary w-100 mt-3">Book Appointment</button>
         </form>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const barberSelect = document.getElementById("barberSelect");
+            const barberSelect = document.querySelectorAll("input[name='BarberId']");
             const dateInput = document.getElementById("dateInput");
             const timeSelect = document.getElementById("timeSelect");
 
             async function updateAvailableTimeSlots() {
-                const barberId = barberSelect.value;
+                const selectedBarber = document.querySelector("input[name='BarberId']:checked");
+                if (!selectedBarber) return;
+                const barberId = selectedBarber.value;
                 const appointmentDate = dateInput.value;
 
                 if (!barberId || !appointmentDate) return;
@@ -191,15 +93,14 @@
                         option.textContent = slot;
                         timeSelect.appendChild(option);
                     });
-
                 } catch (error) {
                     console.error("Error fetching available time slots:", error);
                 }
             }
 
-            barberSelect.addEventListener("change", updateAvailableTimeSlots);
+            barberSelect.forEach(input => input.addEventListener("change", updateAvailableTimeSlots));
             dateInput.addEventListener("change", updateAvailableTimeSlots);
         });
     </script>
 </body>
-</html> 
+</html>

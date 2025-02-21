@@ -1,103 +1,135 @@
-﻿
-body {
-    background-color: #f5f5f5;
-    font-family: 'Abril Fatface', sans-serif;
+﻿body {
+    background: url('../Assets/Images/wp9441481-barber-4k-wallpapers.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    white-space: normal;
 }
-
-.appointment-container {
-    max-width: 700px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #3d2b1f;
+.container {
+    background-color: #fff;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-top: 5rem;
 }
 
-h2.text-center {
-    color: #d4af37;
-    font-family: 'Abril Fatface', serif;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #d4af37;
-    padding-bottom: 1rem;
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
 }
 
-.form-label {
-    color: #d4af37 !important;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+/* Barber Section */
+.barber-container .btn-check:checked + .btn-outline-dark {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
 }
 
-.form-select, .form-control {
-    background-color: #ffffff;
-    border: 2px solid #d4af37;
-    border-radius: 8px !important;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
-}
-
-    .form-select:focus, .form-control:focus {
-        border-color: #b5942e;
-        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    .barber-container .btn-check:checked + .btn-outline-dark strong {
+        color: #fff;
     }
 
-.form-check-container {
-    border-color: #d4af37 !important;
-    background-color: rgba(212, 175, 55, 0.05);
+.barber-card {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
-.form-check-input:checked {
-    background-color: #d4af37;
-    border-color: #d4af37;
-}
+    .barber-card:hover {
+        border-color: #007bff;
+        transform: translateY(-5px);
+    }
 
-.form-check-label {
-    color: #ffffff;
-    margin-left: 0.5rem;
-}
+    .barber-card p {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
 
-.btn-primary {
-    background-color: #d4af37;
-    border-color: #d4af37;
-    color: #3d2b1f;
-    font-weight: 600;
-    padding: 1rem;
+/* Date and Time Section */
+form .form-label {
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    color: #333;
 }
 
-    .btn-primary:hover {
-        background-color: #b5942e;
-        border-color: #b5942e;
-        transform: translateY(-2px);
+input[type="date"], select {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+    select:focus, input[type="date"]:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
     }
 
-/* Custom time slot styling */
-#timeSelect option {
-    padding: 0.5rem;
-    background: #ffffff;
+/* Service Section */
+.service-card {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
 }
 
-/* Hover effects for form elements */
-.form-check:hover {
-    background-color: rgba(212, 175, 55, 0.1);
-    border-radius: 5px;
+    .service-card:hover {
+        border-color: #28a745;
+        transform: translateY(-5px);
+    }
+
+    .service-card p {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
+/* Button Styles */
+button[type="submit"] {
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: #fff;
 }
 
-/* Responsive adjustments */
-@@media (max-width: 768px) {
-    .appointment-container {
-        margin: 1rem;
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
         padding: 1.5rem;
     }
 
-    h2.text-center {
-        font-size: 2rem;
+    .barber-card, .service-card {
+        padding: 1rem;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    .form-label {
+        font-size: 1rem;
+    }
+
+    .btn-check:checked + .btn-outline-dark {
+        padding: 1rem;
     }
 }
 
-/* Icon styling */
-.form-icon {
-    color: #d4af37;
-    margin-right: 0.5rem;
-}
