@@ -1,0 +1,36 @@
+﻿body {
+    background: url('/Assets/Images/circles-background-dark-tones_60389-166.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    white-space:normal
+}
+.title-container{
+    font-family:"Abril Fatface",serif;
+    margin-top:2rem;
+    border-bottom:solid 3px black;
+    margin-bottom:2rem;
+}
+.title-container h2{
+    font-size:4rem;
+    font-weight: 800;
+}
+.title-container p{
+    font-size:2rem;
+    font-weight:600;
+}
+.user-container, .appointments-container {
+    background: rgb(0, 0, 0, 0.60); 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+    .edit-button-container a {
+        display: inline-block; 
+        padding: 10px 20px; 
+        border-radius: 5px;
+    }

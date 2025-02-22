@@ -6,36 +6,39 @@
     white-space: normal;
 }
 .container {
-    background-color: #fff;
+    font-family: "Abril Fatface",serif;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 2rem;
-    margin-top: 5rem;
 }
 
 h2 {
-    font-size: 2rem;
+    padding:1rem;
+    font-size: 3rem;
     font-weight: bold;
-    color: #333;
+    color: black;
 }
 
 /* Barber Section */
 .barber-container .btn-check:checked + .btn-outline-dark {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
+    background-color: rgb(255, 255, 255, 0.8);
+    color: black;
+    border-color: black;
 }
 
     .barber-container .btn-check:checked + .btn-outline-dark strong {
-        color: #fff;
+        color: black;
     }
 
 .barber-card {
+    font-size: 1.3rem;
     border: 2px solid #ddd;
     border-radius: 10px;
     padding: 1.5rem;
     transition: all 0.3s ease;
     cursor: pointer;
+    background-color: rgb(255, 255, 255, 0.4);
 }
 
     .barber-card:hover {
@@ -45,15 +48,15 @@ h2 {
 
     .barber-card p {
         margin: 0.5rem 0;
-        font-size: 0.9rem;
-        color: #666;
+        color: black;
     }
 
 /* Date and Time Section */
 form .form-label {
-    font-size: 1.1rem;
+    padding:1rem;
+    font-size: 2rem;
     font-weight: 600;
-    color: #333;
+    color: black;
 }
 
 input[type="date"], select {
@@ -64,7 +67,7 @@ input[type="date"], select {
     font-size: 1rem;
     margin-top: 0.5rem;
 }
-
+    
     select:focus, input[type="date"]:focus {
         outline: none;
         border-color: #007bff;
@@ -73,22 +76,37 @@ input[type="date"], select {
 
 /* Service Section */
 .service-card {
+    font-size: 1.1rem;
     border: 2px solid #ddd;
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: 1rem;
     transition: all 0.3s ease;
     cursor: pointer;
-    text-align: center;
+    background-color: rgb(255, 255, 255, 0.4);
 }
 
-    .service-card:hover {
-        border-color: #28a745;
-        transform: translateY(-5px);
+.service-container .btn-check:checked + .btn-outline-dark {
+    background-color: rgb(255, 255, 255, 0.8);
+    color: black;
+    border-color: black;
+}
+    .service-container .btn-check:checked + .btn-outline-dark strong {
+        color: black;
     }
 
+.service-card:hover {
+    border-color: #007bff;
+    transform: translateY(-5px);
+}
+    .service card strong {
+        padding: 1rem;
+        font-size: 3rem;
+        font-weight: bold;
+        color: black;
+    }
     .service-card p {
-        font-size: 0.9rem;
-        color: #666;
+        font-size: 1.1rem;
+        color: black;
         margin-top: 0.5rem;
     }
 
@@ -98,7 +116,6 @@ button[type="submit"] {
     font-weight: 600;
     background-color: #007bff;
     border-color: #007bff;
-    padding: 1rem;
     border-radius: 10px;
     transition: all 0.3s ease;
     cursor: pointer;

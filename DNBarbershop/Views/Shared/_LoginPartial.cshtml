@@ -14,7 +14,7 @@
             @if (User.IsInRole(SD.AdminRole))
             {
                 <li>
-                    <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" style="display:inline; font-weight:bold;">
+                    <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="~/" style="display:inline; font-weight:bold;">
                         <button type="submit" class="hoverable" style="border:none; background:none; cursor:pointer; color:inherit;">Изход</button>
                     </form>
                 </li>
@@ -22,10 +22,10 @@
             else
             {
                 <li>
-                    <a id="manage" class="hoverable" asp-controller="User" asp-action="Details" title="Manage">Здравей @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
+                    <a id="manage" class="hoverable" asp-controller="User" asp-action="Details" title="Manage">Профил</a>
                 </li>
                 <li>
-                    <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" style="display:inline; font-weight:bold;">
+                    <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="~/">
                         <button type="submit" class="hoverable" style="border:none; background:none; cursor:pointer; color:inherit;">Изход</button>
                     </form>
                 </li>
