@@ -1,13 +1,22 @@
-﻿namespace DNBarbershop.Models.ViewModels.Barbers
+﻿using DNBarbershop.Models.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace DNBarbershop.Models.ViewModels.Barbers
 {
     public class SingleBarberViewModel
     {
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Speciality { get; set; }
         public int ExperienceYears { get; set; }
         public string Description { get; set; }
         public string ProfilePictureUrl { get; set; }
+
+        public Guid? SpecialityId { get; set; }
+        public int? MinExperienceYears { get; set; }
+
+        public SelectList Specialities { get; set; }
+        public List<Barber> Barbers { get; set; }
     }
 }
