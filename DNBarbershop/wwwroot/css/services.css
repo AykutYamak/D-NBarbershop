@@ -1,16 +1,175 @@
 ﻿body {
     background: url('/Assets/Images/slate-texture-background.jpg');
     background-position: center;
+    background-attachment: fixed;
     background-size: 100%;
     background-repeat: no-repeat;
     white-space: normal;
 }
-.service-card {
-    margin: 10px 0px 0;
-    display: inline-block;
-    width: 400px;
-    height: 300px;
-    align-items: center;
-    color: white;
-    background-color: rgb(0, 0, 0, 0.70);
+
+.card-container {
+    display: flex; /* Use Flexbox for horizontal layout */
+    flex-wrap: wrap; /* Allow cards to wrap to the next row if needed */
+    gap: 20px; /* Add spacing between cards */
+    justify-content: center; /* Center cards horizontally */
+    padding: 20px; /* Add padding around the container */
 }
+
+.card {
+    color: #FFFFFF;
+    position: relative;
+    width: 320px; /* Adjust card width as needed */
+    height: 320px; /* Adjust card height as needed */
+    background: rgb(73, 72, 72);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+    .card::before,
+    .card::after {
+        position: absolute;
+        content: "";
+        width: 20%;
+        height: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        background-color: rgb(57, 57, 57);
+        transition: all 0.5s;
+        z-index: 1; /* Ensure the grey effect is below the text */
+    }
+
+    .card::before {
+        top: 0;
+        right: 0;
+        border-radius: 0 15px 0 100%;
+    }
+
+    .card::after {
+        bottom: 0;
+        left: 0;
+        border-radius: 0 100% 0 15px;
+    }
+
+    .card:hover::before,
+    .card:hover::after {
+        width: 100%;
+        height: 100%;
+        border-radius: 15px;
+        transition: all 0.5s;
+    }
+
+.card-title {
+    font-size: 3rem;
+    transition: opacity 0.3s ease;
+    z-index: 2; /* Ensure the title and text are above the grey effect */
+    position: relative; /* Required for z-index to work */
+}
+
+.card-text {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    transition: opacity 0.3s ease;
+    z-index: 2; /* Ensure the title and text are above the grey effect */
+    position: relative; /* Required for z-index to work */
+}
+
+.card-description {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 1rem;
+    font-weight: normal;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    z-index: 2; /* Ensure the description is above the grey effect */
+}
+
+.card:hover .card-title,
+.card:hover .card-text {
+    opacity: 0;
+}
+
+.card:hover .card-description {
+    opacity: 1;
+}
+/* Style for the form */
+.bg-black.bg-opacity-75 {
+    width: 50%; /* Reduce the width of the black container */
+    margin: 0 auto; /* Center the container */
+    padding: 1rem; /* Reduce padding for a more compact look */
+}
+
+/* Style for the slider */
+.form-range {
+    width: 100%; /* Make the slider full width */
+    cursor: pointer; /* Change cursor to pointer */
+    background: transparent; /* Remove default background */
+}
+
+    /* Style for the slider track */
+    .form-range::-webkit-slider-runnable-track {
+        background: #6c757d; /* Grey track */
+        border-radius: 10px; /* Rounded corners */
+        height: 6px; /* Reduced track height */
+    }
+
+    .form-range::-moz-range-track {
+        background: #6c757d; /* Grey track */
+        border-radius: 10px; /* Rounded corners */
+        height: 6px; /* Reduced track height */
+    }
+
+    /* Style for the slider thumb */
+    .form-range::-webkit-slider-thumb {
+        -webkit-appearance: none; /* Remove default styling */
+        appearance: none;
+        width: 16px; /* Reduced thumb width */
+        height: 16px; /* Reduced thumb height */
+        background: #ffffff; /* White thumb */
+        border-radius: 50%; /* Circular thumb */
+        border: 2px solid #6c757d; /* Grey border */
+        margin-top: -5px; /* Center the thumb vertically */
+    }
+
+    .form-range::-moz-range-thumb {
+        width: 16px; /* Reduced thumb width */
+        height: 16px; /* Reduced thumb height */
+        background: #ffffff; /* White thumb */
+        border-radius: 50%; /* Circular thumb */
+        border: 2px solid #6c757d; /* Grey border */
+    }
+
+/* Style for the max price value display */
+#maxPriceValue {
+    font-weight: bold;
+    color: #ffffff; /* White text */
+    margin-left: 5px; /* Spacing between label and value */
+}
+
+/* Style for the filter button */
+.btn-secondary {
+    background-color: #6c757d; /* Grey background */
+    border: none; /* Remove border */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    padding: 0.5rem 1rem; /* Reduced padding for a smaller button */
+    font-size: 0.9rem; /* Smaller font size */
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268; /* Darker grey on hover */
+    }

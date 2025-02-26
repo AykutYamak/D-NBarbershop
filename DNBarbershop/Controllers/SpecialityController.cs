@@ -14,11 +14,9 @@ namespace DNBarbershop.Controllers
     public class SpecialityController : Controller
     {
         ISpecialityService _specialityService;
-        IBarberService _barberService;
         public SpecialityController(IBarberService barberService,ISpecialityService specialityService)
         {
             _specialityService = specialityService;
-            _barberService = barberService;
         }
 
         //Admin View Actions

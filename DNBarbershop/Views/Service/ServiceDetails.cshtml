@@ -6,38 +6,52 @@
 </head>
 <body>
     <div class="container text-center">
-        <form method="get" class="mb-3 bg-black bg-opacity-75 text-white p-3 rounded">
-            <div class="row g-2 align-items-end">
+        <form method="get" class="mb-3 bg-black bg-opacity-75 text-white p-2 rounded w-50 mx-auto">
+            <div class="row g-2 align-items-center d-flex justify-content-center">
+                <div class="col-md-8">
+                    <label asp-for="MaxPrice" class="form-label">Макс цена: <span id="maxPriceValue">@Model.MaxPrice</span> лв.</label>
+                    <input type="range" asp-for="MaxPrice" class="form-range" min="0" max="50" step="5" id="maxPriceSlider">
+                </div>
                 <div class="col-md-4">
-                    <label asp-for="MaxPrice" class="form-label">Макс цена:</label>
-                    <input type="number" asp-for="MaxPrice" class="form-control">
+                    <button asp-action="ServiceDetails" asp-controller="Service" type="submit" class="btn btn-secondary w-100">
+                        <i class="bi bi-filter"></i> Филтрирай
+                    </button>
                 </div>
             </div>
-            <div class="col-md-4" style="padding-top:1rem;">
-                <button asp-action="ServiceDetails" asp-controller="Service" type="submit" class="btn btn-secondary">
-                    <i class="bi bi-filter"></i> Филтрирай
-                </button>
-            </div>
         </form>
-        <div class="container mt-4 d-flex flex-column align-items-center">
-            <div class="row justify-content-center g-4">
-                @foreach (var service in Model.Services)
-                {
-                    <div class="col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
-                        <div class="service-card shadow-sm p-3 text-center">
-                            <div class="card-body">
-                                <h5 class="card-title">@service.ServiceName</h5>
-                                <p class="card-text">Цена: @service.Price</p>
-                                <p class="card-text">Описание: @service.Description</p>
-                                <p class="card-text">Продължителност: @service.Duration</p>
-
-                            </div>
-                        </div>
-                    </div>
-                }
-                /*Make it look good*/
-            </div>
+        <div class="card-container">
+            @foreach (var service in Model.Services)
+            {
+                <div class="card">
+                    <h3 class="card-title">@service.ServiceName</h3>
+                    <p class="card-text">Цена: @service.Price</p>
+                    @if (service.Duration.Hours < 0)
+                    {
+                        <p class="card-text">Продължителност: @service.Duration.Minutes min</p>
+                    }
+                    else if (service.Duration.Hours > 0 && service.Duration.Minutes != 0)
+                    {
+                        <p class="card-text">Продължителност: @service.Duration.Hours h @service.Duration.Minutes min</p>
+                    }
+                    else
+                    {
+                        <p class="card-text">Продължителност: @service.Duration.Minutes min</p>
+                    }
+                    <p class="card-description">@service.Description</p>
+                </div>
+            }
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const maxPriceSlider = document.getElementById('maxPriceSlider');
+            const maxPriceValue = document.getElementById('maxPriceValue');
+
+            maxPriceSlider.addEventListener('input', function () {
+                maxPriceValue.textContent = this.value;
+            });
+            maxPriceValue.textContent = maxPriceSlider.value;
+        });
+    </script>
 </body>
 </html>
