@@ -169,7 +169,7 @@ namespace DNBarbershop.Areas.Identity.Pages.Account
 
                     if (!string.IsNullOrEmpty(Input.Role)) 
                     {
-                        await _userManager.AddToRoleAsync(user, Input.Role);
+                        await _userManager.AddToRoleAsync(user, SD.UserRole);
                     }
                     else
                     {
