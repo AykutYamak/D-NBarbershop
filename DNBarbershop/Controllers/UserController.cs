@@ -27,7 +27,6 @@ namespace DNBarbershop.Controllers
             _appointmentService = appointmentService;
             _barberService = barberService;
         }
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -81,7 +80,7 @@ namespace DNBarbershop.Controllers
             return View();
         }
         //User's View
-        [Authorize(Roles = "User")]
+        
         public async Task<IActionResult> Details(AppointmentFilterViewModel? filter)
         {
 

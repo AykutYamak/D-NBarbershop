@@ -371,7 +371,6 @@ namespace DNBarbershop.Controllers
         }
 
         //User's View
-        [Authorize(Roles = "User")]
 
         public async Task<IActionResult> MakeAppointment()
         {
@@ -394,7 +393,6 @@ namespace DNBarbershop.Controllers
             await PopulateViewBags();
             return View(model);
         }
-        [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> MakeAppointment(AppointmentCreateViewModel model)

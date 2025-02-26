@@ -12,17 +12,17 @@
     <link rel="stylesheet" href="~/css/make-appointment.css">
 </head>
 <body>
-    <div class="container mt-4 " style="background-color: gray;border-radius: 20px;padding: 2rem; margin:1rem;">
+    <div class="container mt-4 ">
         <h2 class="text-center">Book Your Appointment</h2>
-        <form asp-action="MakeAppointment" method="post">
-            <div class="barber-container mb-3">
+        <form method="post">
+            <div class="mb-3">
                 <label class="form-label">Select Barber:</label>
                 <div class="row g-3">
                     @foreach (var barber in Model.Barbers)
                     {
                         <div class="col-md-4 col-sm-6">
                             <input type="radio" name="BarberId" value="@barber.Id" class="btn-check" id="barber_@barber.Id" required>
-                            <label class="btn btn-outline-dark w-100 text-center p-3 barber-card" for="barber_@barber.Id">
+                            <label class="" for="barber_@barber.Id">
                                 <strong>@barber.FirstName @barber.LastName</strong>
                                 <p>Experience: @barber.ExperienceYears years</p>
                             </label>
@@ -48,12 +48,12 @@
 
             <div class="mb-3 text-center">
                 <label class="form-label">Select Services:</label>
-                <div class="row g-3 justify-content-center">
+                <div class="row g-3">
                     @foreach (var service in Model.Services)
                     {
                         <div class="col-md-4 col-sm-6">
                             <input type="checkbox" name="SelectedServiceIds" value="@service.Id" class="btn-check" id="service_@service.Id">
-                            <label class="btn btn-outline-primary w-100 text-center p-3 service-card" for="service_@service.Id">
+                            <label class="" for="service_@service.Id">
                                 <strong>@service.ServiceName</strong>
                                 <p>@service.Description</p>
                                 <p>Price: $@service.Price</p>
@@ -64,7 +64,9 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-3">Book Appointment</button>
+            <button type="submit" asp-action="MakeAppointment" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-sm">
+                <i class="bi bi-check-lg"></i> Запази
+            </button>
         </form>
     </div>
 
