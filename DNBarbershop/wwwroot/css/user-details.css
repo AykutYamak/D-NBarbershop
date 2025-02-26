@@ -1,0 +1,36 @@
+﻿body {
+    background: url(https://img.freepik.com/free-vector/abstract-black-shapes-background-design_1017-31904.jpg?t=st=1740308557~exp=1740312157~hmac=40d0157c5e0498b7795e49f8e37f35602231109de214768239831655afee5ea1&w=1800);
+    background-size: cover;
+    background-repeat: no-repeat;
+    white-space: normal
+}
+.title-container{
+    font-family:"Abril Fatface",serif;
+    margin-top:2rem;
+    border-bottom:solid 3px black;
+    margin-bottom:2rem;
+}
+.title-container h2{
+    font-size:4rem;
+    font-weight: 800;
+}
+.title-container p{
+    font-size:2rem;
+    font-weight:600;
+}
+.user-container, .appointments-container {
+    background: rgb(0, 0, 0, 0.60); 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+    .edit-button-container a {
+        display: inline-block; 
+        padding: 10px 20px; 
+        border-radius: 5px;
+    }

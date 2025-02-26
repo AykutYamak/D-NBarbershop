@@ -371,6 +371,7 @@ namespace DNBarbershop.Controllers
         }
 
         //User's View
+        [Authorize(Roles = "User,Admin")]
 
         public async Task<IActionResult> MakeAppointment()
         {
@@ -393,6 +394,7 @@ namespace DNBarbershop.Controllers
             await PopulateViewBags();
             return View(model);
         }
+        [Authorize(Roles = "User,Admin")]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> MakeAppointment(AppointmentCreateViewModel model)
@@ -412,14 +414,14 @@ namespace DNBarbershop.Controllers
             }
             else
             {
-                if (!ModelState.IsValid)
-                {
+                //if (!ModelState.IsValid)
+                //{
 
-                    await PopulateViewBags();
-                    TempData["error"] = "Неуспешно премината валидация.";
+                //    await PopulateViewBags();
+                //    TempData["error"] = "Неуспешно премината валидация.";
 
-                    return RedirectToAction("Index");
-                }
+                //    return RedirectToAction("Index");
+                //}
 
                 var appointments = _appointmentService.GetAll();
                 bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
@@ -442,6 +444,7 @@ namespace DNBarbershop.Controllers
                 };
 
                 await _appointmentService.Add(newAppointment);
+                currentUser.Appointments.Add(newAppointment);
                 TempData["success"] = "Успешно резервиран час!";
 
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
@@ -466,7 +469,7 @@ namespace DNBarbershop.Controllers
                     };
                     await _appointmentServiceService.Add(appointmentService);
                 }
-                return RedirectToAction("User/Index");
+                return RedirectToAction("Details", "User", null);
             }
         }
     }

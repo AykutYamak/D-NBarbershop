@@ -2,10 +2,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-</head>
-<body >
+    <link rel="stylesheet" href="~/css/barbers-details.css" />
     
-
+</head>
+<body class="barbers-details">
+    <div class="container text-center">
+        <form method="get" class="mb-3 bg-black bg-opacity-75 text-white p-3 rounded">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label asp-for="SpecialityId" class="form-label">Специализиране</label>
+                    <select asp-for="SpecialityId" asp-items="Model.Specialities" class="form-select">
+                        <option value="">Всички</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="MinExperienceYears" class="form-label">Минимален опит (години)</label>
+                    <input type="number" asp-for="MinExperienceYears" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <button asp-action="UserIndex" asp-controller="Barber" type="submit" class="btn btn-secondary">
+                        <i class="bi bi-filter"></i> Филтрирай
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="container mt-4 d-flex flex-column align-items-center">
+            <div class="row justify-content-center g-4">
+                @foreach (var barber in Model.Barbers)
+                {
+                    <div class="col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
+                        <div class="barber-card shadow-sm p-3 text-center">
+                            <img src="@barber.ProfilePictureUrl" class="card-img-top" style="width: 100px; height: 100px; object-fit: cover; margin-bottom: 10px; border-radius: 50%;" alt="Снимка на @barber.FirstName @barber.LastName">
+                            <div class="card-body">
+                                <h5 class="card-title">@barber.FirstName @barber.LastName</h5>
+                                <p class="card-text">Години опит: @barber.ExperienceYears</p>
+                                <p class="card-text">@barber.Speciality?.Type бръснар</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>

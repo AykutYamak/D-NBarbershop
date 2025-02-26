@@ -12,61 +12,78 @@
     <link rel="stylesheet" href="~/css/make-appointment.css">
 </head>
 <body>
-    <div class="container mt-4 ">
-        <h2 class="text-center">Book Your Appointment</h2>
-        <form method="post">
-            <div class="mb-3">
-                <label class="form-label">Select Barber:</label>
+    <div class="container mt-5 " style="background-color: #808080ad;border-radius: 20px;padding: 2rem;">
+        <h2 class="text-center">Запази своя час!</h2>
+        <form asp-action="MakeAppointment" method="post">
+            <div class="barber-container mb-3">
+                <label class="form-label">Избери бръснар:</label>
                 <div class="row g-3">
                     @foreach (var barber in Model.Barbers)
                     {
                         <div class="col-md-4 col-sm-6">
                             <input type="radio" name="BarberId" value="@barber.Id" class="btn-check" id="barber_@barber.Id" required>
-                            <label class="" for="barber_@barber.Id">
+                            <label class="btn btn-outline-dark w-100 text-center p-3 barber-card" for="barber_@barber.Id">
+                                <img src="@barber.ProfilePictureUrl" alt="barber profile pic" width="100px" height="100px" style="border-radius:100px; object-fit:cover;"/>
+                                <br />
                                 <strong>@barber.FirstName @barber.LastName</strong>
-                                <p>Experience: @barber.ExperienceYears years</p>
+                                <p>Опит: @barber.ExperienceYears години</p>
                             </label>
                         </div>
                     }
                 </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Select Date:</label>
-                <input id="dateInput" asp-for="AppointmentDate" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            <div class="d-flex gap-3 m-3">
+                <div style="flex: 1;">
+                    <label class="form-label">Избери дата:</label>
+                    <input id="dateInput" asp-for="AppointmentDate" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    <small id="dateError" class="text-danger d-none">Моля, изберете работен ден.</small>
+                </div>
+
+                <div style="flex: 1;">
+                    <label class="form-label">Избери час:</label>
+                    <select id="timeSelect" asp-for="AppointmentTime" class="form-select" required>
+                        <option value="">Select a time slot</option>
+                        @foreach (var time in ViewBag.TimeSlots)
+                        {
+                            <option value="@time.Value">@time.Text</option>
+                        }
+                    </select>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Select Time:</label>
-                <select id="timeSelect" asp-for="AppointmentTime" class="form-select" required>
-                    <option value="">Select a time slot</option>
-                    @foreach (var time in ViewBag.TimeSlots)
-                    {
-                        <option value="@time.Value">@time.Text</option>
-                    }
-                </select>
-            </div>
-
-            <div class="mb-3 text-center">
-                <label class="form-label">Select Services:</label>
-                <div class="row g-3">
+            <div class="mb-3 text-center service-container">
+                <label class="form-label">Избери услуга:</label>
+                <div class="row g-3 justify-content-center">
                     @foreach (var service in Model.Services)
                     {
                         <div class="col-md-4 col-sm-6">
                             <input type="checkbox" name="SelectedServiceIds" value="@service.Id" class="btn-check" id="service_@service.Id">
-                            <label class="" for="service_@service.Id">
+                            <label class="btn btn-outline-dark w-100 text-center p-3 service-card" for="service_@service.Id">
                                 <strong>@service.ServiceName</strong>
                                 <p>@service.Description</p>
-                                <p>Price: $@service.Price</p>
-                                <p>Duration: @service.Duration mins</p>
+                                <p>Цена: $@service.Price</p>
+                                @if (service.Duration.Hours<0)
+                                {
+                                    <p>Продължителност: @service.Duration.Minutes min</p>
+                                }
+                                else if (service.Duration.Hours>0 && service.Duration.Minutes != 0)
+                                {
+                                    <p>Продължителност: @service.Duration.Hours h @service.Duration.Minutes min</p>
+                                }
+                                else
+                                {
+                                    <p>Продължителност: @service.Duration.Minutes min</p>
+                                }
                             </label>
                         </div>
                     }
                 </div>
             </div>
-
-            <button type="submit" asp-action="MakeAppointment" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-sm">
-                <i class="bi bi-check-lg"></i> Запази
-            </button>
+            <div class="text-center">
+                <button type="submit" asp-action="MakeAppointment" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-lg">
+                    <i class="bi bi-check-lg"></i> Запази
+                </button>
+            </div>
         </form>
     </div>
 
@@ -75,6 +92,19 @@
             const barberSelect = document.querySelectorAll("input[name='BarberId']");
             const dateInput = document.getElementById("dateInput");
             const timeSelect = document.getElementById("timeSelect");
+            const errorText = document.getElementById("dateError");
+
+             function disableWeekends(event) {
+                const selectedDate = new Date(event.target.value);
+                const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+
+                if (dayOfWeek === 0) {
+                    event.target.value = "";
+                    errorText.classList.remove("d-none"); // Show error message
+                } else {
+                    errorText.classList.add("d-none"); // Hide error message
+                }
+            }
 
             async function updateAvailableTimeSlots() {
                 const selectedBarber = document.querySelector("input[name='BarberId']:checked");
@@ -101,7 +131,11 @@
             }
 
             barberSelect.forEach(input => input.addEventListener("change", updateAvailableTimeSlots));
-            dateInput.addEventListener("change", updateAvailableTimeSlots);
+            dateInput.addEventListener("change", function (event) {
+                disableWeekends(event);
+                updateAvailableTimeSlots();
+            });
+            disableWeekends({ target: dateInput });
         });
     </script>
 </body>

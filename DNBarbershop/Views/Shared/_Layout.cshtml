@@ -22,21 +22,21 @@
                     <ul class="nav navbar-nav" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);color: #FFFFFF;">
                         @if (User.IsInRole(SD.AdminRole))
                         {
-                            <li><a id="len1" class="hoverable" asp-controller="Appointment" asp-action="Index">Резервации</a></li>
-                            <li><a id="len2" class="hoverable" asp-controller="Service" asp-action="Index">Услуги</a></li>
-                            <li><a id="len3" class="hoverable" asp-controller="Feedback" asp-action="Index">Отзиви</a></li>
-                            <li><a id="len4" class="hoverable" asp-controller="Barber" asp-action="Index">Бръснари</a></li>
-                            <li><a id="len5" class="hoverable" asp-controller="WorkSchedule" asp-action="Index">Работно време</a></li>
-                            <li><a id="len6" class="hoverable" asp-controller="Speciality" asp-action="Index">Специализации</a></li>
-                            <li><a id="len7" class="hoverable" asp-controller="User" asp-action="Index">Потребители</a></li>
+                            <li class="navigation"><a id="len1" class="hoverable" asp-controller="Appointment" asp-action="Index">Резервации</a></li>
+                            <li class="navigation"><a id="len2" class="hoverable" asp-controller="Service" asp-action="Index">Услуги</a></li>
+                            <li class="navigation"><a id="len3" class="hoverable" asp-controller="Feedback" asp-action="Index">Отзиви</a></li>
+                            <li class="navigation"><a id="len4" class="hoverable" asp-controller="Barber" asp-action="Index">Бръснари</a></li>
+                            <li class="navigation"><a id="len5" class="hoverable" asp-controller="WorkSchedule" asp-action="Index">Работно време</a></li>
+                            <li class="navigation"><a id="len6" class="hoverable" asp-controller="Speciality" asp-action="Index">Специализации</a></li>
+                            <li class="navigation"><a id="len7" class="hoverable" asp-controller="User" asp-action="Index">Потребители</a></li>
                             <partial name="_LoginPartial" />
                         }
                         else
                         {
-                        <li><a id="len1" class="hoverable" asp-controller="Home" asp-action="Index">Начало</a></li>
-                        <li><a id="len2" class="hoverable" asp-controller="Service" asp-action="Services">Услуги</a></li>
-                        <li><a id="len3" class="hoverable" asp-controller="Barber" asp-action="Barbers">Бръснари</a></li>
-                        <li><a id="len4" class="hoverable" asp-controller="Home" asp-action="AboutUs">За нас</a></li>
+                            <li class="navigation"><a id="len1" class="hoverable" asp-controller="Home" asp-action="Index">Начало</a></li>
+                            <li class="navigation"><a id="len2" class="hoverable" asp-controller="Service" asp-action="Services">Услуги</a></li>
+                            <li class="navigation"><a id="len3" class="hoverable" asp-controller="Barber" asp-action="UserIndex">Бръснари</a></li>
+                            <li class="navigation"><a id="len4" class="hoverable" asp-controller="Home" asp-action="AboutUs">За нас</a></li>
                         <partial name="_LoginPartial" />
                         }
                         
@@ -51,7 +51,7 @@
         </main>
     </div>
 
-    <footer class="footer text-muted p-4 customFooter">
+    <footer class="footer text-muted customFooter">
         <div class="button-container">
             <a class="button flex-center" href="https://www.instagram.com/barberhouseteam/" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -181,9 +181,6 @@
         </div>
         <div class="container d-flex justify-content-center text-white-50">
             &copy; 2024 - DNBarbershop
-        </div>
-        <div class="container d-flex justify-content-center text-white-50">
-            Created By <a href="https://github.com/AykutYamak" target="_blank">Aykut Yamak</a>
         </div>
     </footer>
     <partial name="_Notification"></partial>
