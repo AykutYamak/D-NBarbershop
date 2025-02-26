@@ -48,6 +48,7 @@
                                     <th scope="col">Дата</th>
                                     <th scope="col">Час</th>
                                     <th scope="col">Статус</th>
+                                    <th scope="col">#</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,6 +71,13 @@
                                         <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
                                         <td>@appointment.AppointmentTime</td>
                                         <td>@appointment.Status.ToString()</td>
+                                        <td>
+                                            <form asp-controller="Appointment" asp-action="UserAppointmentDelete" asp-route-id="@appointment.Id" method="post">
+                                            <button type="submit" class="btn btn-danger px-3 py-2">
+                                                <i class="bi bi-trash"></i> Откажи час
+                                            </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

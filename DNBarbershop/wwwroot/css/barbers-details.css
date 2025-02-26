@@ -1,15 +1,163 @@
 ﻿body {
-    background: url(https://img.freepik.com/free-vector/abstract-black-shapes-background-design_1017-31904.jpg?t=st=1740308557~exp=1740312157~hmac=40d0157c5e0498b7795e49f8e37f35602231109de214768239831655afee5ea1&w=1800);
-    background-size: cover;
+    background: url('/Assets/Images/slate-texture-background.jpg');
+    background-size: 100%;
     background-repeat: no-repeat;
     white-space: normal;
 }
-.barber-card {
-    margin: 10px 0px 0;
-    display: inline-block;
-    width: 400px;
-    height:300px;
+
+.container {
+    display: flex;
+    flex-direction: column; /* Stacks form and cards vertically */
+    align-items: center; /* Centers content horizontally */
+    padding: 2rem; /* Adds some breathing room */
+}
+
+/* Cards wrapper to control the row layout */
+.cards-wrapper {
+    display: flex;
+    flex-direction: row; /* Cards in a row */
+    flex-wrap: wrap; /* Wraps cards if they exceed width */
+    justify-content: center; /* Centers cards horizontally */
+    gap: 1rem; /* Spacing between cards */
+    width: 100%; /* Full width */
+    max-width: 1200px; /* Optional: Limits width on large screens */
+}
+
+.card-container {
+    display: flex;
+    justify-content: center; /* Centers the card inside its container */
+    flex: 0 1 auto; /* Prevents squishing */
+}
+
+.card {
+    font-family: "Abril Fatface", serif;
+    width: 18rem;
+    height: 25rem;
+    background: rgb(162, 153, 144);
+    transition: all 0.4s;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.705);
+    color: black;
+    font-size: 30px;
+    margin:2rem;
+}
+
+    .card:hover {
+        border-radius: 15px;
+        cursor: pointer;
+        transform: scale(1.2);
+        box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.705);
+        background: rgb(216, 216, 216);
+    }
+
+.first-content {
+    height: 100%;
+    width: 100%;
+    transition: all 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+    opacity: 1;
+    border-radius: 15px;
+}
+
+.card:hover .first-content {
+    height: 0px;
+    opacity: 0;
+}
+
+.second-content {
+    height: 0%;
+    width: 100%;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    transition: all 0.4s;
+    font-size: 0px;
+    transform: rotate(90deg) scale(-1);
+}
+
+.card:hover .second-content {
+    opacity: 1;
+    height: 100%;
+    font-size: 1.8rem;
+    transform: rotate(0deg);
+}
+
+.card-img-top {
+    object-fit: cover;
+    width: 90%;
+    height: 70%;
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.card-text {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+.comment-section {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.barber-select, .rating, .comment-input {
+    margin-bottom: 15px;
+}
+
+.stars input {
+    display: none;
+}
+
+.stars label {
+    font-size: 30px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+    .stars input:checked ~ label,
+    .stars label:hover,
+    .stars label:hover ~ label {
+        color: #ffcc00;
+    }
+
+textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
-    background-color:rgb(0, 0, 0, 0.70);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+.reviews-display ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reviews-display li {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
 }

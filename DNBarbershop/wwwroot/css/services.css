@@ -1,0 +1,16 @@
+﻿body {
+    background: url('/Assets/Images/slate-texture-background.jpg');
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    white-space: normal;
+}
+.service-card {
+    margin: 10px 0px 0;
+    display: inline-block;
+    width: 400px;
+    height: 300px;
+    align-items: center;
+    color: white;
+    background-color: rgb(0, 0, 0, 0.70);
+}

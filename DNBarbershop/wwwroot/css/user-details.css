@@ -1,8 +1,9 @@
 ﻿body {
-    background: url(https://img.freepik.com/free-vector/abstract-black-shapes-background-design_1017-31904.jpg?t=st=1740308557~exp=1740312157~hmac=40d0157c5e0498b7795e49f8e37f35602231109de214768239831655afee5ea1&w=1800);
-    background-size: cover;
+    background: url('/Assets/Images/slate-texture-background.jpg');
+    background-position: center;
+    background-size: 100%;
     background-repeat: no-repeat;
-    white-space: normal
+    white-space: normal;
 }
 .title-container{
     font-family:"Abril Fatface",serif;

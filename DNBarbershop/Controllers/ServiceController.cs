@@ -1,7 +1,9 @@
 ﻿using System.Text;
+using DNBarbershop.Core.IService;
 using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.ViewModels.Barbers;
 using DNBarbershop.Models.ViewModels.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class ServiceController : Controller
     {
         private readonly IServiceService _serviceService;
@@ -21,6 +22,8 @@ namespace DNBarbershop.Controllers
         {
             _serviceService = serviceService;
         }
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Index(ServiceViewModel? model)
         {
             var list = _serviceService.GetAll();
@@ -167,5 +170,23 @@ namespace DNBarbershop.Controllers
 
         //    return view.ToString();
         //}
+
+        //User View Action
+        public async Task<IActionResult> ServiceDetails(ServiceFilterViewModel? filter) 
+        {
+            var list = _serviceService.GetAll();
+            var query = list.AsQueryable();
+            if (filter.MaxPrice != null)
+            {
+                query = query.Where(b => b.Price <= filter.MaxPrice);
+            }
+            var model = new ServiceFilterViewModel
+            {
+                MaxPrice = filter.MaxPrice,
+                Services = query.ToList()
+            };
+            return View(model);
+        } 
+
     }
 }

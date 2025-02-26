@@ -3,7 +3,6 @@
 <html>
 <head>
     <link rel="stylesheet" href="~/css/barbers-details.css" />
-    
 </head>
 <body class="barbers-details">
     <div class="container text-center">
@@ -26,22 +25,29 @@
                 </div>
             </div>
         </form>
-        <div class="container mt-4 d-flex flex-column align-items-center">
-            <div class="row justify-content-center g-4">
-                @foreach (var barber in Model.Barbers)
-                {
-                    <div class="col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
-                        <div class="barber-card shadow-sm p-3 text-center">
-                            <img src="@barber.ProfilePictureUrl" class="card-img-top" style="width: 100px; height: 100px; object-fit: cover; margin-bottom: 10px; border-radius: 50%;" alt="Снимка на @barber.FirstName @barber.LastName">
-                            <div class="card-body">
-                                <h5 class="card-title">@barber.FirstName @barber.LastName</h5>
-                                <p class="card-text">Години опит: @barber.ExperienceYears</p>
-                                <p class="card-text">@barber.Speciality?.Type бръснар</p>
-                            </div>
+        <div class="cards-wrapper">
+            @foreach (var barber in Model.Barbers)
+            {
+                <div class="card-container">
+                    <div class="card">
+                        <div class="first-content">
+                            <img src="@barber.ProfilePictureUrl" class="card-img-top" alt="Снимка на @barber.FirstName @barber.LastName">
+                            <h5 class="card-title">@barber.FirstName</h5>
+                            <h5 class="card-title">@barber.LastName</h5>
+                        </div>
+                        <div class="second-content">
+                            <h5 class="card-text">Години опит: @barber.ExperienceYears</h5>
+                            <br />
+                            <h5 class="card-text">Специализация: @barber.Speciality?.Type бръснар</h5>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
+        </div>
+        <div class="comment-section">
+            <section>
+               /*TODO: Add a working comment section*/
+            </section>
         </div>
     </div>
 </body>

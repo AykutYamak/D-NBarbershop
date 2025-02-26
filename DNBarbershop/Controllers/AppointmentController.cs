@@ -472,5 +472,20 @@ namespace DNBarbershop.Controllers
                 return RedirectToAction("Details", "User", null);
             }
         }
+
+        [Authorize(Roles = "User")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> UserAppointmentDelete(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                await _appointmentServiceService.DeleteByAppointmentId(id);
+                await _appointmentService.Delete(id);
+                TempData["success"] = "Упсешно изтрита резервация.";
+            }
+            return RedirectToAction("Details", "User", null);
+        }
+
     }
 }
