@@ -21,8 +21,15 @@ namespace DNBarbershop.DataAccess
         public DbSet<Speciality> speciality { get; set; }
         public DbSet<User> users { get; set; }
         public DbSet<WorkSchedule> workSchedules { get; set; }
+        public DbSet<Message> messages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Message>()
+           .HasOne(f => f.User)
+           .WithMany(u => u.Messages)
+           .HasForeignKey(f => f.UserId)
+           .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<Appointment>()
             .HasOne(a => a.User)
             .WithMany(u => u.Appointments)

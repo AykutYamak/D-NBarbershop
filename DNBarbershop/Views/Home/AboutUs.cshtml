@@ -1,4 +1,5 @@
-﻿@{
+﻿@model DNBarbershop.Models.ViewModels.Messages.MessageCreateViewModel;
+@{
     ViewData["Title"] = "About us";
 }
 <html>
@@ -61,10 +62,18 @@
         <div class="contact-form">
             <h2>Свържете се с нас</h2>
             <form action="#" method="post">
-                <input type="text" placeholder="Вашето име" required>
-                <input type="email" placeholder="Вашият имейл" required>
-                <textarea placeholder="Вашето съобщение" required></textarea>
-                <button type="submit">Изпрати</button>
+                <label class="form-label fw-semibold" asp-for="Email">E-mail</label>
+                <textarea type="text" class="form-control" asp-for="Email" placeholder="E-mail"></textarea>
+                <span asp-validation-for="Email" class="text-danger"></span>
+                
+                <label class="form-label fw-semibold" asp-for="Content">Съобщение</label>
+                <textarea type="text" class="form-control" asp-for="Content" placeholder="Съобщение"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+
+                <button type="submit" asp-action="Add" asp-controller="Message" class="btn btn-success px-4 py-2 shadow-sm">
+                    <i class="bi bi-check-lg"></i> Запази
+                </button>
+                @Html.AntiForgeryToken();
             </form>
         </div>
     </section>

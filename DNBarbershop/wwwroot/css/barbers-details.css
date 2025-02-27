@@ -1,6 +1,7 @@
 ﻿body {
     background: url('/Assets/Images/slate-texture-background.jpg');
-    background-size: 100%;
+    background-size: cover;
+    background-attachment: fixed;
     background-repeat: no-repeat;
     white-space: normal;
 }
@@ -14,6 +15,7 @@
 
 /* Cards wrapper to control the row layout */
 .cards-wrapper {
+    font-family: "Abril Fatface", serif;
     display: flex;
     flex-direction: row; /* Cards in a row */
     flex-wrap: wrap; /* Wraps cards if they exceed width */
@@ -30,16 +32,15 @@
 }
 
 .card {
-    font-family: "Abril Fatface", serif;
     width: 18rem;
     height: 25rem;
-    background: rgb(162, 153, 144);
+    background: rgb(73, 72, 72);
     transition: all 0.4s;
     border-radius: 10px;
     box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.705);
     color: black;
     font-size: 30px;
-    margin:2rem;
+    margin: 2rem;
 }
 
     .card:hover {
@@ -47,10 +48,11 @@
         cursor: pointer;
         transform: scale(1.2);
         box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.705);
-        background: rgb(216, 216, 216);
+        background: rgb(57, 57, 57);
     }
 
 .first-content {
+    color: #FFFFFF;
     height: 100%;
     width: 100%;
     transition: all 0.4s;
@@ -68,6 +70,7 @@
 }
 
 .second-content {
+    color: #FFFFFF;
     height: 0%;
     width: 100%;
     opacity: 0;
@@ -93,6 +96,7 @@
     width: 90%;
     height: 70%;
     padding: 1rem;
+    border-radius:2rem;
 }
 
 .card-title {
@@ -103,6 +107,6 @@
 .card-text {
     margin-top: 1rem;
     padding: 0.5rem;
-    font-size: 1.4rem;
+    font-size: 2rem;
     font-weight: 600;
 }

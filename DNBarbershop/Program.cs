@@ -22,7 +22,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        var connection = builder.Configuration.GetConnectionString("HomeConnection");
 
         //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -46,6 +46,7 @@ internal class Program
         builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IEmailSender, EmailSender>();
+        builder.Services.AddScoped<IMessageService, MessageService>();
 
         builder.Services.AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>()

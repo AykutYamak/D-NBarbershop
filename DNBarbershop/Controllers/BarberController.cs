@@ -1,18 +1,11 @@
 ﻿using DNBarbershop.Core.IService;
 using DNBarbershop.Core.IServices;
-using DNBarbershop.Core.Services;
-using DNBarbershop.DataAccess.BarberRepository;
-using DNBarbershop.Models;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.ViewModels.Barbers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 
 namespace DNBarbershop.Controllers
 {

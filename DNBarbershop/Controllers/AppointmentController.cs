@@ -1,9 +1,7 @@
 ﻿using DNBarbershop.Core.IServices;
-using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
 using DNBarbershop.Models.ViewModels.Appointments;
-using DNBarbershop.Models.ViewModels.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
