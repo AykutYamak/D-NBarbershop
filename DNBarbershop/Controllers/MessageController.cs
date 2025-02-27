@@ -5,6 +5,7 @@ using DNBarbershop.Models.ViewModels.Messages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DNBarbershop.Controllers
 {
@@ -32,7 +33,7 @@ namespace DNBarbershop.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Messages= query.ToList(),
-                IsRead = model.IsRead
+                IsRead = query.Where(a=>a.Id == model.Id).Select(a=>a.IsRead).FirstOrDefault()
             };
             return View(message);
         }
@@ -47,6 +48,7 @@ namespace DNBarbershop.Controllers
         public async Task<IActionResult> Add(MessageCreateViewModel messageModel)
         {
             var currentUser = await _userManager.GetUserAsync(User);
+
             if (currentUser==null)
             {
                 var message = new Message

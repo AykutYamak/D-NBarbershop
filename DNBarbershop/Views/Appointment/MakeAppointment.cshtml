@@ -22,11 +22,10 @@
                     {
                         <div class="col-md-4 col-sm-6">
                             <input type="radio" name="BarberId" value="@barber.Id" class="btn-check" id="barber_@barber.Id" required>
-                            <label class="btn btn-outline-dark w-100 text-center p-3 barber-card" for="barber_@barber.Id">
-                                <img src="@barber.ProfilePictureUrl" alt="barber profile pic" width="100px" height="100px" style="border-radius:100px; object-fit:cover;"/>
+                            <label class="btn btn-outline-dark text-center p-3 barber-card" for="barber_@barber.Id">
+                                <img src="@barber.ProfilePictureUrl" alt="barber profile pic" style="border-radius: 40px; object-fit: cover; width: 50%; height: 80%;" />
                                 <br />
                                 <strong>@barber.FirstName @barber.LastName</strong>
-                                <p>Опит: @barber.ExperienceYears години</p>
                             </label>
                         </div>
                     }

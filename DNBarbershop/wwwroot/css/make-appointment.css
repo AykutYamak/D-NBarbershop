@@ -1,5 +1,5 @@
 ﻿body {
-    background: url('../Assets/Images/wp9441481-barber-4k-wallpapers.jpg');
+    background: url('../Assets/Images/makeappointmentbackgroundimg.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -39,7 +39,11 @@ h2 {
     transition: all 0.3s ease;
     cursor: pointer;
     background-color: rgb(255, 255, 255, 0.4);
+    width:90%;
 }
+    .barber-card strong {
+        font-size:20px;
+    }
 
     .barber-card:hover {
         border-color: #007bff;

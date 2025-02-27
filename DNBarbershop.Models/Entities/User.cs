@@ -19,7 +19,6 @@ namespace DNBarbershop.Models.Entities
             public string LastName { get; set; }
 
             public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
-            public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
             public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
             public ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }

@@ -36,7 +36,7 @@ namespace DNBarbershop.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAvailableTimeSlots(Guid barberId, DateTime appointmentDate)
         {
-            var allSlots = await GenerateTimeSlots(TimeSpan.FromHours(9), TimeSpan.FromHours(18), TimeSpan.FromMinutes(30));
+            var allSlots = await GenerateTimeSlots(TimeSpan.FromHours(8), TimeSpan.FromHours(20,30,0,0,0), TimeSpan.FromMinutes(30));
 
             var bookedSlots = _appointmentService
                 .GetAll()

@@ -12,11 +12,7 @@ namespace DNBarbershop.DataAccess
         public DbSet<Appointment> appointments { get; set; }    
         public DbSet<AppointmentServices> appointmentServices { get; set; }
         public DbSet<Barber> barbers { get; set; }
-        public DbSet<Category> categories { get; set; }
         public DbSet<Feedback> feedbacks { get; set; }
-        public DbSet<Order> orders { get; set; }
-        public DbSet<OrderDetail> orderDetails { get; set; }
-        public DbSet<Product> products { get; set; }
         public DbSet<Service> services { get; set; }
         public DbSet<Speciality> speciality { get; set; }
         public DbSet<User> users { get; set; }
@@ -48,12 +44,6 @@ namespace DNBarbershop.DataAccess
             .HasForeignKey(b => b.SpecialityId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Category>()
-            .HasMany(c => c.Products)
-            .WithOne(p => p.Category)
-            .HasForeignKey(p => p.CategoryId)
-            .OnDelete(DeleteBehavior.NoAction);
-
             modelBuilder.Entity<Feedback>()
             .HasOne(f => f.User)
             .WithMany(u => u.Feedbacks)
@@ -64,24 +54,6 @@ namespace DNBarbershop.DataAccess
             .HasOne(f => f.Barber)
             .WithMany(b => b.Feedbacks)
             .HasForeignKey(f => f.BarberId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Order>()
-            .HasOne(o => o.User)
-            .WithMany(u => u.Orders)
-            .HasForeignKey(o => o.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<OrderDetail>()
-            .HasOne(od => od.Product)
-            .WithMany(p => p.orderDetails)
-            .HasForeignKey(od => od.ProductId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<OrderDetail>()
-            .HasOne(od => od.Order)
-            .WithMany(o => o.orderDetails)
-            .HasForeignKey(od => od.OrderId)
             .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<WorkSchedule>()

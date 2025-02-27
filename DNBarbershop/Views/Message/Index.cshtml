@@ -33,11 +33,11 @@
                     {
                         <tr>
                             <td>@message.Id</td>
-                            @if(@message.User == null){
+                            @if(@message.UserId == null){
                                 <td>Not Registered</td>
                             }
                             else{
-                                <td>@message.User.FirstName @message.User.LastName</td>
+                                <td>Registered</td>
                             }
                             <td>@message.Email</td>
                             <td>@message.Content</td>
@@ -45,9 +45,10 @@
                             <td>@message.IsRead.ToString()</td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a class="btn btn-dark px-3 py-2" asp-controller="Message" asp-action="MarkAsRead" asp-route-id="@message.Id">
-                                        <i class="bi bi-pencil"></i> ОК
-                                    </a>
+                                    <form asp-controller="Message" asp-action="MarkAsRead" method="post">
+                                        <input type="hidden" name="Id" value="@message.Id" />
+                                        <button type="submit" class="btn btn-primary">Ok</button>
+                                    </form>
                                     <form asp-controller="Message" asp-action="Delete" asp-route-id="@message.Id" method="post">
                                         <button type="submit" class="btn btn-danger px-3 py-2">
                                             <i class="bi bi-trash"></i> Изтрий

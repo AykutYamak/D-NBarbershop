@@ -226,8 +226,8 @@ body {
     margin-bottom: 1%;
 }
 .navigation{
-    margin-left:2rem;
-    margin-right:2rem;
+    margin-left:20px;
+    margin-right:20px;
 }
 
 .hoverable {
@@ -539,51 +539,47 @@ nav {
     width: 90%;
     text-align: center;
 }
-
-.elementor-widget-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 2rem;
+.card-container {
+    display: flex; /* Creates a flex container for cards */
+    justify-content: center; /* Centers cards horizontally */
+    gap: 1rem; /* Adds consistent spacing between cards */
+    flex-wrap: inherit; /* Allows wrapping on smaller screens */
 }
 
-.testimonial-group {
-    display: flex;
-    justify-content: center;
-    gap: 4rem;
-    flex-wrap: wrap;
+.card {
+    background: linear-gradient(darkgray, gray);
+    width: 33%; /* Keeps cards at 1/3 width */
+    min-width: 30%; /* Prevents cards from getting too narrow */
+    height: auto; /* Allows height to adjust to content */
+    display: flex; /* Makes card a flex container */
+    flex-direction: column; /* Stacks content vertically */
+    box-shadow: 0px 5px 15px black;
 }
 
-.widget-testimonial-wrap {
-    flex: 1 1 300px;
-    max-width: 30%;
-    min-width: 280px;
-    background: darkgray;
-    border-radius: 10px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
-    overflow: hidden;
-    text-overflow: ellipsis;
+.card-img-top {
+    width: 200px; /* Makes image fill card width */
+    height: 200px; /* Maintains aspect ratio */
+    padding: 5%; /* Adds internal spacing */
+    margin: 0 auto; /* Centers image horizontally */
+    border-radius:60px;
+    object-fit:cover;
+
 }
-.testimonial .avatar{
-    padding:1rem;
+.card h5{
+    font-size:30px;
+    font-weight:600;
 }
-.testimonial .content {
-    text-shadow: 0px 1px 6px rgba(0, 0, 0, 0.6);
-    color: #FFFFFF;
-    padding: 1rem;
-    text-align: center;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-    font-size: 1.03rem;
+.card h6{
+    font-size:25px;
+    font-weight:500;
 }
-.role,
-.name {
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-        color: #FFFFFF;
-        text-align: center;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-        hyphens: auto;
-        font-size: 1rem;
-    }
+
+.card-body {
+    flex: 1; /* Allows body to expand */
+    display: flex; /* Makes body a flex container */
+    flex-direction: column; /* Stacks content vertically */
+}
+.card-body p{
+    font-size:20px;
+    font-weight:600;
+}
