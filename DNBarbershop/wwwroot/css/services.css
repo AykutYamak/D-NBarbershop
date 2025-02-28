@@ -18,8 +18,8 @@
 .card {
     color: #FFFFFF;
     position: relative;
-    width: 320px; /* Adjust card width as needed */
-    height: 320px; /* Adjust card height as needed */
+    width: 30%; /* Adjust card width as needed */
+    height: 300px; /* Adjust card height as needed */
     background: rgb(73, 72, 72);
     display: flex;
     flex-direction: column;

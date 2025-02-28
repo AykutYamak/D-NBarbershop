@@ -134,9 +134,13 @@ body {
     position: relative;
 }
 .reservation-button{
-    padding:4rem;
+    display:flex;
+    justify-content:center;
+    padding:2.5%;
 }
 .reservation-button a{
+    width:20%;
+    height:14px;
     font-size:2rem;
 }
 
@@ -583,3 +587,79 @@ nav {
     font-size:20px;
     font-weight:600;
 }
+.gotoactionbutton {
+    position: relative;
+    margin: 0;
+    padding: 0.8em 1em;
+    outline: none;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    background-color: #333;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 300;
+    font-size: 18px;
+    font-family: inherit;
+    z-index: 0;
+    overflow: hidden;
+    transition: transform 0.8s ease-in-out, box-shadow 0.8s ease-in-out;
+    will-change: transform;
+}
+
+.gotoactionbutton:hover {
+    animation: sh0 1s ease-in-out both;
+    transform: translateY(-2px); /* Small lift on hover */
+}
+
+@keyframes sh0 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(3deg);
+    }
+
+    50% {
+        transform: rotate(-3deg);
+    }
+
+    75% {
+        transform: rotate(1deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* Reduce aggressive pseudo-element effects */
+.gotoactionbutton::before,
+.gotoactionbutton::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 80px; /* Reduced size */
+    height: 80px; /* Reduced size */
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0;
+    transition: transform 0.6s ease-out, opacity 0.2s ease-out;
+    z-index: -1;
+    transform: translate(100%, -25%) scale(0.5);
+}
+
+/* Make sure the effect doesn't feel excessive */
+.gotoactionbutton:hover::before,
+.gotoactionbutton:hover::after {
+    opacity: 0.5; /* Less visible */
+    transform: translate3d(50%, 0, 0) scale(0.8);
+}
+
+    

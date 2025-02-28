@@ -32,8 +32,8 @@
 }
 
 .card {
-    width: 18rem;
-    height: 25rem;
+    width: 16rem;
+    height: 20rem;
     background: rgb(73, 72, 72);
     transition: all 0.4s;
     border-radius: 10px;

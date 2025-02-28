@@ -24,8 +24,8 @@
     }
     .aboutus-information p {
         font-family: "Abril Fatface",serif;
-        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.6);
-        color: white;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+        color: black;
         font-size: 1.5rem;
         padding: 1.2rem;
         
@@ -62,9 +62,9 @@
     }
     .aboutus-foundation-text p {
         font-family: "Abril Fatface",serif;
-        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.6);
-        color: white;
-        font-size: 18px;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+        color: black;
+        font-size: 130%;
         padding: 2rem;
     }
 .aboutus-section-contacts {
@@ -108,16 +108,16 @@
     justify-content:space-around;
     margin:1rem;
 }
-.maps iframe{
-    border-radius:20px;
-    padding:1rem;
+.maps iframe {
+    border-radius: 20px;
+    padding: 1rem;
 }
 .contact-form {
     width: 45%;
     background-color: #FFFFFF;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
 }
 
     .contact-form h2 {

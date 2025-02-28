@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/css/make-appointment.css">
 </head>
 <body>
-    <div class="container mt-5 " style="background-color: #808080ad;border-radius: 20px;padding: 2rem;">
+    <div class="container mt-5 " style="background-color: #808080ad;border-radius: 20px;padding: 2rem; margin:5%;">
         <h2 class="text-center">Запази своя час!</h2>
         <form asp-action="MakeAppointment" method="post">
             <div class="barber-container mb-3">
@@ -59,19 +59,18 @@
                             <input type="checkbox" name="SelectedServiceIds" value="@service.Id" class="btn-check" id="service_@service.Id">
                             <label class="btn btn-outline-dark w-100 text-center p-3 service-card" for="service_@service.Id">
                                 <strong>@service.ServiceName</strong>
-                                <p>@service.Description</p>
-                                <p>Цена: $@service.Price</p>
+                                <p>@service.Price BGN.</p>
                                 @if (service.Duration.Hours<0)
                                 {
                                     <p>Продължителност: @service.Duration.Minutes min</p>
                                 }
                                 else if (service.Duration.Hours>0 && service.Duration.Minutes != 0)
                                 {
-                                    <p>Продължителност: @service.Duration.Hours h @service.Duration.Minutes min</p>
+                                    <p>@service.Duration.Hours h @service.Duration.Minutes min</p>
                                 }
                                 else
                                 {
-                                    <p>Продължителност: @service.Duration.Minutes min</p>
+                                    <p>@service.Duration.Minutes min</p>
                                 }
                             </label>
                         </div>

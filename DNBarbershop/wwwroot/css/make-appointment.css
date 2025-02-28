@@ -1,6 +1,6 @@
 ﻿body {
-    background: url('../Assets/Images/makeappointmentbackgroundimg.png');
-    background-size: cover;
+    background: url('../Assets/Images/dark-brown-background-2000-x-1303-gn60fz9lr4okgn6v.jpg');
+    background-size:100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
     white-space: normal;
@@ -80,7 +80,7 @@ input[type="date"], select {
 
 /* Service Section */
 .service-card {
-    font-size: 1.1rem;
+    font-size: 250%;
     border: 2px solid #ddd;
     border-radius: 10px;
     padding: 1rem;
@@ -104,14 +104,15 @@ input[type="date"], select {
 }
     .service card strong {
         padding: 1rem;
-        font-size: 3rem;
+        font-size: 50%;
         font-weight: bold;
         color: black;
     }
     .service-card p {
-        font-size: 1.1rem;
+        font-size: 60%;
         color: black;
         margin-top: 0.5rem;
+        font-weight:700;    
     }
 
 /* Button Styles */
