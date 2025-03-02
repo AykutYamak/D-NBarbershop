@@ -1,0 +1,65 @@
+﻿@model DNBarbershop.Models.ViewModels.Barbers.SingleBarberViewModel;
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/single-barber-details.css" />
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="card-container">
+            <div class="card" style="margin:0;">
+                <img src="@Model.ProfilePictureUrl" class="card-img" alt="Снимка на @Model.FirstName @Model.LastName">
+                <div class="first-content">
+                    <h5 class="card-title">@Model.FirstName @Model.LastName</h5>
+                </div>
+            </div>
+        </div>
+        <div class="comments-container">
+            <h3>Коментари</h3>
+            <form asp-controller="Feedback" asp-action="AddComment" method="post">
+                <input type="hidden" name="BarberId" value="@Model.Id" />
+
+                <label for="rating">Оценка:</label>
+                <select name="Rating" required>
+                    <option value="" disabled selected>Изберете оценка</option>
+                    <option value="1">1 ⭐</option>
+                    <option value="2">2 ⭐⭐</option>
+                    <option value="3">3 ⭐⭐⭐</option>
+                    <option value="4">4 ⭐⭐⭐⭐</option>
+                    <option value="5">5 ⭐⭐⭐⭐⭐</option>
+                </select>
+
+                <textarea name="Comment" placeholder="Напишете коментар..." required></textarea>
+                <button type="submit">Добави коментар</button>
+            </form>
+            <hr />
+            <div class="comments-list">
+                @foreach (var comment in Model.Feedbacks)
+                {
+                    <div class="comment">
+                        @if (comment.User != null)
+                        {
+
+                            <h1>@comment.User.FirstName @comment.User.LastName</h1>
+                            <div class="rating">
+                                @for (int i = 0; i < comment.Rating; i++)
+                                {
+                                    <span>⭐</span>
+                                }
+                                <div class="comment-to">&#x2705; Клиент на @Model.FirstName @Model.LastName</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <h1>Анонимен потребител</h1>
+                        }
+                        
+                        <p>@comment.Comment</p>
+                        <span>@comment.FeedBackDate.ToString("dd.MM.yyyy HH:mm")</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

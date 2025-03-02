@@ -13,11 +13,13 @@ namespace DNBarbershop.Controllers
     public class BarberController : Controller
     {
         private readonly IBarberService _barberService;
+        private readonly IFeedbackService _feedbackService;
         private readonly ISpecialityService _specialityService;
-        public BarberController(IBarberService barberService, ISpecialityService specialityService)
+        public BarberController(IFeedbackService feedbackService, IBarberService barberService, ISpecialityService specialityService)
         {
             _barberService = barberService;
             _specialityService = specialityService;
+            _feedbackService = feedbackService;
         }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
@@ -170,6 +172,28 @@ namespace DNBarbershop.Controllers
                 MinExperienceYears = filter?.MinExperienceYears,
                 Specialities = new SelectList(_specialityService.GetAll(), "Id", "Type"),
                 Barbers = query.Include(b => b.Speciality).ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var barber = await _barberService.Get(b => b.Id == id);
+            if (barber == null)
+            {
+                return NotFound();
+            }
+            var feedbacks = _feedbackService.GetAll().Where(f=>f.BarberId == id).Include(f => f.User).ToList();
+            var model = new SingleBarberViewModel
+            {
+                Id = barber.Id,
+                FirstName = barber.FirstName,
+                LastName = barber.LastName,
+                SpecialityId = barber.SpecialityId,
+                Speciality = _specialityService.Get(s => s.Id == barber.SpecialityId).Result.Type,
+                ExperienceYears = barber.ExperienceYears,
+                ProfilePictureUrl = barber.ProfilePictureUrl,
+                Feedbacks = feedbacks.OrderByDescending(c=>c.FeedBackDate).ToList()
+
             };
             return View(model);
         }

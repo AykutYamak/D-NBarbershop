@@ -94,7 +94,7 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
-            if (!_barberService.GetAll().Any(b => b.Id == feedbackModel.SelectedBarberId))
+            if (!_barberService.GetAll().Any(b => b.Id == feedbackModel.BarberId))
             {
                 TempData["error"]= "Избраният бръснар не съществува.";
                 return View(feedbackModel);
@@ -112,13 +112,13 @@ namespace DNBarbershop.Controllers
                 {
                     Id = Guid.NewGuid(),
                     UserId = currentUser.Id,
-                    BarberId = feedbackModel.SelectedBarberId,
+                    BarberId = feedbackModel.BarberId,
                     Rating = feedbackModel.Rating,
                     Comment = feedbackModel.Comment,
                     FeedBackDate = feedbackModel.FeedBackDate
                 };
                 await _feedbackService.Add(feedback);
-                TempData["success"] = "Успешно добавен отзив.";
+                TempData["success"] = "Успешно добавен коментар.";
             }
             return RedirectToAction("Index");
         }
@@ -135,13 +135,13 @@ namespace DNBarbershop.Controllers
             var feedback = await _feedbackService.Get(f => f.Id == id);
             if (feedback == null)
             {
-                TempData["error"] = "Не е намерен такъв отзив.";
+                TempData["error"] = "Не е намерен такъв коментар.";
                 return NotFound();
             }
 
             if (feedback.UserId != currentUser.Id)
             {
-                TempData["error"] = "Нямате право да редактирате този отзив.";
+                TempData["error"] = "Нямате право да редактирате този коментар.";
                 return Forbid();
             }
 
@@ -194,7 +194,7 @@ namespace DNBarbershop.Controllers
                 FeedBackDate = DateTime.UtcNow
             };
             await _feedbackService.Update(model);
-            TempData["success"] = "Успешно редактиран отзив.";
+            TempData["success"] = "Успешно редактиран коментар.";
 
             return RedirectToAction("Index");
         }
@@ -213,10 +213,65 @@ namespace DNBarbershop.Controllers
             if (ModelState.IsValid) 
             {
                 await _feedbackService.Delete(Id);
-                TempData["success"] = "Успешно изтрит отзив";
+                TempData["success"] = "Успешно изтрит коментар";
                 return RedirectToAction("Index");
             }
             return View();
+        }
+        //User Actions
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> AddComment()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
+            }
+            var model = new FeedbackCreateViewModel();
+            return View(model);
+        }
+        [Authorize(Roles = "User")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> AddComment(FeedbackCreateViewModel feedbackModel)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/a.";
+                return Unauthorized();
+            }
+
+            if (!_barberService.GetAll().Any(b => b.Id == feedbackModel.BarberId))
+            {
+                TempData["error"] = "Избраният бръснар не съществува.";
+                return View(feedbackModel);
+            }
+
+            feedbackModel.UserId = currentUser.Id;
+
+            if (feedbackModel.UserId != currentUser.Id)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                var feedback = new Feedback
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = currentUser.Id,
+                    User = currentUser,
+                    BarberId = feedbackModel.BarberId,
+                    Barber = _barberService.Get(b => b.Id == feedbackModel.BarberId).Result,
+                    Rating = feedbackModel.Rating,
+                    Comment = feedbackModel.Comment,
+                    FeedBackDate = feedbackModel.FeedBackDate
+                };
+                await _feedbackService.Add(feedback);
+                TempData["success"] = "Успешно добавен коментар.";
+            }
+            return RedirectToAction("Details","Barber", new {id=feedbackModel.BarberId});
         }
     }
 }

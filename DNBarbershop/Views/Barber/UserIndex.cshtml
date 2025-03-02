@@ -28,20 +28,22 @@
         <div class="cards-wrapper">
             @foreach (var barber in Model.Barbers)
             {
-                <div class="card-container">
-                    <div class="card">
-                        <div class="first-content">
-                            <img src="@barber.ProfilePictureUrl" class="card-img-top" alt="Снимка на @barber.FirstName @barber.LastName">
-                            <h5 class="card-title">@barber.FirstName</h5>
-                            <h5 class="card-title">@barber.LastName</h5>
-                        </div>
-                        <div class="second-content">
-                            <h5 class="card-text">Години опит: @barber.ExperienceYears</h5>
-                            <br />
-                            <h5 class="card-text">Специализация: @barber.Speciality?.Type бръснар</h5>
+                <a asp-controller="Barber" asp-action="Details" asp-route-id="@barber.Id" class="card-link">
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="first-content">
+                                <img src="@barber.ProfilePictureUrl" class="card-img-top" alt="Снимка на @barber.FirstName @barber.LastName">
+                                <h5 class="card-title">@barber.FirstName</h5>
+                                <h5 class="card-title">@barber.LastName</h5>
+                            </div>
+                            <div class="second-content">
+                                <h5 class="card-text">Години опит: @barber.ExperienceYears</h5>
+                                <br />
+                                <h5 class="card-text">Специализация: @barber.Speciality?.Type бръснар</h5>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             }
         </div>
         <div class="comment-section">

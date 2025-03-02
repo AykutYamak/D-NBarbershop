@@ -14,10 +14,10 @@
                 <div class="row">
                         <div class="mb-3">
                             <label for="SelectedBarberId" class="form-label fw-semibold">Бръснар</label>
-                            <select asp-for="SelectedBarberId" asp-items="Model.Barbers" class="form-control">
+                            <select asp-for="BarberId" asp-items="Model.Barbers" class="form-control">
                                 <option value="">Избери бръснар</option>
                             </select>
-                        <span asp-validation-for="SelectedBarberId" class="text-danger"></span>
+                        <span asp-validation-for="BarberId" class="text-danger"></span>
                         </div>
                 </div>
                 <div class="mb-3">

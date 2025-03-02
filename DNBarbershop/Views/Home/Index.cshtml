@@ -21,7 +21,7 @@
 			<div class="reservation-button">
 			@if (User.IsInRole(SD.AdminRole) || User.IsInRole(SD.UserRole))
 			{
-				<a class="gotoactionbutton" asp-area="Identity" asp-page="/Account/Register">Запази час!</a>
+				<a class="gotoactionbutton" asp-action="MakeAppointment" asp-controller="Appointment">Запази час!</a>
 						
 			}
 			else{

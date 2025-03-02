@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/css/make-appointment.css">
 </head>
 <body>
-    <div class="container mt-5 " style="background-color: #808080ad;border-radius: 20px;padding: 2rem; margin:5%;">
+    <div class="container mt-5 " style="background-color: rgb(48, 48, 48,0.6);border-radius: 20px;padding: 2rem; margin:5%; width:75%; ">
         <h2 class="text-center">Запази своя час!</h2>
         <form asp-action="MakeAppointment" method="post">
             <div class="barber-container mb-3">
@@ -35,7 +35,7 @@
                 <div style="flex: 1;">
                     <label class="form-label">Избери дата:</label>
                     <input id="dateInput" asp-for="AppointmentDate" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
-                    <small id="dateError" class="text-danger d-none">Моля, изберете работен ден.</small>
+                    <small id="dateError" class="d-none" style="font-size:1.5rem; color:darkred;">Моля, изберете работен ден.</small>
                 </div>
 
                 <div style="flex: 1;">

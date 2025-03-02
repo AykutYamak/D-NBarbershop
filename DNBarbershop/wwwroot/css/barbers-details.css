@@ -110,3 +110,8 @@
     font-size: 2rem;
     font-weight: 600;
 }
+.card-link
+{
+    text-decoration: none;
+    color:inherit;
+}

@@ -8,13 +8,13 @@ namespace DNBarbershop.Models.ViewModels.Feedbacks
 {
     public class FeedbackCreateViewModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public string UserId { get; set; }
-
         [Required(ErrorMessage = RequiredErrorMessage)]
-        public List<SelectListItem> Barbers { get; set; } = new();
-        public Guid SelectedBarberId { get; set; }
-
+        public Guid Id { get; set; } = Guid.NewGuid();
+        [Required(ErrorMessage = RequiredErrorMessage)]
+        public string UserId { get; set; }
+        public List<SelectListItem>? Barbers { get; set; } = new();
+        [Required(ErrorMessage = RequiredErrorMessage)]
+        public Guid BarberId { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
         [Range(0, 5, ErrorMessage = "Rating should be in the range [0;5]")]
         public int Rating { get; set; }

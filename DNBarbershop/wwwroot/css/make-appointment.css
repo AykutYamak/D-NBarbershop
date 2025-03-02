@@ -1,5 +1,5 @@
 ﻿body {
-    background: url('../Assets/Images/dark-brown-background-2000-x-1303-gn60fz9lr4okgn6v.jpg');
+    background: url('../Assets/Images/peakpx.jpg');
     background-size:100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -12,18 +12,22 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 2rem;
 }
-
+main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 h2 {
     padding:1rem;
     font-size: 3rem;
     font-weight: bold;
-    color: black;
+    color: #FFFFFF;
 }
 
 /* Barber Section */
 .barber-container .btn-check:checked + .btn-outline-dark {
     background-color: rgb(255, 255, 255, 0.8);
-    color: black;
+    color: #FFFFFF;
     border-color: black;
 }
 
@@ -52,15 +56,15 @@ h2 {
 
     .barber-card p {
         margin: 0.5rem 0;
-        color: black;
+        color: #FFFFFF;
     }
 
 /* Date and Time Section */
 form .form-label {
-    padding:1rem;
+    padding: 1rem;
     font-size: 2rem;
     font-weight: 600;
-    color: black;
+    color: #FFFFFF;
 }
 
 input[type="date"], select {
@@ -70,12 +74,13 @@ input[type="date"], select {
     width: 100%;
     font-size: 1rem;
     margin-top: 0.5rem;
+    margin-bottom:0.5rem;
 }
     
     select:focus, input[type="date"]:focus {
         outline: none;
         border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.6);
     }
 
 /* Service Section */
@@ -101,35 +106,37 @@ input[type="date"], select {
 .service-card:hover {
     border-color: #007bff;
     transform: translateY(-5px);
+    color: #FFFFFF;
 }
-    .service card strong {
-        padding: 1rem;
-        font-size: 50%;
-        font-weight: bold;
-        color: black;
-    }
-    .service-card p {
-        font-size: 60%;
-        color: black;
-        margin-top: 0.5rem;
-        font-weight:700;    
-    }
+.service card strong {
+    padding: 1rem;
+    font-size: 50%;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+.service-card p {
+    font-size: 60%;
+    color: #FFFFFF;
+    margin-top: 0.5rem;
+    font-weight: 700;
+}
 
 /* Button Styles */
 button[type="submit"] {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: black;
+    border-color: black;
     border-radius: 10px;
     transition: all 0.3s ease;
     cursor: pointer;
-    color: #fff;
+    color: #FFFFFF;
 }
 
     button[type="submit"]:hover {
-        background-color: #0056b3;
-        border-color: #004085;
+        background-color: #313131;
+        border-color: #313131;
+        color:#FFFFFF;
     }
 
 /* Responsive Design */
@@ -152,6 +159,7 @@ button[type="submit"] {
 
     .btn-check:checked + .btn-outline-dark {
         padding: 1rem;
+        color:white;
     }
 }
 

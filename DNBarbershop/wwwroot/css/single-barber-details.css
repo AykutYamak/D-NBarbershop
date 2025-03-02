@@ -1,0 +1,154 @@
+﻿body {
+    background: url('/Assets/Images/slate-texture-background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    white-space: normal;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: start;
+    gap: 2rem;
+    padding: 2%;
+    align-items: flex-start;
+}
+
+.card-container {
+    font-family: "Abril Fatface", serif;
+    width: 30%;
+    display: flex;
+    justify-content: start;
+    flex-wrap: inherit;
+}
+
+.card {
+    background: linear-gradient(darkgray, gray);
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 5px 15px black;
+    padding: 2%;
+    border-radius: 10px;
+}
+
+.card-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.comments-container {
+    background-color: white;
+    width: 75%;
+    padding: 2%;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+    color: black;
+}
+    .comments-container form{
+        margin-bottom:1.5rem;
+    }
+
+    .comments-container h3 {
+        font-family: "Abril Fatface",serif;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .comments-container label {
+        display: flex;
+        justify-content: left;
+    }
+    .comments-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .comments-container textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none;
+    }
+
+    .comments-container button {
+        background-color: black;
+        width: 100%;
+        font-size: 130%;
+        color: white;
+        padding: 1%;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+        .comments-container button:hover {
+            background-color: darkgray;
+            transform: scale(1.04);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+.comments-list {
+    margin-top: 1.5rem;
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+.comment {
+    background-color:lightgray;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    color:black;
+    margin-bottom:2%;
+    border-radius:10px;
+}
+    .comment h1 {
+        display:flex;
+        justify-content:left;
+        font-size: 1.5rem;
+    }
+
+    .comment p {
+        display: flex;
+        justify-content: left;
+        font-size: 1.2rem;
+        padding:1%;
+    }
+
+    .comment span {
+        font-size: 0.8rem;
+        color: gray;
+    }
+.rating{
+    display:flex;
+    justify-content:left;
+    font-size:0.8rem;
+}
+.comment-to{
+    display:flex;
+    justify-content:left;
+    font-size:0.8rem;
+}
+select {
+    font-size: 1rem;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+    select:focus {
+        border-color: #333;
+        outline: none;
+    }

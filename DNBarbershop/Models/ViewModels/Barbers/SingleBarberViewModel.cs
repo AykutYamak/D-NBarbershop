@@ -10,13 +10,10 @@ namespace DNBarbershop.Models.ViewModels.Barbers
         public string LastName { get; set; }
         public string Speciality { get; set; }
         public int ExperienceYears { get; set; }
-        public string Description { get; set; }
         public string ProfilePictureUrl { get; set; }
 
         public Guid? SpecialityId { get; set; }
         public int? MinExperienceYears { get; set; }
-
-        public SelectList Specialities { get; set; }
-        public List<Barber> Barbers { get; set; }
+        public List<Feedback> Feedbacks { get; set; } = new List<Feedback>();
     }
 }
