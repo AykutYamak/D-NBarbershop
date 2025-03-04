@@ -86,13 +86,15 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+                    document.addEventListener("DOMContentLoaded", function () {
             const barberSelect = document.querySelectorAll("input[name='BarberId']");
             const dateInput = document.getElementById("dateInput");
             const timeSelect = document.getElementById("timeSelect");
             const errorText = document.getElementById("dateError");
+            const serviceCheckboxes = document.querySelectorAll("input[name='SelectedServiceIds']");
 
-             function disableWeekends(event) {
+            // Function to disable weekends
+            function disableWeekends(event) {
                 const selectedDate = new Date(event.target.value);
                 const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
 
@@ -104,18 +106,42 @@
                 }
             }
 
+            // Function to calculate the total duration of selected services
+            function calculateTotalDuration() {
+                let totalDuration = 0;
+                serviceCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const serviceId = checkbox.value;
+                        const service = @Html.Raw(Json.Serialize(Model.Services)); // Serialize services to JavaScript
+                        const selectedService = service.find(s => s.id == serviceId);
+                        if (selectedService) {
+                            // Convert service duration to minutes and add to total
+                            totalDuration += selectedService.duration.hours * 60 + selectedService.duration.minutes;
+                        }
+                    }
+                });
+                return totalDuration;
+            }
+
+            // Function to fetch and populate available time slots
             async function updateAvailableTimeSlots() {
                 const selectedBarber = document.querySelector("input[name='BarberId']:checked");
-                if (!selectedBarber) return;
+                if (!selectedBarber) return; // No barber selected
                 const barberId = selectedBarber.value;
                 const appointmentDate = dateInput.value;
+                const totalDurationMinutes = calculateTotalDuration(); // Calculate total duration
 
-                if (!barberId || !appointmentDate) return;
+                if (!barberId || !appointmentDate) return; // Missing required data
 
                 try {
-                    const response = await fetch(`/Appointment/GetAvailableTimeSlots?barberId=${barberId}&appointmentDate=${appointmentDate}`);
+                    // Fetch available time slots from the backend
+                    const response = await fetch(`/Appointment/GetAvailableTimeSlots?barberId=${barberId}&appointmentDate=${appointmentDate}&totalDurationMinutes=${totalDurationMinutes}`);
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch available time slots");
+                    }
                     const availableSlots = await response.json();
 
+                    // Clear the dropdown and populate it with available slots
                     timeSelect.innerHTML = '<option value="">Select a time slot</option>';
                     availableSlots.forEach(slot => {
                         const option = document.createElement("option");
@@ -128,12 +154,22 @@
                 }
             }
 
+            // Add event listeners
             barberSelect.forEach(input => input.addEventListener("change", updateAvailableTimeSlots));
             dateInput.addEventListener("change", function (event) {
                 disableWeekends(event);
                 updateAvailableTimeSlots();
             });
-            disableWeekends({ target: dateInput });
+            serviceCheckboxes.forEach(checkbox => checkbox.addEventListener("change", updateAvailableTimeSlots));
+
+            // Initial setup
+            disableWeekends({ target: dateInput }); // Check for weekends on page load
+
+            // Populate the dropdown with available time slots on page load
+            const initialBarber = document.querySelector("input[name='BarberId']:checked");
+            if (initialBarber) {
+                updateAvailableTimeSlots(); // Fetch available time slots for the initially selected barber
+            }
         });
     </script>
 </body>

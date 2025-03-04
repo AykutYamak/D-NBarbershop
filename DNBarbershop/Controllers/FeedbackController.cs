@@ -239,8 +239,8 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
-                TempData["error"] = "Не сте регистриран/a.";
-                return Unauthorized();
+                TempData["error"] = "За да добавите коментар трябва да се регистрирате.";
+                return RedirectToAction("Details", "Barber", new { id = feedbackModel.BarberId });
             }
 
             if (!_barberService.GetAll().Any(b => b.Id == feedbackModel.BarberId))
