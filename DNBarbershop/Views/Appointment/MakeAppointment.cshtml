@@ -154,7 +154,7 @@
                 const totalDurationMinutes = calculateTotalDuration();
 
                 if (!selectedBarber || !appointmentDate || totalDurationMinutes === 0) {
-                    timeSelect.innerHTML = '<option value="">Select a time slot</option>';
+                    timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
                     return;
                 }
 
@@ -163,12 +163,12 @@
                 try {
                     const response = await fetch(`/Appointment/GetAvailableTimeSlots?barberId=${barberId}&appointmentDate=${appointmentDate}&totalDurationMinutes=${totalDurationMinutes}`);
                     if (!response.ok) {
-                        throw new Error("Failed to fetch available time slots");
+                            throw new Error("Грешка при зареждане на свободните часове.");
                     }
                     const availableSlots = await response.json();
 
                     // Clear and populate the dropdown with available slots
-                    timeSelect.innerHTML = '<option value="">Select a time slot</option>';
+                        timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
                     availableSlots.forEach(slot => {
                         const option = document.createElement("option");
                         option.value = slot;
@@ -184,7 +184,7 @@
                     }
                 } catch (error) {
                     console.error("Error fetching available time slots:", error);
-                    timeSelect.innerHTML = '<option value="">Error loading time slots</option>';
+                    timeSelect.innerHTML = '<option value="">Грешка при зареждане на свободните часове.</option>';
                 }
             }
 
