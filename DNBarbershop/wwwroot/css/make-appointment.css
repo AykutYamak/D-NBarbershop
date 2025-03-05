@@ -53,6 +53,11 @@ h2 {
         border-color: #007bff;
         transform: translateY(-5px);
     }
+    .barber-card:hover strong{
+        border-color: #007bff;
+        transform: translateY(-5px);
+        color:#FFFFFF;    
+    }
 
     .barber-card p {
         margin: 0.5rem 0;
@@ -96,14 +101,19 @@ input[type="date"], select {
 
 .service-container .btn-check:checked + .btn-outline-dark {
     background-color: rgb(255, 255, 255, 0.8);
-    color: black;
+    color: #FFFFFF;
     border-color: black;
 }
     .service-container .btn-check:checked + .btn-outline-dark strong {
-        color: black;
+        color: #FFFFFF;
     }
 
 .service-card:hover {
+    border-color: #007bff;
+    transform: translateY(-5px);
+    color: #FFFFFF;
+}
+.service-card:hover strong{
     border-color: #007bff;
     transform: translateY(-5px);
     color: #FFFFFF;
@@ -159,7 +169,25 @@ button[type="submit"] {
 
     .btn-check:checked + .btn-outline-dark {
         padding: 1rem;
-        color:white;
+        color: #FFFFFF;
     }
 }
+/* Custom Scrollbar */
+select::-webkit-scrollbar {
+    width: 8px;
+}
+
+select::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+}
+
+select::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 4px;
+}
+
+    select::-webkit-scrollbar-thumb:hover {
+        background: #888;
+    }
 

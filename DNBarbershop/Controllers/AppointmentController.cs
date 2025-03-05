@@ -3,25 +3,25 @@ using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
 using DNBarbershop.Models.ViewModels.Appointments;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using static DNBarbershop.Extensions.ActionResultExtensions;
 namespace DNBarbershop.Controllers
 {
     public class AppointmentController : Controller
     {
-        private readonly IAppointmentServiceService _appointmentServiceService;   
+        private readonly IAppointmentServiceService _appointmentServiceService;
         private readonly IAppointmentService _appointmentService;
         private readonly IBarberService _barberService;
         private readonly IServiceService _serviceService;
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
         public AppointmentController(
-            UserManager<User> userManager, 
+            UserManager<User> userManager,
             IAppointmentService appointmentService,
-            IBarberService barberService, 
+            IBarberService barberService,
             IServiceService serviceService,
             IUserService userService,
             IAppointmentServiceService appointmentServiceService)
@@ -33,64 +33,92 @@ namespace DNBarbershop.Controllers
             _userManager = userManager;
             _appointmentServiceService = appointmentServiceService;
         }
+        private async Task<bool> IsTimeSlotAvailable(Guid barberId, DateTime date, TimeSpan startTime, int durationMinutes)
+        {
+            var endTime = startTime.Add(TimeSpan.FromMinutes(durationMinutes));
+
+            var existingAppointments = await _appointmentService.GetAll()
+                .Where(a => a.BarberId == barberId && a.AppointmentDate == date)
+                .Include(a => a.AppointmentServices)
+                .ThenInclude(ap => ap.Service)
+                .ToListAsync();
+
+            foreach (var appointment in existingAppointments)
+            {
+                var appointmentDuration = appointment.AppointmentServices.Sum(s => s.Service.Duration.Hours * 60 + s.Service.Duration.Minutes);
+                var appointmentEnd = appointment.AppointmentTime.Add(TimeSpan.FromMinutes(appointmentDuration));
+
+                if (startTime < appointmentEnd && endTime > appointment.AppointmentTime)
+                    return false;
+            }
+
+            return endTime <= TimeSpan.FromHours(20);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAvailableTimeSlots(Guid barberId, DateTime appointmentDate, int totalDurationMinutes)
         {
-            // Step 1: Generate all possible time slots for the day
-            var allSlots = await GenerateTimeSlots(TimeSpan.FromHours(8), TimeSpan.FromHours(20, 30, 0, 0, 0), TimeSpan.FromMinutes(30));
+            var startTime = TimeSpan.FromHours(8);
+            var endTime = TimeSpan.FromHours(20,30);
+            var interval = TimeSpan.FromMinutes(30);
+            
+            if (appointmentDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                startTime = TimeSpan.FromHours(10); 
+                endTime = TimeSpan.FromHours(15,30);       
+            }
 
-            // Step 2: Get all booked time slots for the selected barber and date
-            var bookedSlots = _appointmentService
-                .GetAll()
+            var allSlots = await GenerateTimeSlots(startTime, endTime, interval);
+
+            var existingAppointments = await _appointmentService.GetAll()
                 .Where(a => a.BarberId == barberId && a.AppointmentDate == appointmentDate)
-                .Select(a => a.AppointmentTime.ToString(@"hh\:mm"))
-                .ToList();
+                .Include(a => a.AppointmentServices)
+                .ThenInclude(ap => ap.Service)
+                .ToListAsync();
 
-            // Step 3: Calculate unavailable slots based on the total duration of selected services
-            var unavailableSlots = new List<string>();
+            var bookedRanges = existingAppointments.Select(a =>
+            {
+                var duration = a.AppointmentServices.Sum(s => s.Service.Duration.Hours * 60 + s.Service.Duration.Minutes);
+                var end = a.AppointmentTime.Add(TimeSpan.FromMinutes(duration));
+                return (Start: a.AppointmentTime, End: end);
+            }).ToList();
+
+            var availableSlots = new List<string>();
             foreach (var slot in allSlots)
             {
-                var slotTime = TimeSpan.Parse(slot);
-                var endTime = slotTime.Add(TimeSpan.FromMinutes(totalDurationMinutes));
+                var slotStart = TimeSpan.Parse(slot);
+                var slotEnd = slotStart.Add(TimeSpan.FromMinutes(totalDurationMinutes));
 
-                // Check if this slot overlaps with any booked slots
-                bool isSlotUnavailable = bookedSlots.Any(bookedSlot =>
+                if (slotEnd >= endTime)
                 {
-                    var bookedTime = TimeSpan.Parse(bookedSlot);
-                    return (bookedTime >= slotTime && bookedTime < endTime) || // Booked slot starts during the service
-                           (bookedTime.Add(TimeSpan.FromMinutes(30)) > slotTime && bookedTime.Add(TimeSpan.FromMinutes(30)) <= endTime); // Booked slot ends during the service
-                });
+                    continue;
+                }
 
-                // If the slot is unavailable, add it to the list
-                if (isSlotUnavailable)
+                bool isConflict = bookedRanges.Any(range => slotStart < range.End && slotEnd > range.Start);
+
+                if (!isConflict)
                 {
-                    unavailableSlots.Add(slot);
+                    availableSlots.Add(slot);
                 }
             }
 
-            // Step 4: Filter out unavailable slots from all slots
-            var availableSlots = allSlots.Except(unavailableSlots).ToList();
-
-            // Step 5: Return the available slots as JSON
             return Json(availableSlots);
         }
+
         private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
         {
             var slots = new List<string>();
             for (var time = start; time < end; time += interval)
             {
-                slots.Add(time.ToString("hh\\:mm"));
+                slots.Add(time.ToString(@"hh\:mm"));
             }
             return slots;
         }
         private async Task PopulateViewBags()
         {
-            // Step 1: Get all barbers and services
             var barbers = _barberService.GetAll();
             var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
             var services = _serviceService.GetAll();
 
-            // Step 2: Populate ViewBag.Barbers and ViewBag.Services
             ViewBag.Barbers = new SelectList(barbersList, "Id", "FullName");
             ViewBag.Services = services.Select(s => new SelectListItem
             {
@@ -98,27 +126,22 @@ namespace DNBarbershop.Controllers
                 Text = s.ServiceName
             }).ToList();
 
-            // Step 3: Generate all possible time slots
             var allSlots = await GenerateTimeSlots(TimeSpan.FromHours(8), TimeSpan.FromHours(20, 30, 0, 0, 0), TimeSpan.FromMinutes(30));
 
-            // Step 4: Get booked slots for the selected barber and date (if any)
             var bookedSlots = _appointmentService
                 .GetAll()
                 .Where(a => a.AppointmentDate == DateTime.Today) // Adjust this to use the selected date
                 .Select(a => a.AppointmentTime.ToString(@"hh\:mm"))
                 .ToList();
 
-            // Step 5: Filter out booked slots from all slots
             var availableSlots = allSlots.Except(bookedSlots).ToList();
 
-            // Step 6: Populate ViewBag.TimeSlots with available slots
             ViewBag.TimeSlots = availableSlots.Select(ts => new SelectListItem
             {
                 Value = ts,
                 Text = ts
             }).ToList();
 
-            // Step 7: Populate ViewBag.Statuses
             var statuses = Enum.GetValues(typeof(AppointmentStatus));
             ViewBag.Statuses = statuses;
         }
@@ -145,8 +168,8 @@ namespace DNBarbershop.Controllers
             var appointments = query
             .Include(a => a.User)
             .Include(a => a.Barber)
-            .Include(a => a.AppointmentServices) 
-            .ThenInclude(ap => ap.Service)  
+            .Include(a => a.AppointmentServices)
+            .ThenInclude(ap => ap.Service)
             .ToList();
 
             var model = new AppointmentFilterViewModel
@@ -154,7 +177,7 @@ namespace DNBarbershop.Controllers
                 UserId = filter.UserId,
                 BarberId = filter.BarberId,
                 Barbers = new SelectList(barbersList, "Id", "FullName"),
-                Users = new SelectList(usersList,"Id","FullName"),
+                Users = new SelectList(usersList, "Id", "FullName"),
                 Appointments = appointments
             };
             return View(model);
@@ -263,9 +286,9 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Резервацията не е намерена.";
                 return RedirectToAction("Index");
             }
-            
+
             var currentUser = await _userManager.GetUserAsync(User);
-            
+
             if (currentUser == null)
             {
                 TempData["error"] = "Не сте регистриран/а.";
@@ -299,7 +322,7 @@ namespace DNBarbershop.Controllers
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Edit(AppointmentEditViewModel model)
-       {
+        {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
@@ -408,7 +431,6 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
-
             var model = new AppointmentCreateViewModel
             {
                 UserId = currentUser.Id,
@@ -428,86 +450,66 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
-                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
             model.UserId = currentUser.Id;
 
-            if (model.UserId != currentUser.Id)
+            // Calculate total duration
+            int totalDurationMinutes = 0;
+            foreach (var serviceId in model.SelectedServiceIds)
             {
-                return BadRequest();
+                var service = await _serviceService.Get(s => s.Id == serviceId);
+                totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
             }
-            else
+
+            var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
+            if (!isAvailable)
             {
-                // Calculate total duration of selected services
-                int totalDurationMinutes = 0;
-                if (model.SelectedServiceIds != null)
-                {
-                    foreach (var serviceId in model.SelectedServiceIds)
-                    {
-                        var service = _serviceService.GetAll().FirstOrDefault(s => s.Id == serviceId);
-                        if (service != null)
-                        {
-                            totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
-                        }
-                    }
-                }
+                TempData["error"] = "Този час не е свободен.";
+                await PopulateViewBags();
+                return RedirectToAction("MakeAppointment","Appointment",null);
+            }
 
-                // Call GetAvailableTimeSlots and deserialize the response
-                var availableSlotsResponse = await GetAvailableTimeSlots(model.BarberId, model.AppointmentDate, totalDurationMinutes);
-                var availableSlots = await availableSlotsResponse.GetResultAsync<List<string>>(); // Use the extension method
+            var newAppointment = new Appointment
+            {
+                Id = Guid.NewGuid(),
+                BarberId = model.BarberId,
+                UserId = model.UserId,
+                AppointmentDate = model.AppointmentDate,
+                AppointmentTime = model.AppointmentTime,
+                Status = AppointmentStatus.Scheduled
+            };
 
-                // Check if the selected time slot is available
-                var selectedSlot = model.AppointmentTime.ToString(@"hh\:mm");
+            if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+            {
+                TempData["error"] = "Няма такава услуга!";
+                return RedirectToAction("Index");
+            }
 
-                if (!availableSlots.Contains(selectedSlot))
-                {
-                    await PopulateViewBags();
-                    TempData["error"] = "Избраният час не е наличен за избраните услуги.";
-                    return RedirectToAction("MakeAppointment");
-                }
 
-                var newAppointment = new Appointment
-                {
-                    Id = Guid.NewGuid(),
-                    BarberId = model.BarberId,
-                    UserId = model.UserId,
-                    AppointmentDate = model.AppointmentDate,
-                    AppointmentTime = model.AppointmentTime,
-                    Status = AppointmentStatus.Scheduled
-                };
 
-                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+            await _appointmentService.Add(newAppointment);
+            currentUser.Appointments.Add(newAppointment);
+
+            foreach (var serviceId in model.SelectedServiceIds)
+            {
+                var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
+                if (!serviceExists)
                 {
                     TempData["error"] = "Няма такава услуга!";
                     return RedirectToAction("Index");
                 }
 
-               
-
-                await _appointmentService.Add(newAppointment);
-                currentUser.Appointments.Add(newAppointment);
-
-                foreach (var serviceId in model.SelectedServiceIds)
+                var appointmentService = new AppointmentServices
                 {
-                    var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
-                    if (!serviceExists)
-                    {
-                        TempData["error"] = "Няма такава услуга!";
-                        return RedirectToAction("Index");
-                    }
-
-                    var appointmentService = new AppointmentServices
-                    {
-                        AppointmentId = newAppointment.Id,
-                        ServiceId = serviceId
-                    };
-                    await _appointmentServiceService.Add(appointmentService);
-                }
-                TempData["success"] = "Успешно резервиран час!";
-                return RedirectToAction("Details", "User", null);
+                    AppointmentId = newAppointment.Id,
+                    ServiceId = serviceId
+                };
+                await _appointmentServiceService.Add(appointmentService);
             }
+            TempData["success"] = "Успешно резервиран час!";
+            return RedirectToAction("Details", "User", null);
         }
         [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]
