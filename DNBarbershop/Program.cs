@@ -14,6 +14,7 @@ using DNBarbershop.Utility;
 using DNBarbershop.DataAccess.BarberRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using DNBarbershop.DataAccess.AppointmentServiceRepository;
+using DNBarbershop.DataAccess.AppointmentRepository;
 
 internal class Program
 {
@@ -31,12 +32,13 @@ internal class Program
 
         builder.Services.AddRazorPages();
 
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,b=>b.MigrationsAssembly("DNBarbershop.DataAccess")));
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,b=>b.MigrationsAssembly("DNBarbershop.DataAccess")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddScoped(typeof(IGlobalService<>), typeof(GlobalService<>));
         builder.Services.AddScoped(typeof(IRepository<Speciality>), typeof(Repository<Speciality>));
         builder.Services.AddScoped(typeof(IBarberRepository<Barber>), typeof(BarberRepository<Barber>));
         builder.Services.AddScoped(typeof(IAppointmentServiceRepository<AppointmentServices>), typeof(AppointmentServiceRepository<AppointmentServices>));
+        builder.Services.AddScoped(typeof(IAppointmentRepository<Appointment>), typeof(AppointmentRepository<Appointment>));
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
         builder.Services.AddScoped<IBarberService, BarberService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();

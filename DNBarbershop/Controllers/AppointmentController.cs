@@ -180,6 +180,17 @@ namespace DNBarbershop.Controllers
                 Users = new SelectList(usersList, "Id", "FullName"),
                 Appointments = appointments
             };
+            foreach (var item in appointments)
+            {
+                if (item.AppointmentDate.Date < DateTime.UtcNow.Date && item.AppointmentTime < DateTime.UtcNow.TimeOfDay && item.Status != AppointmentStatus.Canceled)
+                {
+                    item.Status = AppointmentStatus.Completed;
+                }
+                else
+                {
+                    item.Status = AppointmentStatus.Scheduled;
+                }
+            }
             return View(model);
         }
         [Authorize(Roles = "Admin")]
@@ -280,7 +291,7 @@ namespace DNBarbershop.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var appointment = await _appointmentService.Get(a => a.Id == id);
+            var appointment = await _appointmentService.GetWithRels(a => a.Id == id);
             if (appointment == null)
             {
                 TempData["error"] = "Резервацията не е намерена.";
@@ -337,73 +348,59 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Не сте регистриран/а.";
                 return BadRequest();
             }
-            if (model.AppointmentDate < DateTime.Now.Date ||
-                (model.AppointmentDate.Date == DateTime.Now.Date &&
-                model.AppointmentTime < DateTime.Now.TimeOfDay))
+
+            if (!ModelState.IsValid)
             {
-                TempData["error"] = "Часът не може да бъде в миналото.";
                 await PopulateViewBags();
+                TempData["error"] = "Неуспешно премината валидация.";
                 return View(model);
             }
-            else
+
+            var appointment = await _appointmentService.GetWithRels(a => a.Id == model.Id);
+            if (appointment == null)
             {
-                if (!ModelState.IsValid)
-                {
-                    await PopulateViewBags();
-                    TempData["error"] = "Неуспешно премината валидация.";
-                    return RedirectToAction("Index");
-                }
-                if (false)
-                {
-                    var appointment = await _appointmentService.Get(a => a.Id == model.Id);
-                    if (appointment == null)
-                    {
-                        TempData["error"] = "Резервацията не е намерена.";
-                        return RedirectToAction("Index");
-                    }
-                }
-                var newAppointment = new Appointment
-                {
-                    Id = model.Id,
-                    BarberId = model.BarberId,
-                    UserId = model.UserId,
-                    AppointmentDate = model.AppointmentDate,
-                    AppointmentTime = model.AppointmentTime,
-                    Status = model.Status,
-                };
-
-                await _appointmentService.Update(newAppointment);
-                TempData["success"] = "Упсешно редактирана резервация.";
-
-                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
-                {
-                    TempData["error"] = "Моля, изберете поне една услуга.";
-                    await PopulateViewBags();
-                    return View(model);
-                }
-
-                await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
-
-
-                foreach (var serviceId in model.SelectedServiceIds)
-                {
-                    var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
-                    if (!serviceExists)
-                    {
-                        TempData["error"] = "Няма такава услуга.";
-                        return RedirectToAction("Index");
-                    }
-                    var appointmentServiceEntity = new AppointmentServices
-                    {
-                        AppointmentId = newAppointment.Id,
-                        ServiceId = serviceId,
-                    };
-                    await _appointmentServiceService.Add(appointmentServiceEntity);
-                }
-
-
+                TempData["error"] = "Резервацията не е намерена.";
                 return RedirectToAction("Index");
             }
+            var newAppointment = new Appointment
+            {
+                Id = model.Id,
+                BarberId = appointment.BarberId,
+                UserId = appointment.UserId,
+                AppointmentDate = model.AppointmentDate,
+                AppointmentTime = appointment.AppointmentTime,
+                Status = model.Status,
+            };
+
+            await _appointmentService.Update(newAppointment);
+            TempData["success"] = "Успешно редактирана резервация.";
+
+            //if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+            //{
+            //    TempData["error"] = "Моля, изберете поне една услуга.";
+            //    await PopulateViewBags();
+            //    return View(model);
+            //}
+
+            await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
+
+            foreach (var serviceId in model.SelectedServiceIds)
+            {
+                var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
+                if (!serviceExists)
+                {
+                    TempData["error"] = "Няма такава услуга.";
+                    return RedirectToAction("Index");
+                }
+                var appointmentServiceEntity = new AppointmentServices
+                {
+                    AppointmentId = newAppointment.Id,
+                    ServiceId = serviceId,
+                };
+                await _appointmentServiceService.Add(appointmentServiceEntity);
+            }
+
+            return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]

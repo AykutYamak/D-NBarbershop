@@ -18,7 +18,12 @@
                         @foreach (var service in (List<SelectListItem>)ViewBag.Services)
                         {
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@service.Value" id="@service.Value">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="SelectedServiceIds"
+                                       value="@service.Value"
+                                       id="@service.Value"
+                                @(Model.SelectedServiceIds.Contains(Guid.Parse(service.Value)) ? "checked" : null)>
                                 <label class="form-check-label" for="@service.Value">
                                     @service.Text
                                 </label>
@@ -26,6 +31,8 @@
                         }
                     </div>
                 </div>
+
+
                 <div class="mb-3">
                     <label asp-for="BarberId" class="form-label fw-semibold">Бръснар</label>
                     <select asp-for="BarberId" asp-items="ViewBag.Barbers" class="form-select">
@@ -40,6 +47,7 @@
                     <select asp-for="AppointmentTime" class="form-select">
                         @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
                         {
+                            <option value="@Model.AppointmentTime">@Model.AppointmentTime</option>
                             @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
                             {
                                 <option value="@item.Value">@item.Text</option>
@@ -54,11 +62,11 @@
                 <div class="form-group">
                     <label asp-for="Status">Редактирайте статуса</label>
                     <select asp-for="Status" class="form-select">
-                        @if (ViewBag.Statuses!=null)
+                        @if (ViewBag.Statuses != null)
                         {
                             @foreach (var item in ViewBag.Statuses)
                             {
-                                <option value ="@item">@item</option>
+                                <option value="@item">@item</option>
                             }
                         }
                     </select>

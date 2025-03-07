@@ -92,13 +92,30 @@
             background-color: darkgray;
             transform: scale(1.04);
             color: white;
-            padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
-
+.addcommentbutton {
+    background-color: black;
+    width: 100%;
+    font-size: 130%;
+    color: white;
+    padding: 1%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+    .addcommentbutton:hover {
+        background-color: darkgray;
+        transform: scale(1.04);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 .comments-list {
     margin-top: 1.5rem;
     max-height: 400px; /* Adjust the height as needed */

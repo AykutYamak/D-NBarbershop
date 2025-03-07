@@ -1,4 +1,5 @@
-﻿@model DNBarbershop.Models.ViewModels.Barbers.SingleBarberViewModel;
+﻿@using DNBarbershop.Utility
+@model DNBarbershop.Models.ViewModels.Barbers.SingleBarberViewModel;
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +35,16 @@
                     </div>
                     <textarea name="Comment" placeholder="Напишете коментар..." required></textarea>
                 </div>
-                <button type="submit">Добави коментар</button>
+                @if (User.IsInRole(SD.AdminRole) || User.IsInRole(SD.UserRole))
+                {
+                    <button type="submit">Добави коментар</button>
+
+                }
+                else
+                {
+                    <a class="btn addcommentbutton" asp-area="Identity" asp-page="/Account/Register">Добави коментар</a>
+                }
+                
             </form>
             <hr />
             <div class="comments-list">

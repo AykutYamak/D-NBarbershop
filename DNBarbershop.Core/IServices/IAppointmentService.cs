@@ -13,5 +13,6 @@ namespace DNBarbershop.Core.IServices
     {
         Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date);
         Task<IEnumerable<Appointment>> GetAppointmentsByService(string service);
+        Task<Appointment> GetWithRels(System.Linq.Expressions.Expression<Func<Appointment, bool>> filter);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.EnumClasses;
 using DNBarbershop.Models.ViewModels.Appointments;
 using DNBarbershop.Models.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -98,7 +99,17 @@ namespace DNBarbershop.Controllers
                 .Include(a => a.AppointmentServices)
                     .ThenInclude(s => s.Service)
                 .ToList();
-
+            foreach (var item in appointments)
+            {
+                if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Canceled)
+                {
+                    item.Status = AppointmentStatus.Completed;
+                }
+                else
+                {
+                    item.Status = AppointmentStatus.Scheduled;
+                }
+            }
             var model = new UserViewModel
             {
                 Id = currentUser.Id,

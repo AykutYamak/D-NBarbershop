@@ -11,15 +11,18 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using DNBarbershop.DataAccess.AppointmentRepository;
 
 namespace DNBarbershop.Core.Services
 {
     public class AppointmentService : IAppointmentService
     {
         private readonly IRepository<Appointment> _appointmentRepository;
-        public AppointmentService(IRepository<Appointment> appointmentRepository)
+        private readonly IAppointmentRepository<Appointment> _appointmentRepo;
+        public AppointmentService(IRepository<Appointment> appointmentRepository, IAppointmentRepository<Appointment> appointmentRepo)
         {
             _appointmentRepository = appointmentRepository;
+            _appointmentRepo = appointmentRepo;
         }
         /*public bool ValidateAppointment(Appointment appointment)
         {
@@ -64,6 +67,12 @@ namespace DNBarbershop.Core.Services
         {
             return await _appointmentRepository.Get(filter);
         }
+        public async Task<Appointment> GetWithRels(Expression<Func<Appointment, bool>> filter)
+        {
+
+            return await _appointmentRepo.GetWithRels(filter);
+        }
+
         public IQueryable<Appointment> GetAll()
         {
                 return _appointmentRepository.GetAll();
