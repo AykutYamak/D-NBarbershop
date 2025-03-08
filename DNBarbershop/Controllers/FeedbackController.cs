@@ -260,10 +260,10 @@ namespace DNBarbershop.Controllers
                 var feedback = new Feedback
                 {
                     Id = Guid.NewGuid(),
-                    UserId = currentUser.Id,
-                    User = currentUser,
+                    UserId = feedbackModel.UserId,
+                    //User = currentUser,
                     BarberId = feedbackModel.BarberId,
-                    Barber = _barberService.Get(b => b.Id == feedbackModel.BarberId).Result,
+                    //Barber = _barberService.Get(b => b.Id == feedbackModel.BarberId).Result,
                     Rating = feedbackModel.Rating,
                     Comment = feedbackModel.Comment,
                     FeedBackDate = feedbackModel.FeedBackDate

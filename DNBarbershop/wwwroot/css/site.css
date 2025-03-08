@@ -171,7 +171,9 @@ body {
     height: 100%;
     font-size: 100%;
 }
-
+.LoginContainer p{
+    padding-top:2%;
+}
 .LoginDiv {
     margin: auto;
     color: white;
