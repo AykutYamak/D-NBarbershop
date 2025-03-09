@@ -43,11 +43,16 @@
                                 <p>@service.Price BGN.</p>
                                 @if (service.Duration.Hours < 0)
                                 {
-                                    <p>Продължителност: @service.Duration.Minutes min</p>
+                                    <p>@service.Duration.Minutes мин.</p>
                                 }
                                 else if (service.Duration.Hours > 0 && service.Duration.Minutes != 0)
                                 {
-                                    <p>@service.Duration.Hours h @service.Duration.Minutes min</p>
+                                    <p>@service.Duration.Hours ч. @service.Duration.Minutes мин.</p>
+                                }
+                                else if (service.Duration.Hours > 0 && service.Duration.Minutes == 0)
+                                {
+                                    <p>@service.Duration.Hours ч.</p>
+
                                 }
                                 else
                                 {

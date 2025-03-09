@@ -24,13 +24,13 @@ namespace DNBarbershop.DataAccess
            .HasOne(f => f.User)
            .WithMany(u => u.Messages)
            .HasForeignKey(f => f.UserId)
-           .OnDelete(DeleteBehavior.NoAction);
+           .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Appointment>()
             .HasOne(a => a.User)
             .WithMany(u => u.Appointments)
             .HasForeignKey(a => a.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Barber)
@@ -48,13 +48,13 @@ namespace DNBarbershop.DataAccess
             .HasOne(f => f.User)
             .WithMany(u => u.Feedbacks)
             .HasForeignKey(f => f.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Feedback>()
             .HasOne(f => f.Barber)
             .WithMany(b => b.Feedbacks)
             .HasForeignKey(f => f.BarberId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WorkSchedule>()
             .HasOne(ws => ws.Barber)
@@ -69,13 +69,13 @@ namespace DNBarbershop.DataAccess
             .HasOne(a => a.Appointment)
             .WithMany(a => a.AppointmentServices)
             .HasForeignKey(a => a.AppointmentId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AppointmentServices>()
             .HasOne(a => a.Service)
             .WithMany(s => s.AppointmentServices)
             .HasForeignKey(a => a.ServiceId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Speciality>()
                 .HasMany(s => s.Barbers)

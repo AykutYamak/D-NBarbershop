@@ -97,6 +97,7 @@ input[type="date"], select {
     transition: all 0.3s ease;
     cursor: pointer;
     background-color: rgb(255, 255, 255, 0.4);
+    height:100%;
 }
 
 .service-container .btn-check:checked + .btn-outline-dark {
