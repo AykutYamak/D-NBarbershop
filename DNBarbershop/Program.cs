@@ -23,7 +23,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("HomeConnection");
+        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
         //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         //    .AddEntityFrameworkStores<ApplicationDbContext>();

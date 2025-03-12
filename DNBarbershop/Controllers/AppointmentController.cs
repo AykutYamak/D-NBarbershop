@@ -171,15 +171,6 @@ namespace DNBarbershop.Controllers
             .Include(a => a.AppointmentServices)
             .ThenInclude(ap => ap.Service)
             .ToList();
-
-            var model = new AppointmentFilterViewModel
-            {
-                UserId = filter.UserId,
-                BarberId = filter.BarberId,
-                Barbers = new SelectList(barbersList, "Id", "FullName"),
-                Users = new SelectList(usersList, "Id", "FullName"),
-                Appointments = appointments
-            };
             foreach (var item in appointments)
             {
                 if (item.AppointmentDate.Date < DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Canceled)
@@ -191,6 +182,15 @@ namespace DNBarbershop.Controllers
                     item.Status = AppointmentStatus.Scheduled;
                 }
             }
+            var model = new AppointmentFilterViewModel
+            {
+                UserId = filter.UserId,
+                BarberId = filter.BarberId,
+                Barbers = new SelectList(barbersList, "Id", "FullName"),
+                Users = new SelectList(usersList, "Id", "FullName"),
+                Appointments = appointments
+            };
+           
             return View(model);
         }
         [Authorize(Roles = "Admin")]

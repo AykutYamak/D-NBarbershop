@@ -9,11 +9,6 @@
             <div class="col-md-6">
                 <h3 class="text-uppercase fw-bold text-danger">Отзиви и коментари</h3>
             </div>
-            <div class="col-md-6 text-md-end">
-                <a asp-controller="Feedback" asp-action="Add" class="btn btn-dark shadow-sm px-4 py-2">
-                    <i class="bi bi-person-plus"></i> Добави отзив
-                </a>
-            </div>
         </div>
         <form method="get" class="mb-3 bg-black bg-opacity-75 text-white p-3 rounded">
             <div class="row g-2 align-items-end">
@@ -55,9 +50,6 @@
                             <td>@feedback.FeedBackDate.Day/@feedback.FeedBackDate.Month/@feedback.FeedBackDate.Year г.</td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a class="btn btn-dark px-3 py-2" asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.Id">
-                                        <i class="bi bi-pencil"></i> Редактирай
-                                    </a>
                                     <form asp-controller="Feedback" asp-action="Delete" asp-route-id="@feedback.Id" method="post">
                                         <button type="submit" class="btn btn-danger px-3 py-2">
                                             <i class="bi bi-trash"></i> Изтрий
