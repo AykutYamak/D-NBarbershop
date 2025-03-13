@@ -27,7 +27,6 @@
                             <li class="navigation"><a id="len3" class="hoverable" asp-controller="Feedback" asp-action="Index">Отзиви</a></li>
                             <li class="navigation"><a id="len7" class="hoverable" asp-controller="Message" asp-action="Index">Съобщения</a></li>
                             <li class="navigation"><a id="len4" class="hoverable" asp-controller="Barber" asp-action="Index">Бръснари</a></li>
-                            <li class="navigation"><a id="len5" class="hoverable" asp-controller="WorkSchedule" asp-action="Index">Работно време</a></li>
                             <li class="navigation"><a id="len6" class="hoverable" asp-controller="Speciality" asp-action="Index">Специализации</a></li>
                             <li class="navigation"><a id="len7" class="hoverable" asp-controller="User" asp-action="Index">Потребители</a></li>
                             <partial name="_LoginPartial" />
@@ -46,7 +45,7 @@
             </div>
     </header>
     <div >
-        <main role="main" class="pd-flex align-items-center justify-content-center min-vh-100">
+        <main role="main" class="pd-flex align-items-center justify-content-center min-vh-70" style="min-height:calc(100vh - 199px); padding-top:10px;">
             @RenderBody()
         </main>
     </div>

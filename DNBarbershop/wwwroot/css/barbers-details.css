@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column; /* Stacks form and cards vertically */
     align-items: center; /* Centers content horizontally */
-    padding: 2rem; /* Adds some breathing room */
+  
 }
 
 /* Cards wrapper to control the row layout */

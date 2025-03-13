@@ -16,7 +16,6 @@ namespace DNBarbershop.DataAccess
         public DbSet<Service> services { get; set; }
         public DbSet<Speciality> speciality { get; set; }
         public DbSet<User> users { get; set; }
-        public DbSet<WorkSchedule> workSchedules { get; set; }
         public DbSet<Message> messages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,19 +47,13 @@ namespace DNBarbershop.DataAccess
             .HasOne(f => f.User)
             .WithMany(u => u.Feedbacks)
             .HasForeignKey(f => f.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Feedback>()
             .HasOne(f => f.Barber)
             .WithMany(b => b.Feedbacks)
             .HasForeignKey(f => f.BarberId)
             .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<WorkSchedule>()
-            .HasOne(ws => ws.Barber)
-            .WithMany(b => b.WorkSchedules)
-            .HasForeignKey(ws => ws.BarberId)
-            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AppointmentServices>()
             .HasKey(a => new { a.AppointmentId, a.ServiceId });

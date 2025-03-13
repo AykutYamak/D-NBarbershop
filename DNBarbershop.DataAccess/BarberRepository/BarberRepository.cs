@@ -22,9 +22,5 @@ namespace DNBarbershop.DataAccess.BarberRepository
         {
             return await barbers.Include(b => b.Speciality).ToListAsync();
         }
-        public async Task<Barber> GetBarberWithSchedules(Guid barberId)
-        {
-            return await barbers.Include(b => b.WorkSchedules).FirstOrDefaultAsync(b => b.Id == barberId);
-        }
     }
 }

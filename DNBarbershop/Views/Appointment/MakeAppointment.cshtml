@@ -1,4 +1,5 @@
-﻿@model DNBarbershop.Models.ViewModels.Appointments.AppointmentCreateViewModel
+﻿@using DNBarbershop.Utility
+@model DNBarbershop.Models.ViewModels.Appointments.AppointmentCreateViewModel
 
 @{
     ViewData["Title"] = "Make an Appointment";
@@ -9,208 +10,221 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/make-appointment.css">
+   
 </head>
 <body>
-    <div class="container mt-5 " style="background-color: rgb(48, 48, 48,0.6);border-radius: 20px;padding: 2rem; margin:5%; width:75%; ">
-        <h2 class="text-center">Запази своя час!</h2>
-        <form asp-action="MakeAppointment" method="post">
-            <div class="barber-container mb-3">
-                <label class="form-label">Избери бръснар:</label>
-                <div class="row g-3 d-flex justify-content-center">
-                    @foreach (var barber in Model.Barbers)
-                    {
-                        <div class="col-md-4 col-sm-6">
-                            <input type="radio" name="BarberId" value="@barber.Id" class="btn-check" id="barber_@barber.Id" required>
-                            <label class="btn btn-outline-dark text-center p-3 barber-card" for="barber_@barber.Id">
-                                <img src="@barber.ProfilePictureUrl" alt="barber profile pic" style="border-radius: 40px; object-fit: cover; width: 50%; height: 80%;" />
-                                <br />
-                                <strong>@barber.FirstName @barber.LastName</strong>
-                            </label>
-                        </div>
-                    }
-                </div>
-            </div>
-            <div class="mb-3 text-center service-container">
-                <label class="form-label">Избери услуга:</label>
-                <div id="serviceContainer" class="row g-3 justify-content-center">
-                    @foreach (var service in Model.Services)
-                    {
-                        <div class="col-md-4 col-sm-6">
-                            <input type="checkbox" name="SelectedServiceIds" value="@service.Id" class="btn-check" id="service_@service.Id" data-duration="@service.Duration.TotalMinutes">
-                            <label class="btn btn-outline-dark w-100 text-center p-3 service-card" for="service_@service.Id">
-                                <strong>@service.ServiceName</strong>
-                                <p>@service.Price BGN.</p>
-                                @if (service.Duration.Hours < 0)
-                                {
-                                    <p>@service.Duration.Minutes мин.</p>
-                                }
-                                else if (service.Duration.Hours > 0 && service.Duration.Minutes != 0)
-                                {
-                                    <p>@service.Duration.Hours ч. @service.Duration.Minutes мин.</p>
-                                }
-                                else if (service.Duration.Hours > 0 && service.Duration.Minutes == 0)
-                                {
-                                    <p>@service.Duration.Hours ч.</p>
-
-                                }
-                                else
-                                {
-                                    <p>@service.Duration.Minutes min</p>
-                                }
-                            </label>
-                        </div>
-                    }
-                </div>
-            </div>
-            <!-- Date & Time Section - Enhanced -->
-            <div class="row g-4 mb-4">
-                <!-- Date Picker -->
-                <div class="col-md-6">
-                    <div class="date-picker-container p-3 rounded-3" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                        <label class="form-label mb-3 d-block fw-medium text-light" style="font-size: 1.1rem;">
-                            <i class="bi bi-calendar3 me-2"></i>Избери дата
-                        </label>
-                        <div class="input-group">
-                            <input id="dateInput"
-                                   asp-for="AppointmentDate"
-                                   type="date"
-                                   value="@DateTime.Now.ToString("yyyy-MM-dd")"
-                                   class="form-control form-control-lg border-2 py-2 bg-dark text-light"
-                                   style="border-color: #555; border-radius: 10px; transition: all 0.3s ease;"
-                                   required />
-                        </div>
-                        <small id="dateError" class="d-none mt-2 d-block fw-medium" style="font-size: 0.9rem; color: #ff6b6b;">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>Моля, изберете работен ден
-                        </small>
+    <div class="container-fluid">
+        <div class="main-container">
+            <h2>Запази своя час!</h2>
+            <form asp-action="MakeAppointment" method="post">
+                <!-- Barber Selection -->
+                <div class="mb-4">
+                    <label class="form-label">Избери бръснар:</label>
+                    <div class="row g-4 d-flex justify-content-center">
+                        @foreach (var barber in Model.Barbers)
+                        {
+                            <div class="col-lg-4 col-md-6">
+                                <input type="radio" name="BarberId" value="@barber.Id" class="btn-check" id="barber_@barber.Id" required>
+                                <label class="btn btn-outline-dark text-center barber-card" for="barber_@barber.Id">
+                                    <img src="@barber.ProfilePictureUrl" alt="barber profile pic" />
+                                    <strong>@barber.FirstName @barber.LastName</strong>
+                                </label>
+                            </div>
+                        }
                     </div>
                 </div>
 
-                <!-- Time Selector -->
-                <div class="col-md-6">
-                    <div class="time-select-container p-3 rounded-3" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                        <label class="form-label mb-3 d-block fw-medium text-light" style="font-size: 1.1rem;">
-                            <i class="bi bi-clock me-2"></i>Избери час
-                        </label>
-                        <div class="position-relative">
-                            <select id="timeSelect"
-                                    asp-for="AppointmentTime"
-                                    class="form-select form-select-lg border-2 py-2 bg-dark text-light"
-                                    style="border-color: #555; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;"
-                                    aria-label="Time selection">
-                                <option value="" class="text-muted">-- Избери час --</option>
-                            </select>
-                            <div class="position-absolute end-0 top-50 translate-middle-y pe-3">
-                                <i class="bi bi-chevron-down fs-5 text-secondary"></i>
+                <!-- Service Selection -->
+                <div class="mb-4 service-container">
+                    <label class="form-label">Избери услуга:</label>
+                    <div id="serviceContainer" class="row g-4 justify-content-center">
+                        @foreach (var service in Model.Services)
+                        {
+                            <div class="col-lg-4 col-md-6">
+                                <input type="checkbox" name="SelectedServiceIds" value="@service.Id" class="btn-check" id="service_@service.Id" data-duration="@service.Duration.TotalMinutes">
+                                <label class="btn btn-outline-dark w-100 text-center service-card" for="service_@service.Id">
+                                    <strong>@service.ServiceName</strong>
+                                    <p>@service.Price BGN.</p>
+                                    @if (service.Duration.Hours < 0)
+                                    {
+                                        <p>@service.Duration.Minutes мин.</p>
+                                    }
+                                    else if (service.Duration.Hours > 0 && service.Duration.Minutes != 0)
+                                    {
+                                        <p>@service.Duration.Hours ч. @service.Duration.Minutes мин.</p>
+                                    }
+                                    else if (service.Duration.Hours > 0 && service.Duration.Minutes == 0)
+                                    {
+                                        <p>@service.Duration.Hours ч.</p>
+                                    }
+                                    else
+                                    {
+                                        <p>@service.Duration.Minutes min</p>
+                                    }
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Date & Time Section - Enhanced -->
+                <div class="date-time-section">
+                    <div class="row g-4">
+                        <!-- Date Picker -->
+                        <div class="col-md-6">
+                            <div class="date-picker-container">
+                                <label class="form-label mb-3 d-block text-light" style="font-size: 1.3rem; text-align: left;">
+                                    <i class="bi bi-calendar3 me-2"></i>Избери дата
+                                </label>
+                                <div class="input-group">
+                                    <input id="dateInput"
+                                           asp-for="AppointmentDate"
+                                           type="date"
+                                           value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                           class="form-control py-2"
+                                           required />
+                                </div>
+                                <small id="dateError" class="d-none mt-2 d-block fw-medium" style="font-size: 0.9rem; color: #ff6b6b;">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Моля, изберете работен ден
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Time Selector -->
+                        <div class="col-md-6">
+                            <div class="time-select-container">
+                                <label class="form-label mb-3 d-block text-light" style="font-size: 1.3rem; text-align: left;">
+                                    <i class="bi bi-clock me-2"></i>Избери час
+                                </label>
+                                <div class="position-relative">
+                                    <select id="timeSelect"
+                                            asp-for="AppointmentTime"
+                                            class="form-select py-2"
+                                            aria-label="Time selection">
+                                        <option value="" class="text-muted">-- Избери час --</option>
+                                    </select>
+                                    <div class="position-absolute end-0 top-50 translate-middle-y pe-3">
+                                        <i class="bi bi-chevron-down fs-5 text-secondary"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-
-           
-            <div class="text-center">
-                <button type="submit" asp-action="MakeAppointment" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-lg">
-                    <i class="bi bi-check-lg"></i> Запази
-                </button>
-            </div>
-        </form>
+                <!-- Submit Button -->
+                <div class="text-center">
+                    @if (User.IsInRole(SD.AdminRole))
+                    {
+                        <button type="submit" asp-action="Add" asp-controller="Appointment" class="btn btn-submit">
+                            <i class="bi bi-check-lg me-2"></i> Запази
+                        </button>
+                    }
+                    else 
+                    {
+                        <button type="submit" asp-action="MakeAppointment" asp-controller="Appointment" class="btn btn-submit">
+                            <i class="bi bi-check-lg me-2"></i> Запази
+                        </button>
+                    }
+                    
+                </div>
+            </form>
+        </div>
     </div>
-    @section Scripts{
-    <script>
-                  document.addEventListener("DOMContentLoaded", function () {
-            const barberSelect = document.querySelectorAll("input[name='BarberId']");
-            const dateInput = document.getElementById("dateInput");
-            const timeSelect = document.getElementById("timeSelect");
-            const errorText = document.getElementById("dateError");
-            const serviceCheckboxes = document.querySelectorAll("input[name='SelectedServiceIds']");
 
-            function disableWeekendsAndPast(event) {
-                const selectedDate = new Date(event.target.value);
-                const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
-                const today = new Date();
-                today.setHours(0, 0, 0, 0); 
+    @section Scripts {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const barberSelect = document.querySelectorAll("input[name='BarberId']");
+                const dateInput = document.getElementById("dateInput");
+                const timeSelect = document.getElementById("timeSelect");
+                const errorText = document.getElementById("dateError");
+                const serviceCheckboxes = document.querySelectorAll("input[name='SelectedServiceIds']");
 
-                if (dayOfWeek === 0 || selectedDate < today) {
-                    event.target.value = "";
-                    errorText.classList.remove("d-none"); 
-                } else {
-                    errorText.classList.add("d-none"); 
-                }
-            }
+                function disableWeekendsAndPast(event) {
+                    const selectedDate = new Date(event.target.value);
+                    const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
 
-            function calculateTotalDuration() {
-                let totalDuration = 0;
-                    // const services = document.getElementById("#serviceContainer");
-                    // console.log(services);
-                serviceCheckboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        console.log(checkbox);
-                                    totalDuration += Number(checkbox.dataset.duration);
+                    if (dayOfWeek === 0 || selectedDate < today) {
+                        event.target.value = "";
+                        errorText.classList.remove("d-none");
+                    } else {
+                        errorText.classList.add("d-none");
                     }
-                });
-                return totalDuration;
-            }
-
-                              async function updateAvailableTimeSlots() {
-                const selectedBarber = document.querySelector("input[name='BarberId']:checked");
-                const appointmentDate = dateInput.value;
-                const totalDurationMinutes = calculateTotalDuration();
-
-                if (!selectedBarber || !appointmentDate || totalDurationMinutes === 0) {
-                    timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
-                    return;
                 }
 
-                const barberId = selectedBarber.value;
-
-                try {
-                    const response = await fetch(`/Appointment/GetAvailableTimeSlots?barberId=${barberId}&appointmentDate=${appointmentDate}&totalDurationMinutes=${totalDurationMinutes}`);
-                    if (!response.ok) {
-                            throw new Error("Грешка при зареждане на свободните часове.");
-                    }
-                    const availableSlots = await response.json();
-
-                    // Clear and populate the dropdown with available slots
-                        timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
-                    availableSlots.forEach(slot => {
-                        const option = document.createElement("option");
-                        option.value = slot;
-                        option.textContent = slot; // Already formatted as "hh:mm" from backend
-                        timeSelect.appendChild(option);
+                function calculateTotalDuration() {
+                    let totalDuration = 0;
+                    serviceCheckboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            console.log(checkbox);
+                            totalDuration += Number(checkbox.dataset.duration);
+                        }
                     });
-
-                    // Optional: Add a note for Saturday
-                    const selectedDate = new Date(appointmentDate);
-                    if (selectedDate.getDay() === 6) { // Saturday
-                        console.log("Saturday selected: Showing slots from 10:00 to 15:00");
-                        // You could add a UI hint here if desired, e.g., a small text note
-                    }
-                } catch (error) {
-                    console.error("Error fetching available time slots:", error);
-                    timeSelect.innerHTML = '<option value="">Грешка при зареждане на свободните часове.</option>';
+                    return totalDuration;
                 }
-            }
 
-            barberSelect.forEach(input => input.addEventListener("change", updateAvailableTimeSlots));
-            dateInput.addEventListener("change", function (event) {
-                disableWeekendsAndPast(event);
-                updateAvailableTimeSlots();
+                async function updateAvailableTimeSlots() {
+                    const selectedBarber = document.querySelector("input[name='BarberId']:checked");
+                    const appointmentDate = dateInput.value;
+                    const totalDurationMinutes = calculateTotalDuration();
+
+                    if (!selectedBarber || !appointmentDate || totalDurationMinutes === 0) {
+                        timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
+                        return;
+                    }
+
+                    const barberId = selectedBarber.value;
+
+                    try {
+                        const response = await fetch(`/Appointment/GetAvailableTimeSlots?barberId=${barberId}&appointmentDate=${appointmentDate}&totalDurationMinutes=${totalDurationMinutes}`);
+                        if (!response.ok) {
+                            throw new Error("Грешка при зареждане на свободните часове.");
+                        }
+                        const availableSlots = await response.json();
+
+                        // Clear and populate the dropdown with available slots
+                        timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
+                        availableSlots.forEach(slot => {
+                            const option = document.createElement("option");
+                            option.value = slot;
+                            option.textContent = slot; // Already formatted as "hh:mm" from backend
+                            timeSelect.appendChild(option);
+                        });
+
+                        // Optional: Add a note for Saturday
+                        const selectedDate = new Date(appointmentDate);
+                        if (selectedDate.getDay() === 6) { // Saturday
+                            console.log("Saturday selected: Showing slots from 10:00 to 15:00");
+                        }
+                    } catch (error) {
+                        console.error("Error fetching available time slots:", error);
+                        timeSelect.innerHTML = '<option value="">Грешка при зареждане на свободните часове.</option>';
+                    }
+                }
+
+                barberSelect.forEach(input => input.addEventListener("change", updateAvailableTimeSlots));
+                dateInput.addEventListener("change", function (event) {
+                    disableWeekendsAndPast(event);
+                    updateAvailableTimeSlots();
+                });
+                serviceCheckboxes.forEach(checkbox => checkbox.addEventListener("change", updateAvailableTimeSlots));
+
+                disableWeekendsAndPast({ target: dateInput });
+
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.setAttribute('min', today);
+
+                const initialBarber = document.querySelector("input[name='BarberId']:checked");
+                if (initialBarber && dateInput.value) {
+                    updateAvailableTimeSlots();
+                }
             });
-            serviceCheckboxes.forEach(checkbox => checkbox.addEventListener("change", updateAvailableTimeSlots));
-
-            disableWeekendsAndPast({ target: dateInput }); 
-
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.setAttribute('min', today);
-            
-            const initialBarber = document.querySelector("input[name='BarberId']:checked");
-            if (initialBarber && dateInput.value) {
-                updateAvailableTimeSlots();
-            }
-        });
-    </script>
+        </script>
     }
 </body>
 </html>

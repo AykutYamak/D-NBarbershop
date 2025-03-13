@@ -22,7 +22,6 @@ namespace DNBarbershop.Models.ViewModels.Barbers
         [Required(ErrorMessage = RequiredErrorMessage)]
         public string ProfilePictureUrl { get; set; }
 
-        public ICollection<WorkSchedule> WorkSchedules { get; set; } = new HashSet<WorkSchedule>();
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
         public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
     }

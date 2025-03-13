@@ -9,7 +9,7 @@
 <body class="crudOperationsView">
     <div class="container mt-4">
         <div class="table-responsive">
-            <table class="table table-striped table-hover shadow-sm rounded">
+            <table class="table table-hover shadow-sm rounded overflow-hidden">
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">#</th>
@@ -20,10 +20,10 @@
                         <th scope="col">Действия</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white">
                     @foreach (var user in Model)
                     {
-                        <tr>
+                        <tr class="align-middle border-bottom">
                             <td>@user.User.Id</td>
                             <td>@user.User.FirstName</td>
                             <td>@user.User.LastName</td>
@@ -33,11 +33,11 @@
                                     var roles = await UserManager.GetRolesAsync(user.User);
                                     if (roles.Contains("Admin"))
                                     {
-                                        <span class="badge bg-success">Админ</span>
+                                        <span class="badge bg-success rounded-pill px-3 py-2">Админ</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary">Потребител</span>
+                                        <span class="badge bg-secondary rounded-pill px-3 py-2">Потребител</span>
                                     }
                                 }
                             </td>
@@ -45,17 +45,16 @@
                                 <div class="d-flex gap-2">
                                     <form asp-controller="User" asp-action="MakeAdmin" method="post">
                                         <input type="hidden" name="userId" value="@user.User.Id" />
-                                        <button type="submit" class="btn btn-primary">Make Admin</button>
+                                        <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">Make Admin</button>
                                     </form>
                                     <form asp-controller="User" asp-action="Delete" asp-route-id="@user.User.Id" method="post">
-                                        <button type="submit" class="btn btn-danger px-3 py-2">
+                                        <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
                                             <i class="bi bi-trash"></i> Изтрий
                                         </button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
-
                     }
                 </tbody>
             </table>

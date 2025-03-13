@@ -45,12 +45,12 @@ internal class Program
         builder.Services.AddScoped<IServiceService, ServiceService>();
         builder.Services.AddScoped<ISpecialityService, SpecialityService>();
         builder.Services.AddScoped<IAppointmentServiceService, AppointmentServiceService>();
-        builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IEmailSender, EmailSender>();
         builder.Services.AddScoped<IMessageService, MessageService>();
 
         builder.Services.AddIdentity<User, IdentityRole>()
+        .AddErrorDescriber<CustomIdentityErrorDescriber>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

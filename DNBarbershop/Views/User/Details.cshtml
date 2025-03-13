@@ -6,7 +6,7 @@
 </head>
 <body class="user-details" >
 
-    <div class="container" style="margin:5%;">
+    <div class="container" style="margin-top:5%; display:flex; justify-content:center;">
         <div class="row">
             <div class="col-md-5">
                 <div class="user-container">
@@ -64,11 +64,23 @@
                                         <td>@appointment.AppointmentTime</td>
                                         <td>@appointment.Status.ToString()</td>
                                         <td>
-                                            <form asp-controller="Appointment" asp-action="UserAppointmentDelete" asp-route-id="@appointment.Id" method="post">
-                                            <button type="submit" class="btn btn-danger px-3 py-2">
-                                                <i class="bi bi-trash"></i> Откажи час
-                                            </button>
-                                            </form>
+                                            @if (appointment.Status.ToString() == "Completed")
+                                            {
+                                                <form asp-controller="Appointment" asp-action="UserAppointmentDelete" asp-route-id="@appointment.Id" method="post">
+                                                    <button type="submit" class="btn btn-danger px-3 py-2">
+                                                        <i class="bi bi-trash"></i> Изтрии
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-controller="Appointment" asp-action="UserAppointmentDelete" asp-route-id="@appointment.Id" method="post">
+                                                    <button type="submit" class="btn btn-danger px-3 py-2">
+                                                        <i class="bi bi-trash"></i> Откажи час
+                                                    </button>
+                                                </form>
+                                            }
+                                            
                                         </td>
                                     </tr>
                                 }

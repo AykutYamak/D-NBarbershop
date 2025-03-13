@@ -10,6 +10,5 @@ namespace DNBarbershop.DataAccess.BarberRepository
     public interface IBarberRepository<T> where T : class
     {
         Task<IEnumerable<Barber>> GetAll();
-        Task<Barber> GetBarberWithSchedules(Guid barberId);
     }
 }

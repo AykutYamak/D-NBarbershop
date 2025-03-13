@@ -35,17 +35,7 @@ namespace DNBarbershop.Core.Services
             }
             return true;
         }*/
-        public async Task<IEnumerable<WorkSchedule>> GetWorkSchedules(Guid barberId)
-        {
-            var barber = await _barberRepository.Get(b => b.Id == barberId);
-
-            if (barber == null)
-            {
-                throw new ArgumentException("Barber not found.");
-            }
-
-            return barber.WorkSchedules ?? new HashSet<WorkSchedule>();
-        }
+        
         public async Task Add(Barber barber)
         { 
               await _barberRepository.Add(barber);

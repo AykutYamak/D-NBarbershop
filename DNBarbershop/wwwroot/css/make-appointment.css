@@ -1,176 +1,220 @@
 ﻿body {
     background: url('../Assets/Images/peakpx.jpg');
-    background-size:100%;
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     white-space: normal;
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
 }
-.container {
-    font-family: "Abril Fatface",serif;
-    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-}
-main {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+.main-container {
+    background-color: rgba(33, 33, 33, 0.85);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3% auto;
+    width: 85%;
+    max-width: 1200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 h2 {
-    padding:1rem;
-    font-size: 3rem;
+    font-family: "Abril Fatface", serif;
+    font-size: 3.2rem;
     font-weight: bold;
     color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 1rem;
+}
+.form-label {
+    font-family: "Abril Fatface",serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    display: block;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* Barber Section */
-.barber-container .btn-check:checked + .btn-outline-dark {
-    background-color: rgb(255, 255, 255, 0.8);
-    color: #FFFFFF;
-    border-color: black;
-}
-
-    .barber-container .btn-check:checked + .btn-outline-dark strong {
-        color: black;
-    }
-
 .barber-card {
-    font-size: 1.3rem;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 1.5rem;
+    font-family: "Abril Fatface",serif;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
     transition: all 0.3s ease;
     cursor: pointer;
-    background-color: rgb(255, 255, 255, 0.4);
-    width:90%;
+    background-color: rgba(255, 255, 255, 0.15);
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1rem;
 }
-    .barber-card strong {
-        font-size:20px;
-    }
 
     .barber-card:hover {
-        border-color: #007bff;
-        transform: translateY(-5px);
-    }
-    .barber-card:hover strong{
-        border-color: #007bff;
-        transform: translateY(-5px);
-        color:#FFFFFF;    
+        transform: translateY(-8px);
+        background-color: rgba(0, 0, 0, 0.3);
+        border-color: #fff;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     }
 
-    .barber-card p {
-        margin: 0.5rem 0;
-        color: #FFFFFF;
+    .barber-card img {
+        width: 160px !important;
+        height: 160px !important;
+        border-radius: 50% !important;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
     }
+
+    .barber-card:hover img {
+        border-color: rgba(255, 255, 255, 0.8);
+        transform: scale(1.05);
+    }
+
+    .barber-card strong {
+        font-size: 1.2rem;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-top: 0.5rem;
+    }
+
+.barber-container .btn-check:checked + .barber-card {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+
 
 /* Date and Time Section */
-form .form-label {
-    padding: 1rem;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #FFFFFF;
+.date-time-section {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-input[type="date"], select {
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    padding: 0.8rem;
-    width: 100%;
-    font-size: 1rem;
-    margin-top: 0.5rem;
-    margin-bottom:0.5rem;
+.date-picker-container, .time-select-container {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    height: 100%;
 }
-    
-    select:focus, input[type="date"]:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.6);
+
+.form-control, .form-select {
+    background-color: rgba(33, 33, 33, 0.8) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    padding: 0.8rem 1rem !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s ease !important;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #007bff !important;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5) !important;
+        background-color: rgba(33, 33, 33, 0.9) !important;
     }
 
 /* Service Section */
 .service-card {
-    font-size: 250%;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
     transition: all 0.3s ease;
     cursor: pointer;
-    background-color: rgb(255, 255, 255, 0.4);
-    height:100%;
+    background-color: rgba(255, 255, 255, 0.15);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    text-align: center;
 }
 
-.service-container .btn-check:checked + .btn-outline-dark {
-    background-color: rgb(255, 255, 255, 0.8);
-    color: #FFFFFF;
-    border-color: black;
-}
-    .service-container .btn-check:checked + .btn-outline-dark strong {
-        color: #FFFFFF;
+    .service-card:hover {
+        transform: translateY(-8px);
+        background-color: rgba(0, 0, 0, 0.3);
+        border-color: #fff;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     }
 
-.service-card:hover {
-    border-color: #007bff;
-    transform: translateY(-5px);
-    color: #FFFFFF;
-}
-.service-card:hover strong{
-    border-color: #007bff;
-    transform: translateY(-5px);
-    color: #FFFFFF;
-}
-.service card strong {
-    padding: 1rem;
-    font-size: 50%;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-.service-card p {
-    font-size: 60%;
-    color: #FFFFFF;
-    margin-top: 0.5rem;
-    font-weight: 700;
+    .service-card strong {
+        font-size: 2rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .service-card p {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+    }
+
+.service-container .btn-check:checked + .service-card {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 /* Button Styles */
-button[type="submit"] {
-    font-size: 1.5rem;
-    font-weight: 600;
-    background-color: black;
-    border-color: black;
+.btn-submit {
+    background: linear-gradient(45deg, #00112c, #003366);
+    color: white;
+    border: none;
     border-radius: 10px;
+    padding: 1rem 2.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
-    cursor: pointer;
-    color: #FFFFFF;
+    margin-top: 1rem;
 }
 
-    button[type="submit"]:hover {
-        background-color: #313131;
-        border-color: #313131;
-        color:#FFFFFF;
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+        background: linear-gradient(45deg, #001e4d, #004080);
     }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .container {
-        padding: 1.5rem;
-    }
-
-    .barber-card, .service-card {
-        padding: 1rem;
-    }
-
     h2 {
-        font-size: 1.6rem;
+        font-size: 2.2rem;
     }
 
     .form-label {
-        font-size: 1rem;
+        font-size: 1.4rem;
     }
 
-    .btn-check:checked + .btn-outline-dark {
+    .barber-card img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .service-card strong {
+        font-size: 1.1rem;
+    }
+
+    .date-time-section {
         padding: 1rem;
-        color: #FFFFFF;
+    }
+
+    .btn-submit {
+        font-size: 1.1rem;
+        padding: 0.8rem 2rem;
     }
 }
 /* Custom Scrollbar */
@@ -192,3 +236,9 @@ select::-webkit-scrollbar-thumb {
         background: #888;
     }
 
+@media (max-width: 768px) {
+    .main-container {
+        width: 95%;
+        padding: 1.5rem;
+    }
+}

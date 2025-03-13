@@ -20,9 +20,12 @@
                 <h2 class="p-1">Създайте си акаунт.</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-2">
+               <div class="form-floating mb-2">
                     <label asp-for="Input.Email" class="form-label">E-mail</label>
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <input asp-for="Input.Email" type="email"
+                           pattern="[a-zA-Z0-9._%+-]+&#64;[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?"
+                           class="form-control" autocomplete="username" 
+                       aria-required="true" placeholder="name@example.com" required />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-2">

@@ -173,7 +173,7 @@ namespace DNBarbershop.Controllers
             .ToList();
             foreach (var item in appointments)
             {
-                if (item.AppointmentDate.Date < DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Canceled)
+                if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Canceled)
                 {
                     item.Status = AppointmentStatus.Completed;
                 }
@@ -216,6 +216,7 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AppointmentCreateViewModel model)
         {
+
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
@@ -483,7 +484,6 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Няма такава услуга!";
                 return RedirectToAction("Index");
             }
-
 
 
             await _appointmentService.Add(newAppointment);

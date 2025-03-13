@@ -1,4 +1,5 @@
-﻿using DNBarbershop.Core.IServices;
+﻿using System.Linq;
+using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Services;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
@@ -21,13 +22,17 @@ namespace DNBarbershop.Controllers
         private readonly IUserService _userService;
         private readonly IAppointmentService _appointmentService;
         private readonly IBarberService _barberService;
-        public UserController(IAppointmentService appointmentService, IBarberService barberService, IUserService userService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        private readonly IFeedbackService _feedbackService;
+        private readonly IMessageService _messageService;
+        public UserController(IMessageService messageService,IFeedbackService feedbackService, IAppointmentService appointmentService, IBarberService barberService, IUserService userService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             _userService = userService;
             _roleManager = roleManager;
             _userManager = userManager;
             _appointmentService = appointmentService;
             _barberService = barberService;
+            _feedbackService = feedbackService;
+            _messageService = messageService;
         }
         public async Task<IActionResult> Index()
         {
@@ -75,6 +80,22 @@ namespace DNBarbershop.Controllers
         {
             if (ModelState.IsValid)
             {
+                List<Feedback> userFeedbacks = _feedbackService.GetAll().ToList();
+                foreach (var item in userFeedbacks)
+                {
+                    if (item.UserId == id.ToString())
+                    {
+                        await _feedbackService.Delete(item.Id);
+                    }
+                }
+                List<Message> userMessages = _messageService.GetAll().ToList();
+                foreach (var item in userMessages)
+                {
+                    if (item.UserId == id.ToString())
+                    {
+                        await _messageService.Delete(item.Id);
+                    }
+                }
                 await _userService.DeleteStringId(id);
                 TempData["success"] = "Успешно изтрит потребител.";
                 return RedirectToAction("Index");

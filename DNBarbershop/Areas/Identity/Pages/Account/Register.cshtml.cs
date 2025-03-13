@@ -84,8 +84,10 @@ namespace DNBarbershop.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Email is required.")]
+            [EmailAddress(ErrorMessage = "Невалиден e-mail формат.")]
+            [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$",
+            ErrorMessage = "Вашият e-mail трябва да съдържа валиден домейн и поне една точка, както и символ '@'!")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
@@ -117,7 +119,7 @@ namespace DNBarbershop.Areas.Identity.Pages.Account
             /// </summary>
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Паролата не съвпада с паролата за потвърждение.")]
             public string ConfirmPassword { get; set; }
             public string? Role { get; set; }
             [ValidateNever]
