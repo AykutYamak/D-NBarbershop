@@ -20,6 +20,7 @@ html {
 body {
     margin-bottom: 0px;
     white-space: normal;
+    
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -79,15 +80,15 @@ body {
 
 
 .customFooter {
-    background-color: rgb(30, 30, 30,0.8);
+    background-color: rgba(30, 30, 30, 0.8);
     position: relative;
     width: 100%;
     bottom: 0;
-    padding-top:1.5rem;
-    padding-bottom:1%;
-    height:100px;
+    padding-top: 1.5rem;
+    padding-bottom: 1%;
+    height: 100px;
+    z-index: 1000; /* Ensure it stays on top of other content */
 }
-
 .welcomeText {
     font-family: "Abril Fatface", serif;
     font-style: normal;

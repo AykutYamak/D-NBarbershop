@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
 using DNBarbershop.Models.ViewModels.Services;
 using static DNBarbershop.Common.ErrorMessages;
@@ -22,7 +23,7 @@ namespace DNBarbershop.Models.ViewModels.Appointments
         [Required]
         public AppointmentStatus Status { get; set; }
 
-        public List<ServiceViewModel> Services { get; set; } = new();
+        public List<Service> Services { get; set; } = new();
         public List<Guid> SelectedServiceIds { get; set; } = new();
 
     }

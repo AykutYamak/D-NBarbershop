@@ -338,6 +338,7 @@ namespace DNBarbershop.Controllers
                 AppointmentDate = appointment.AppointmentDate,
                 AppointmentTime = appointment.AppointmentTime,
                 Status = appointment.Status,
+                Services = _serviceService.GetAll().ToList(),
                 SelectedServiceIds = appointment.AppointmentServices.Select(asv => asv.ServiceId).ToList()
             };
 
@@ -396,7 +397,7 @@ namespace DNBarbershop.Controllers
                 var newAppointment = new Appointment
                 {
                     Id = model.Id,
-                    BarberId = model.BarberId,
+                    BarberId = appointment.BarberId,
                     UserId = model.UserId,
                     AppointmentDate = model.AppointmentDate,
                     AppointmentTime = model.AppointmentTime,
@@ -515,7 +516,7 @@ namespace DNBarbershop.Controllers
                     await PopulateViewBags();
                     return RedirectToAction("MakeAppointment", "Appointment", null);
                 }
-                if (model.AppointmentTime <= DateTime.Now.TimeOfDay)
+                if (model.AppointmentDate <= DateTime.Now.Date && model.AppointmentTime <= DateTime.Now.TimeOfDay)
                 {
                     TempData["error"] = "Изберете валиден час!";
                     await PopulateViewBags();
