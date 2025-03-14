@@ -170,7 +170,7 @@ h2 {
 
 /* Button Styles */
 .btn-submit {
-    background: linear-gradient(45deg, #00112c, #003366);
+    background: linear-gradient(45deg, #000,#fff);
     color: white;
     border: none;
     border-radius: 10px;
@@ -186,7 +186,7 @@ h2 {
     .btn-submit:hover {
         transform: translateY(-3px);
         box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
-        background: linear-gradient(45deg, #001e4d, #004080);
+        background: linear-gradient(45deg, #000, #fff);
     }
 
 /* Responsive Design */

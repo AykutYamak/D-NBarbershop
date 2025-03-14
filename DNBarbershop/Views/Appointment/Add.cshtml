@@ -6,70 +6,307 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body class="crudOperationsView">
-    <div class="container mt-5">
-        <div class="card shadow-lg border-0 p-4 rounded">
-            <h3 class="text-center text-dark fw-bold mb-4">Запази час</h3>
-
-            <form method="post" enctype="multipart/form-data">
-                @Html.AntiForgeryToken()
-                <div class="card-body">
-                    <input type="hidden" asp-for="UserId">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold fs-5">Услуги</label>
-                        <div class="d-flex flex-wrap gap-3">
-                            @foreach (var service in (List<SelectListItem>)ViewBag.Services)
-                            {
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@service.Value" id="@service.Value">
-                                    <label class="form-check-label" for="@service.Value">
-                                        @service.Text
-                                    </label>
+            <div class="container mt-3 d-flex justify-content-center mb-3">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-dark text-white py-4">
+                        <h3 class="text-center mb-0">
+                            Запази час
+                        </h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <form method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="UserId">
+                            <div class="mb-4">
+                                <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
+                                    Избери услуги
+                                </h5>
+                                <div class="row row-cols-1 row-cols-md-3 g-3 mb-2">
+                                    @foreach (var service in Model.Services)
+                                    {
+                                        <div class="col">
+                                            <div class="service-card h-100">
+                                                <input type="checkbox" name="SelectedServiceIds" value="@service.Id"
+                                                       class="btn-check" id="service_@service.Id"
+                                                       data-duration="@service.Duration.TotalMinutes">
+                                                <label class="btn btn-outline-dark position-relative h-100 w-100 d-flex flex-column align-items-center justify-content-between p-3"
+                                                       for="service_@service.Id">
+                                                    <span class="position-relative top-0 end-0 badge w-50 bg-dark m-2" style="font-size:120%;">
+                                                        @service.Price лв.
+                                                    </span>
+                                                    <span class="service-name fw-bold fs-5 mb-2">@service.ServiceName</span>
+                                                    <div class="service-duration mt-2 d-flex align-items-center">
+                                                        <i class="bi bi-clock me-1"></i>
+                                                        @if (service.Duration.Hours < 0)
+                                                        {
+                                                            <span>@service.Duration.Minutes мин.</span>
+                                                        }
+                                                        else if (service.Duration.Hours > 0 && service.Duration.Minutes != 0)
+                                                        {
+                                                            <span>@service.Duration.Hours ч. @service.Duration.Minutes мин.</span>
+                                                        }
+                                                        else if (service.Duration.Hours > 0 && service.Duration.Minutes == 0)
+                                                        {
+                                                            <span>@service.Duration.Hours ч.</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@service.Duration.Minutes мин.</span>
+                                                        }
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                            }
-                            <span class="text-danger">@Html.ValidationMessageFor(m => m.SelectedServiceIds, "Моля, изберете поне една услуга.")</span>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="BarberId" class="form-label fw-semibold">Бръснар</label>
-                        <select asp-for="BarberId" asp-items="ViewBag.Barbers" class="form-select shadow-sm">
-                        </select>
-                        <span class="text-danger">@Html.ValidationMessageFor(m => m.BarberId)</span>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="AppointmentDate" class="form-label fw-semibold">Изберете дата</label>
-                        <input type="date" asp-for="AppointmentDate" class="form-control shadow-sm" required value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")">
-                        <span class="text-danger">@Html.ValidationMessageFor(m => m.AppointmentDate)</span>
-                    </div>
-                    <div class="mb-4">
-                        <label asp-for="AppointmentTime" class="form-label fw-semibold">⏰ Изберете час</label>
-                        <select asp-for="AppointmentTime" class="form-select shadow-sm">
-                            @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
-                            {
-                                @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            }
-                            else
-                            {
-                                <option value="">Няма свободни часове</option>
-                            }
-                        </select>
-                        <span class="text-danger">@Html.ValidationMessageFor(m => m.AppointmentTime)</span>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" asp-action="Add" asp-controller="Appointment" class="btn btn-success px-4 py-2 shadow-lg">
-                            <i class="bi bi-check-lg"></i> Запази
-                        </button>
+                                 
+                            </div>
+
+                            <div class="row mt-4">
+                                <!-- Barber Selection -->
+                                <div class="col-md-4 mb-3">
+                                    <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
+                                        Бръснар
+                                    </h5>
+                                    <select asp-for="BarberId" asp-items="ViewBag.Barbers"
+                                            class="form-select shadow-sm rounded-3 py-2" id="barberSelect">
+                                    </select>
+                                    <span class="text-danger">@Html.ValidationMessageFor(m => m.BarberId)</span>
+                                </div>
+
+                                <!-- Date Selection -->
+                                <div class="col-md-4 mb-3">
+                                    <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
+                                        Дата
+                                    </h5>
+                                    <input type="date" asp-for="AppointmentDate"
+                                           class="form-control shadow-sm rounded-3 py-2" required
+                                           value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                           min="@DateTime.Now.ToString("yyyy-MM-dd")" id="dateInput">
+                                    <span class="text-danger">@Html.ValidationMessageFor(m => m.AppointmentDate)</span>
+                                    <small id="dateError" class="text-danger d-none">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                        Не може да избирате по-стари дати или уикенди!
+                                    </small>
+                                </div>
+
+                                <!-- Time Selection -->
+                                <div class="col-md-4 mb-3">
+                                    <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
+                                        Час
+                                    </h5>
+                                    <select asp-for="AppointmentTime" class="form-select shadow-sm rounded-3 py-2" id="timeSelect">
+                                        @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
+                                        {
+                                            @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="">Няма свободни часове</option>
+                                        }
+                                    </select>
+                                    <span class="text-danger">@Html.ValidationMessageFor(m => m.AppointmentTime)</span>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4 pt-3">
+                                <button type="submit" asp-action="Add" asp-controller="Appointment"
+                                        class="btn btn-dark btn-lg px-5 py-3 shadow-lg rounded-pill">
+                                        Запази час
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
-            @section Scripts {
-                @{
-                    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const barberSelect = document.getElementById("barberSelect");
+                    const dateInput = document.getElementById("dateInput");
+                    const timeSelect = document.getElementById("timeSelect");
+                    const errorText = document.getElementById("dateError");
+                    const serviceCheckboxes = document.querySelectorAll("input[name='SelectedServiceIds']");
+
+                    // Disable weekends and past dates
+                    function disableWeekendsAndPast(event) {
+                        const selectedDate = new Date(event.target.value);
+                        const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+
+                        if (dayOfWeek === 0 || selectedDate < today) {
+                            event.target.value = "";
+                            errorText.classList.remove("d-none");
+                        } else {
+                            errorText.classList.add("d-none");
+                        }
+                    }
+
+                    // Calculate total duration of selected services
+                    function calculateTotalDuration() {
+                        let totalDuration = 0;
+                        serviceCheckboxes.forEach(checkbox => {
+                            if (checkbox.checked) {
+                                totalDuration += Number(checkbox.dataset.duration);
+                            }
+                        });
+                        return totalDuration;
+                    }
+
+                    // Update available time slots based on selections
+                    async function updateAvailableTimeSlots() {
+                        const selectedBarber = barberSelect.value;
+                        const appointmentDate = dateInput.value;
+                        const totalDurationMinutes = calculateTotalDuration();
+
+                        if (!selectedBarber || !appointmentDate || totalDurationMinutes === 0) {
+                            timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
+                            return;
+                        }
+
+                        try {
+                            const response = await fetch(`/Appointment/GetAvailableTimeSlots?barberId=${selectedBarber}&appointmentDate=${appointmentDate}&totalDurationMinutes=${totalDurationMinutes}`);
+                            if (!response.ok) {
+                                throw new Error("Грешка при зареждане на свободните часове.");
+                            }
+                            const availableSlots = await response.json();
+
+                            // Clear and populate the dropdown with available slots
+                            timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
+                            availableSlots.forEach(slot => {
+                                const option = document.createElement("option");
+                                option.value = slot;
+                                option.textContent = slot; // Already formatted as "hh:mm" from backend
+                                timeSelect.appendChild(option);
+                            });
+
+                            // Optional: Add a note for Saturday
+                            const selectedDate = new Date(appointmentDate);
+                            if (selectedDate.getDay() === 6) { // Saturday
+                                console.log("Saturday selected: Showing slots from 10:00 to 15:00");
+                            }
+                        } catch (error) {
+                            console.error("Error fetching available time slots:", error);
+                            timeSelect.innerHTML = '<option value="">Грешка при зареждане на свободните часове.</option>';
+                        }
+                    }
+
+                    // Attach event listeners
+                    barberSelect.addEventListener("change", updateAvailableTimeSlots);
+                    dateInput.addEventListener("change", function (event) {
+                        disableWeekendsAndPast(event);
+                        updateAvailableTimeSlots();
+                    });
+                    serviceCheckboxes.forEach(checkbox => checkbox.addEventListener("change", updateAvailableTimeSlots));
+
+                    // Initialize form
+                    disableWeekendsAndPast({ target: dateInput });
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.setAttribute('min', today);
+
+                    // Update time slots on initial load if barber and date are selected
+                    if (barberSelect.value && dateInput.value) {
+                        updateAvailableTimeSlots();
+                    }
+
+                    // Add visual feedback when services are selected
+                    serviceCheckboxes.forEach(checkbox => {
+                        checkbox.addEventListener("change", function() {
+                            const serviceCards = document.querySelectorAll(".service-card label");
+                            serviceCards.forEach(card => {
+                                if (card.classList.contains("selected-service")) {
+                                    card.classList.remove("selected-service");
+                                }
+                            });
+
+                            // Count selected services
+                            let selectedCount = 0;
+                            serviceCheckboxes.forEach(cb => {
+                                if (cb.checked) {
+                                    selectedCount++;
+                                    document.querySelector(`label[for="${cb.id}"]`).classList.add("selected-service");
+                                }
+                            });
+
+                            // Update total duration and price display if needed
+                            const totalDuration = calculateTotalDuration();
+                            console.log(`Selected services: ${selectedCount}, Total duration: ${totalDuration} minutes`);
+                        });
+                    });
+                });
+            </script>
+
+            <!-- Additional barbershop styling -->
+            <style>
+                /* Additional animations and effects */
+                .selected-service {
+                    position: relative;
                 }
-            }
-        </div>
-    </div>
+
+                    .selected-service::after {
+                        color: white;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        font-weight: bold;
+                    }
+
+                /* Barbershop pole animation on the button */
+                .btn-dark {
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                    .btn-dark::before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: -100%;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+                        transition: left 0.7s ease;
+                    }
+
+                    .btn-dark:hover::before {
+                        left: 100%;
+                    }
+
+                /* Custom styling for the barbershop theme */
+                .card-header h3 {
+                    font-family: 'Georgia', serif;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                }
+
+                .form-label i {
+                    color: #0d6efd;
+                }
+
+                /* Time slot hover effect */
+                #timeSelect option:hover {
+                    background-color: #f8f9fa;
+                }
+
+                /* Form validation styling */
+                .form-control.is-invalid,
+                .form-select.is-invalid {
+                    border-color: #dc3545;
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+                    background-repeat: no-repeat;
+                    background-position: right calc(0.375em + 0.1875rem) center;
+                    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+                }
+
+                .text-danger {
+                    font-size: 0.875rem;
+                    margin-top: 0.375rem;
+                }
+            </style>
 </body>
 </html>

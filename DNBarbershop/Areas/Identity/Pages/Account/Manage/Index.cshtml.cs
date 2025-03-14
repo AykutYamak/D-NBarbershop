@@ -56,8 +56,11 @@ namespace DNBarbershop.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            
             [Phone]
             [Display(Name = "Phone number")]
+            [StringLength(10, MinimumLength = 10)]
+            [RegularExpression(@"^\d+$", ErrorMessage = "Phone number must be numeric.")]
             public string PhoneNumber { get; set; }
         }
 

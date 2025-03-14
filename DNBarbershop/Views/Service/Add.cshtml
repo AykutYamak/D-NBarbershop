@@ -1,56 +1,101 @@
 ﻿@model DNBarbershop.Models.ViewModels.Services.ServiceCreateViewModel
+
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        /* Custom styling for consistency */
+        .card-header h3 {
+            font-family: "Abril Fatface", serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+
+        }
+        .form-label{
+            font-size:150%;
+            border-bottom:1.5px white solid;
+            width:100%;
+            margin-bottom:3%;
+        }
+        .input{
+            width:100%;
+        }
+        .form-label i {
+            color: #0d6efd;
+        }
+
+        .btn-dark {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .btn-dark::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+                transition: left 0.7s ease;
+            }
+
+            .btn-dark:hover::before {
+                left: 100%;
+            }
+
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545;
+        }
+    </style>
 </head>
 <body class="crudOperationsView">
-    <div class="container mt-4">
-        <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-            <div class="card shadow-sm p-4 rounded" style="width: 100%; max-width: 600px;">
-                <h3 class="text-center text-white fw-bold mb-4">Добави Услуга</h3>
+    <div class="container mt-3 d-flex justify-content-center mb-3">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="max-width: 600px; width: 100%; margin-bottom:1%;">
+            <div class="card-header bg-dark text-white py-4">
+                <h3 class="text-center mb-0">Добави Услуга</h3>
+            </div>
+            <div class="card-body p-4 p-md-5">
                 <form method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold" asp-for="ServiceName">Име на услуга</label>
-                                <input type="text" class="form-control" asp-for="ServiceName" placeholder="Въведете име">
-                                <span asp-validation-for="ServiceName" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold" asp-for="Description">Описание на услугата</label>
-                                <input type="text" class="form-control" asp-for="Description" placeholder="Въведете описание">
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
-                        </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" asp-for="ServiceName">Име на услуга</label>
+                        <input type="text" class="form-control shadow-sm rounded-3 py-2" asp-for="ServiceName" placeholder="Въведете име">
+                        <span asp-validation-for="ServiceName" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" asp-for="Price">Цена</label>
-                        <input type="number" class="form-control" asp-for="Price" placeholder="Въведете цена" min="0">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" asp-for="Description">Описание</label>
+                        <textarea type="text" class="form-control shadow-sm rounded-3 py-2" asp-for="Description" placeholder="Въведете описание"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" asp-for="Price">Цена (лв.)</label>
+                        <input type="number" class="form-control shadow-sm rounded-3 py-2" asp-for="Price" placeholder="Въведете цена" min="0">
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" asp-for="Duration">Продължителност</label>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" asp-for="Duration">Продължителност</label>
                         <div class="d-flex">
-                            <input type="number" id="Hours" name="DurationHours" class="form-control me-2" placeholder="Часове" min="0" value="1" />
-                            <input type="number" id="Minutes" name="DurationMinutes" class="form-control" placeholder="Минути" min="0" max="59" value="30" />
+                            <input type="number" id="Hours" name="DurationHours" class="form-control me-2 shadow-sm rounded-3 py-2" placeholder="Часове" min="0" value="1">
+                            <input type="number" id="Minutes" name="DurationMinutes" class="form-control shadow-sm rounded-3 py-2" placeholder="Минути" min="0" max="59" value="30">
                         </div>
                     </div>
-                    <div class="text-center">
-                        <button type="submit" asp-action="Add" asp-controller="Service" class="btn btn-success px-4 py-2 shadow-sm">
-                            <i class="bi bi-check-lg"></i> Запази
+
+                    <div class="text-center mt-4">
+                        <button type="submit" asp-action="Add" asp-controller="Service" class="btn btn-dark btn-lg px-5 py-3 shadow-lg rounded-pill">
+                            Запази
                         </button>
                     </div>
                 </form>
-                @section Scripts {
-                    @{
-                        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-                    }
-                }
             </div>
         </div>
     </div>
 </body>
 </html>
+

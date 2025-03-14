@@ -27,7 +27,7 @@
                             <label class="form-label fw-semibold">Телефонен номер</label>
                             <br />
                             <label class="form-label fw-semibold" asp-for="PhoneNumber">
-                                <input type="number" class="form-control" asp-for="PhoneNumber">
+                                <input type="tel" pattern="[03589]{1}[0-9]{9}" class="form-control" asp-for="PhoneNumber">
                             </label>
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>

@@ -66,8 +66,23 @@ namespace DNBarbershop.Controllers
                 startTime = TimeSpan.FromHours(10); 
                 endTime = TimeSpan.FromHours(15,30);       
             }
+            if (appointmentDate.Date == DateTime.Today.Date)
+            {
+                TimeSpan buffer = TimeSpan.FromMinutes(30);
+                TimeSpan currentTime = DateTime.Now.TimeOfDay.Add(buffer);
 
-            var allSlots = await GenerateTimeSlots(startTime, endTime, interval);
+                int totalMinutes = (int)currentTime.TotalMinutes;   
+                int roundedMinutes = ((totalMinutes + 29) / 30) * 30; 
+                TimeSpan earliestStart = TimeSpan.FromMinutes(roundedMinutes);
+
+                startTime = earliestStart > startTime ? earliestStart : startTime;
+            }
+
+            var allSlots = new List<string>();
+            if (startTime < endTime)
+            {
+                allSlots = await GenerateTimeSlots(startTime, endTime, interval);
+            }
 
             var existingAppointments = await _appointmentService.GetAll()
                 .Where(a => a.BarberId == barberId && a.AppointmentDate == appointmentDate)
@@ -88,17 +103,10 @@ namespace DNBarbershop.Controllers
                 var slotStart = TimeSpan.Parse(slot);
                 var slotEnd = slotStart.Add(TimeSpan.FromMinutes(totalDurationMinutes));
 
-                if (slotEnd >= endTime)
-                {
-                    continue;
-                }
+                if (slotEnd > endTime) continue;
 
                 bool isConflict = bookedRanges.Any(range => slotStart < range.End && slotEnd > range.Start);
-
-                if (!isConflict)
-                {
-                    availableSlots.Add(slot);
-                }
+                if (!isConflict) availableSlots.Add(slot);
             }
 
             return Json(availableSlots);
@@ -206,7 +214,9 @@ namespace DNBarbershop.Controllers
             var model = new AppointmentCreateViewModel
             {
                 UserId = currentUser.Id,
-                Status = AppointmentStatus.Scheduled
+                Status = AppointmentStatus.Scheduled,
+                Services = _serviceService.GetAll().ToList(),
+                Barbers = _barberService.GetAll().ToList()
             };
 
             await PopulateViewBags();
@@ -232,23 +242,19 @@ namespace DNBarbershop.Controllers
             }
             else
             {
-                //if (!ModelState.IsValid)
-                //{
-
-                //    await PopulateViewBags();
-                //    TempData["error"] = "Неуспешно премината валидация.";
-
-                //    return RedirectToAction("Index");
-                //}
-
-                var appointments = _appointmentService.GetAll();
-                bool isAlreadyBooked = _appointmentService.GetAll().Any(a => a.BarberId == model.BarberId && a.AppointmentDate == model.AppointmentDate && a.AppointmentTime == model.AppointmentTime);
-                if (isAlreadyBooked)
+                int totalDurationMinutes = 0;
+                foreach (var serviceId in model.SelectedServiceIds)
                 {
+                    var service = await _serviceService.Get(s => s.Id == serviceId);
+                    totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
+                }
 
+                var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
+                if (!isAvailable)
+                {
+                    TempData["error"] = "Този час не е свободен.";
                     await PopulateViewBags();
-                    TempData["error"] = "Този час е вече резервиран.";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Add", "Appointment", null);
                 }
 
                 var newAppointment = new Appointment
@@ -261,14 +267,20 @@ namespace DNBarbershop.Controllers
                     Status = AppointmentStatus.Scheduled
                 };
 
-                await _appointmentService.Add(newAppointment);
-                TempData["success"] = "Успешно резервиран час!";
-
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
                 {
                     TempData["error"] = "Няма такава услуга!";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Add", "Appointment", null);
                 }
+                if (model.AppointmentTime <= DateTime.Now.TimeOfDay)
+                {
+                    TempData["error"] = "Изберете валиден час!";
+                    await PopulateViewBags();
+                    return RedirectToAction("Add","Appointment",null);
+                }
+
+                await _appointmentService.Add(newAppointment);
+                currentUser.Appointments.Add(newAppointment);
 
                 foreach (var serviceId in model.SelectedServiceIds)
                 {
@@ -276,7 +288,7 @@ namespace DNBarbershop.Controllers
                     if (!serviceExists)
                     {
                         TempData["error"] = "Няма такава услуга!";
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Add", "Appointment", null);
                     }
 
                     var appointmentService = new AppointmentServices
@@ -286,6 +298,7 @@ namespace DNBarbershop.Controllers
                     };
                     await _appointmentServiceService.Add(appointmentService);
                 }
+                TempData["success"] = "Успешно резервиран час!";
                 return RedirectToAction("Index");
             }
         }
@@ -344,11 +357,7 @@ namespace DNBarbershop.Controllers
 
             model.UserId = currentUser.Id;
 
-            if (model.UserId != currentUser.Id)
-            {
-                TempData["error"] = "Не сте регистриран/а.";
-                return BadRequest();
-            }
+            
 
             if (!ModelState.IsValid)
             {
@@ -363,45 +372,59 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Резервацията не е намерена.";
                 return RedirectToAction("Index");
             }
-            var newAppointment = new Appointment
+            if (model.UserId != currentUser.Id)
             {
-                Id = model.Id,
-                BarberId = appointment.BarberId,
-                UserId = appointment.UserId,
-                AppointmentDate = model.AppointmentDate,
-                AppointmentTime = appointment.AppointmentTime,
-                Status = model.Status,
-            };
-
-            await _appointmentService.Update(newAppointment);
-            TempData["success"] = "Успешно редактирана резервация.";
-
-            //if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
-            //{
-            //    TempData["error"] = "Моля, изберете поне една услуга.";
-            //    await PopulateViewBags();
-            //    return View(model);
-            //}
-
-            await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
-
-            foreach (var serviceId in model.SelectedServiceIds)
-            {
-                var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
-                if (!serviceExists)
-                {
-                    TempData["error"] = "Няма такава услуга.";
-                    return RedirectToAction("Index");
-                }
-                var appointmentServiceEntity = new AppointmentServices
-                {
-                    AppointmentId = newAppointment.Id,
-                    ServiceId = serviceId,
-                };
-                await _appointmentServiceService.Add(appointmentServiceEntity);
+                TempData["error"] = "Не сте регистриран/а.";
+                return BadRequest();
             }
+            else
+            {
+                int totalDurationMinutes = 0;
+                foreach (var serviceId in model.SelectedServiceIds)
+                {
+                    var service = await _serviceService.Get(s => s.Id == serviceId);
+                    totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
+                }
 
-            return RedirectToAction("Index");
+                var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
+                if (!isAvailable)
+                {
+                    TempData["error"] = "Този час не е свободен.";
+                    await PopulateViewBags();
+                    return RedirectToAction("Edit", "Appointment", null);
+                }
+                var newAppointment = new Appointment
+                {
+                    Id = model.Id,
+                    BarberId = model.BarberId,
+                    UserId = model.UserId,
+                    AppointmentDate = model.AppointmentDate,
+                    AppointmentTime = model.AppointmentTime,
+                    Status = model.Status,
+                };
+
+                await _appointmentService.Update(newAppointment);
+
+                await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
+
+                foreach (var serviceId in model.SelectedServiceIds)
+                {
+                    var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
+                    if (!serviceExists)
+                    {
+                        TempData["error"] = "Няма такава услуга.";
+                        return RedirectToAction("Edit", "Appointment", null);
+                    }
+                    var appointmentServiceEntity = new AppointmentServices
+                    {
+                        AppointmentId = newAppointment.Id,
+                        ServiceId = serviceId,
+                    };
+                    await _appointmentServiceService.Add(appointmentServiceEntity);
+                }
+                TempData["success"] = "Успешно редактирана резервация.";
+                return RedirectToAction("Index");
+            }
         }
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -448,65 +471,80 @@ namespace DNBarbershop.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                TempData["error"] = "Не сте регистриран/а.";
                 return Unauthorized();
             }
 
             model.UserId = currentUser.Id;
 
-            // Calculate total duration
-            int totalDurationMinutes = 0;
-            foreach (var serviceId in model.SelectedServiceIds)
+            if (model.UserId != currentUser.Id)
             {
-                var service = await _serviceService.Get(s => s.Id == serviceId);
-                totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
+                return BadRequest();
             }
-
-            var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
-            if (!isAvailable)
+            else
             {
-                TempData["error"] = "Този час не е свободен.";
-                await PopulateViewBags();
-                return RedirectToAction("MakeAppointment","Appointment",null);
-            }
-
-            var newAppointment = new Appointment
-            {
-                Id = Guid.NewGuid(),
-                BarberId = model.BarberId,
-                UserId = model.UserId,
-                AppointmentDate = model.AppointmentDate,
-                AppointmentTime = model.AppointmentTime,
-                Status = AppointmentStatus.Scheduled
-            };
-
-            if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
-            {
-                TempData["error"] = "Няма такава услуга!";
-                return RedirectToAction("Index");
-            }
-
-
-            await _appointmentService.Add(newAppointment);
-            currentUser.Appointments.Add(newAppointment);
-
-            foreach (var serviceId in model.SelectedServiceIds)
-            {
-                var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
-                if (!serviceExists)
+                // Calculate total duration
+                int totalDurationMinutes = 0;
+                foreach (var serviceId in model.SelectedServiceIds)
                 {
-                    TempData["error"] = "Няма такава услуга!";
-                    return RedirectToAction("Index");
+                    var service = await _serviceService.Get(s => s.Id == serviceId);
+                    totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
                 }
 
-                var appointmentService = new AppointmentServices
+                var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
+                if (!isAvailable)
                 {
-                    AppointmentId = newAppointment.Id,
-                    ServiceId = serviceId
+                    TempData["error"] = "Този час не е свободен.";
+                    await PopulateViewBags();
+                    return RedirectToAction("MakeAppointment", "Appointment", null);
+                }
+
+                var newAppointment = new Appointment
+                {
+                    Id = Guid.NewGuid(),
+                    BarberId = model.BarberId,
+                    UserId = model.UserId,
+                    AppointmentDate = model.AppointmentDate,
+                    AppointmentTime = model.AppointmentTime,
+                    Status = AppointmentStatus.Scheduled
                 };
-                await _appointmentServiceService.Add(appointmentService);
+
+                if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
+                {
+                    TempData["error"] = "Няма такава услуга!";
+                    await PopulateViewBags();
+                    return RedirectToAction("MakeAppointment", "Appointment", null);
+                }
+                if (model.AppointmentTime <= DateTime.Now.TimeOfDay)
+                {
+                    TempData["error"] = "Изберете валиден час!";
+                    await PopulateViewBags();
+                    return RedirectToAction("MakeAppointment", "Appointment", null);
+                }
+
+                await _appointmentService.Add(newAppointment);
+                currentUser.Appointments.Add(newAppointment);
+
+                foreach (var serviceId in model.SelectedServiceIds)
+                {
+                    var serviceExists = _serviceService.GetAll().Any(s => s.Id == serviceId);
+                    if (!serviceExists)
+                    {
+                        TempData["error"] = "Няма такава услуга!";
+                        await PopulateViewBags();
+                        return RedirectToAction("MakeAppointment", "Appointment", null);
+                    }
+
+                    var appointmentService = new AppointmentServices
+                    {
+                        AppointmentId = newAppointment.Id,
+                        ServiceId = serviceId
+                    };
+                    await _appointmentServiceService.Add(appointmentService);
+                }
+                TempData["success"] = "Успешно резервиран час!";
+                return RedirectToAction("Details", "User", null);
             }
-            TempData["success"] = "Успешно резервиран час!";
-            return RedirectToAction("Details", "User", null);
         }
         [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]

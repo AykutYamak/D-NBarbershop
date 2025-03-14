@@ -556,7 +556,7 @@ nav {
 
 .card {
     background: linear-gradient(darkgray, gray);
-    width: 33%; /* Keeps cards at 1/3 width */
+    width: 100%; /* Keeps cards at 1/3 width */
     min-width: 30%; /* Prevents cards from getting too narrow */
     height: auto; /* Allows height to adjust to content */
     display: flex; /* Makes card a flex container */
