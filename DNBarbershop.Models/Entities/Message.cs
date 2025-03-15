@@ -12,7 +12,10 @@ namespace DNBarbershop.Models.Entities
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        [Required(ErrorMessage = RequiredErrorMessage)]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Невалиден e-mail формат.")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$",
+        ErrorMessage = "Вашият e-mail трябва да съдържа валиден домейн и поне една точка, както и символ '@'!")]
         public string Email { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
         public string Content { get; set; }

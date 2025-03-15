@@ -19,7 +19,6 @@
                                 <label class="form-label fw-bold" asp-for="FirstName">Име</label>
                                 <input type="text" class="form-control shadow-sm rounded-3 py-2"
                                        asp-for="FirstName" placeholder="Въведете име">
-                                <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -27,7 +26,6 @@
                                 <label class="form-label fw-bold" asp-for="LastName">Фамилия</label>
                                 <input type="text" class="form-control shadow-sm rounded-3 py-2"
                                        asp-for="LastName" placeholder="Въведете фамилия">
-                                <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -38,21 +36,18 @@
                                 class="form-select shadow-sm rounded-3 py-2">
                             <option value="">Избери ниво на специализация</option>
                         </select>
-                        <span asp-validation-for="SelectedSpecialityId" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-bold" asp-for="ExperienceYears">Години опит</label>
                         <input type="number" class="form-control shadow-sm rounded-3 py-2"
                                asp-for="ExperienceYears" placeholder="Въведете години опит" min="0">
-                        <span asp-validation-for="ExperienceYears" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-bold" asp-for="ProfilePictureUrl">Профилна снимка</label>
                         <input type="text" class="form-control shadow-sm rounded-3 py-2"
                                asp-for="ProfilePictureUrl" placeholder="URL на снимката">
-                        <span asp-validation-for="ProfilePictureUrl" class="text-danger"></span>
                     </div>
 
                     <div class="text-center mt-4">
@@ -67,7 +62,14 @@
     </div>
 
     <style>
+        .card-body label {
+            font-family: "Abril Fatface,serif";
+            font-size:25px;
+        }
 
+        .card-body span {
+            font-family: "Abril Fatface,serif";
+        }
         .card-header h3 {
             font-family: "Abril Fatface", serif;
             letter-spacing: 1px;
@@ -109,11 +111,5 @@
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
     </style>
-
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
-    }
 </body>
 </html>

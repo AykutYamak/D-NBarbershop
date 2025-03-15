@@ -3,9 +3,11 @@ using DNBarbershop.Core.IServices;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.ViewModels.Barbers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace DNBarbershop.Controllers
 {
@@ -15,11 +17,13 @@ namespace DNBarbershop.Controllers
         private readonly IBarberService _barberService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISpecialityService _specialityService;
-        public BarberController(IFeedbackService feedbackService, IBarberService barberService, ISpecialityService specialityService)
+        private readonly UserManager<User> _userManager;
+        public BarberController(UserManager<User> userManager,IFeedbackService feedbackService, IBarberService barberService, ISpecialityService specialityService)
         {
             _barberService = barberService;
             _specialityService = specialityService;
             _feedbackService = feedbackService;
+            _userManager = userManager;
         }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
@@ -47,6 +51,14 @@ namespace DNBarbershop.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add()
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
+            }
+
             var model = new BarberCreateViewModel();
             var specialities = _specialityService.GetAll();
             if (!specialities.Any())
@@ -62,6 +74,14 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(BarberCreateViewModel barberModel)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
+            }
+
             var barber = new Barber
             {
                 FirstName = barberModel.FirstName,
@@ -70,6 +90,21 @@ namespace DNBarbershop.Controllers
                 ProfilePictureUrl = barberModel.ProfilePictureUrl,
                 SpecialityId = barberModel.SelectedSpecialityId 
             };
+            if (string.IsNullOrEmpty(barber.FirstName) || string.IsNullOrEmpty(barber.LastName) || barber.ExperienceYears < 0 || barber.ExperienceYears > 30 || barber.SpecialityId.ToString() == "00000000-0000-0000-0000-000000000000")
+            {
+                TempData["error"] = "Невалидни данни!";
+                return RedirectToAction("Add", "Barber", null);
+            }
+            var barbers = _barberService.GetAll().ToList();
+            foreach (var item in barbers)
+            {
+                if (barber.ProfilePictureUrl == item.ProfilePictureUrl)
+                {
+                    TempData["error"] = "Бръснар с такава снимка вече съществува!";
+                    return RedirectToAction("Add", "Barber", null);
+                }
+            }
+
             await _barberService.Add(barber);
             TempData["success"] = "Упсешно добавен бръснар.";
 
@@ -121,7 +156,20 @@ namespace DNBarbershop.Controllers
                 ProfilePictureUrl = barberModel.ProfilePictureUrl,
                 SpecialityId = barberModel.SelectedSpecialityId
             };
-
+            if (string.IsNullOrEmpty(model.FirstName) || string.IsNullOrEmpty(model.LastName) || model.ExperienceYears < 0 || model.ExperienceYears > 30 || model.SpecialityId.ToString() == "00000000-0000-0000-0000-000000000000")
+            {
+                TempData["error"] = "Невалидни данни!";
+                return RedirectToAction("Edit", "Barber", null);
+            }
+            var barbers = _barberService.GetAll().ToList();
+            foreach (var item in barbers)
+            {
+                if (model.ProfilePictureUrl == item.ProfilePictureUrl)
+                {
+                    TempData["error"] = "Бръснар с такава снимка вече съществува!";
+                    return RedirectToAction("Edit", "Barber", null);
+                }
+            }
             await _barberService.Update(model);
             TempData["success"] = "Упсешно редактиран бръснар.";
             return RedirectToAction("Index");

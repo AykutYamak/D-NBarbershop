@@ -64,16 +64,29 @@
                             <td>@appointment.AppointmentTime</td>
                             <td>@appointment.Status.ToString()</td>
                             <td>
-                                <div class="d-flex gap-2">
-                                    <a class="btn btn-dark px-3 py-2" asp-controller="Appointment" asp-action="Edit" asp-route-id="@appointment.Id">
-                                        <i class="bi bi-pencil"></i> Редактирай
-                                    </a>
-                                    <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@appointment.Id" method="post">
-                                        <button type="submit" class="btn btn-danger px-3 py-2">
-                                            <i class="bi bi-trash"></i> Изтрий
-                                        </button>
-                                    </form>
-                                </div>
+                                
+                                    @if(appointment.Status != DNBarbershop.Models.EnumClasses.AppointmentStatus.Completed)
+                                    {
+                                    <div class="d-flex gap-2">
+                                        <a class="btn btn-dark px-3 py-2" asp-controller="Appointment" asp-action="Edit" asp-route-id="@appointment.Id">
+                                            <i class="bi bi-pencil"></i> Редактирай
+                                        </a>
+                                        <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@appointment.Id" method="post">
+                                            <button type="submit" class="btn btn-danger px-3 py-2">
+                                                <i class="bi bi-trash"></i> Изтрий
+                                            </button>
+                                        </form>
+                                        </div>
+                                    }
+                                    else{
+                                        <div class="d-flex justify-content-center">
+                                        <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@appointment.Id" method="post">
+                                            <button type="submit" class="btn btn-danger px-3 py-2">
+                                                <i class="bi bi-trash"></i> Изтрий
+                                            </button>
+                                        </form>
+                                        </div>
+                                    }
                             </td>
                         </tr>
                     }

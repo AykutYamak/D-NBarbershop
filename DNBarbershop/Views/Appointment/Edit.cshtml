@@ -1,5 +1,4 @@
 ﻿@model DNBarbershop.Models.ViewModels.Appointments.AppointmentEditViewModel
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,10 +78,9 @@
                             <select asp-for="AppointmentTime" class="form-select shadow-sm rounded-3 py-2" id="timeSelect">
                                 @if (ViewBag.TimeSlots != null && ViewBag.TimeSlots.Count > 0)
                                 {
-                                    <option value="@Model.AppointmentTime">@Model.AppointmentTime</option>
                                     @foreach (var item in (List<SelectListItem>)ViewBag.TimeSlots)
                                     {
-                                        <option value="@item.Value">@item</option>
+                                        <option value="@item.Value">@item.Text</option>
                                     }
                                 }
                                 else
@@ -101,7 +99,7 @@
                             <select asp-for="Status" class="form-select shadow-sm rounded-3 py-2">
                                 @foreach (var item in ViewBag.Statuses)
                                 {
-                                    <option value="@item">@item</option>
+                                    <option value="@item.Value" selected="@(item.Value == Model.Status.ToString() ? "selected" : null)">@item.Text</option>
                                 }
                             </select>
                         </div>
@@ -124,7 +122,7 @@
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
         <script>
-                             document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 const barberSelect = document.getElementById("barberSelect");
                 const dateInput = document.getElementById("dateInput");
                 const timeSelect = document.getElementById("timeSelect");
@@ -218,7 +216,7 @@
 
                 // Update time slots on initial load if barber and date are selected
                 if (barberSelect.value && dateInput.value) {
-                    updateAvailableTimeSlots();
+                    updateAvailableTimeSlots(); // Call this function on page load
                 }
 
                 // Add visual feedback when services are selected
@@ -248,8 +246,14 @@
             });
         </script>
 
-
         <style>
+            .card h3 {
+                font-family: "Abril Fatface,serif";
+            }
+
+            .card h5 {
+                font-family: "Abril Fatface,serif";
+            }
             .card-header h3 {
                 font-family: "Abril Fatface", serif;
                 letter-spacing: 1px;

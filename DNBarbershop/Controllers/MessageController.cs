@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
 
 namespace DNBarbershop.Controllers
 {
@@ -47,21 +48,14 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(MessageCreateViewModel messageModel)
         {
+           
+
             var currentUser = await _userManager.GetUserAsync(User);
 
             if (currentUser==null)
             {
-                var message = new Message
-                {
-                    Id = Guid.NewGuid(),
-                    Email = messageModel.Email,
-                    UserId = null,
-                    Content = messageModel.Content,
-                    Date = DateTime.UtcNow,
-                    IsRead = false
-                };
-                await _messageService.Add(message);
-                TempData["success"] = "Успешно изпратено съобщение.";
+                TempData["error"] = "Не сте регистриран/а.";
+                return RedirectToAction("AboutUs", "Home", null);
             }
             else
             {
@@ -74,8 +68,27 @@ namespace DNBarbershop.Controllers
                     Date = DateTime.UtcNow,
                     IsRead = false
                 };
-                await _messageService.Add(message);
-                TempData["success"] = "Успешно изпратено съобщение.";
+                string regex = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+                if (!Regex.IsMatch(message.Email,regex,RegexOptions.IgnoreCase))
+                {
+                    TempData["error"] = "Невалидни данни.";
+                    return RedirectToAction("AboutUs", "Home", null);
+                }
+                else if(!string.IsNullOrEmpty(message.Email))
+                {
+                    if (string.IsNullOrEmpty(message.Content))
+                    {
+                        TempData["error"] = "Не може да се изпрати празен текст!";
+                        return RedirectToAction("AboutUs", "Home", null);
+                    }
+                    await _messageService.Add(message);
+                    TempData["success"] = "Успешно изпратено съобщение.";
+                }
+                else
+                {
+                    TempData["error"] = "Невалидни данни.";
+                    return RedirectToAction("AboutUs", "Home", null);
+                }
             }
             return RedirectToAction("AboutUs","Home",null);
         }

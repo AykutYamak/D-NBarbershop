@@ -40,17 +40,28 @@
                             <td>@message.Date.Day/@message.Date.Month/@message.Date.Year г.</td>
                             <td>@message.IsRead.ToString()</td>
                             <td>
-                                <div class="d-flex gap-2">
-                                    <form asp-controller="Message" asp-action="MarkAsRead" method="post">
-                                        <input type="hidden" name="Id" value="@message.Id" />
-                                        <button type="submit" class="btn btn-primary">Ok</button>
-                                    </form>
+                                @if(@message.IsRead == true){
+                                    <div class="d-flex justify-content-center">
                                     <form asp-controller="Message" asp-action="Delete" asp-route-id="@message.Id" method="post">
                                         <button type="submit" class="btn btn-danger px-3 py-2">
                                             <i class="bi bi-trash"></i> Изтрий
                                         </button>
                                     </form>
-                                </div>
+                                    </div>
+                                }
+                                else{
+                                    <div class="d-flex gap-2">
+                                        <form asp-controller="Message" asp-action="MarkAsRead" method="post">
+                                            <input type="hidden" name="Id" value="@message.Id" />
+                                            <button type="submit" class="btn btn-primary">Ok</button>
+                                        </form>
+                                        <form asp-controller="Message" asp-action="Delete" asp-route-id="@message.Id" method="post">
+                                            <button type="submit" class="btn btn-danger px-3 py-2">
+                                                <i class="bi bi-trash"></i> Изтрий
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }

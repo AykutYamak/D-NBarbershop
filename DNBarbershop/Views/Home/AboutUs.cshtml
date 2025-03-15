@@ -62,9 +62,12 @@
         <div class="contact-form">
             <h2>Свържете се с нас</h2>
             <form action="#" method="post">
-                <label class="form-label fw-semibold" asp-for="Email">E-mail</label>
-                <textarea type="text" class="form-control" asp-for="Email" placeholder="E-mail"></textarea>
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="@Model.Email" class="form-label">E-mail</label>
+                <input asp-for="@Model.Email" type="email"
+                       pattern="[a-zA-Z0-9._%+-]+&#64;[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?"
+                       class="form-control" autocomplete="username"
+                       aria-required="true" placeholder="name@example.com" required />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
                 
                 <label class="form-label fw-semibold" asp-for="Content">Съобщение</label>
                 <textarea type="text" class="form-control" asp-for="Content" placeholder="Съобщение"></textarea>

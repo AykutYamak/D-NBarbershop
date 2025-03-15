@@ -47,13 +47,18 @@ namespace DNBarbershop.Controllers
             if (existingSpeciality != null)
             {
                 TempData["error"] = "Ниво на специализиране с този тип вече съществува.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Add","Speciality",null);
             }
-
+            if (string.IsNullOrEmpty(specialityModel.Type))
+            {
+                TempData["error"] = "Не може да добавите празно поле!";
+                return RedirectToAction("Add", "Speciality", null);
+            }
             var speciality = new Speciality
             {
                 Type = specialityModel.Type
             };
+           
             await _specialityService.Add(speciality);
             TempData["success"] = "Успешно добавено ниво на специализиране.";
             return RedirectToAction("Index");
@@ -74,7 +79,7 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Няма намерено такова ниво на специализиране.";
                 return NotFound();
             }
-
+            
             var model = new SpecialityEditViewModel
             {
                 Id = speciality.Id,
@@ -87,8 +92,6 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(SpecialityEditViewModel specialityModel)
         {
-            if (false)
-            {
                 var speciality = await _specialityService.Get(s => s.Id == specialityModel.Id);
                 if (speciality == null)
                 {
@@ -99,11 +102,14 @@ namespace DNBarbershop.Controllers
                 var duplicate = await _specialityService.Get(s => s.Type == specialityModel.Type && s.Id != specialityModel.Id);
                 if (duplicate != null)
                 {
-                    TempData["error"] = "Ниво на специализиране с този тип вече съществува.";
+                    TempData["error"] = "Този тип ниво на специализиране вече съществува.";
                     return RedirectToAction("Index");
                 }
+            if (string.IsNullOrEmpty(specialityModel.Type))
+            {
+                TempData["error"] = "Не може да добавите празно поле!";
+                return RedirectToAction("Edit", "Speciality", null);
             }
-
             var model = new Speciality
             {
                 Id = specialityModel.Id,

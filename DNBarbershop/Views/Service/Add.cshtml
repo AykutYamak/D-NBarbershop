@@ -5,6 +5,17 @@
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
+        .card-body span{
+            font-family: "Abril Fatface,serif";
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            border-bottom: solid 0.5px black
+        }
+        .card-body label{
+            font-family: "Abril Fatface,serif";
+        }
+        .card-body{
+            width:60%;
+        }
         /* Custom styling for consistency */
         .card-header h3 {
             font-family: "Abril Fatface", serif;
@@ -53,7 +64,7 @@
 </head>
 <body class="crudOperationsView">
     <div class="container mt-3 d-flex justify-content-center mb-3">
-        <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="max-width: 600px; width: 100%; margin-bottom:1%;">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="max-width: 650px; width: 100%; margin-bottom:1%;">
             <div class="card-header bg-dark text-white py-4">
                 <h3 class="text-center mb-0">Добави Услуга</h3>
             </div>
@@ -64,26 +75,35 @@
                     <div class="mb-4">
                         <label class="form-label fw-bold" asp-for="ServiceName">Име на услуга</label>
                         <input type="text" class="form-control shadow-sm rounded-3 py-2" asp-for="ServiceName" placeholder="Въведете име">
-                        <span asp-validation-for="ServiceName" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-bold" asp-for="Description">Описание</label>
                         <textarea type="text" class="form-control shadow-sm rounded-3 py-2" asp-for="Description" placeholder="Въведете описание"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-bold" asp-for="Price">Цена (лв.)</label>
-                        <input type="number" class="form-control shadow-sm rounded-3 py-2" asp-for="Price" placeholder="Въведете цена" min="0">
-                        <span asp-validation-for="Price" class="text-danger"></span>
+                        <input type="number" class="form-control shadow-sm rounded-3 py-2" asp-for="Price" placeholder="Въведете цена" min="0" step="1">
+                        <span asp-validation-for="Price" class="text-dark">Трябва да бъде цяло число.</span>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-bold" asp-for="Duration">Продължителност</label>
                         <div class="d-flex">
-                            <input type="number" id="Hours" name="DurationHours" class="form-control me-2 shadow-sm rounded-3 py-2" placeholder="Часове" min="0" value="1">
-                            <input type="number" id="Minutes" name="DurationMinutes" class="form-control shadow-sm rounded-3 py-2" placeholder="Минути" min="0" max="59" value="30">
+                            <select id="Hours" name="DurationHours" class="form-select me-2 shadow-sm rounded-3 py-2">
+                                <option value="0">0 часа</option>
+                                <option value="1">1 час</option>
+                                <option value="2">2 часа</option>
+                                <option value="3">3 часа</option>
+                                <option value="4">4 часа</option>
+                                <option value="5">5 часа</option>
+                            </select>
+                            <select id="Minutes" name="DurationMinutes" class="form-select shadow-sm rounded-3 py-2">
+                                <option value="0">0 минути</option>
+                                <option value="15">15 минути</option>
+                                <option value="30">30 минути</option>
+                            </select>
                         </div>
                     </div>
 
@@ -96,6 +116,7 @@
             </div>
         </div>
     </div>
+   
 </body>
 </html>
 

@@ -2,6 +2,7 @@
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.ViewModels.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DNBarbershop.Controllers
@@ -9,10 +10,11 @@ namespace DNBarbershop.Controllers
     public class ServiceController : Controller
     {
         private readonly IServiceService _serviceService;
-
-        public ServiceController(IServiceService serviceService)
+        private readonly UserManager<User> _userManager;
+        public ServiceController(IServiceService serviceService, UserManager<User> userManager)
         {
             _serviceService = serviceService;
+            _userManager = userManager;
         }
         [Authorize(Roles = "Admin")]
 
@@ -35,6 +37,14 @@ namespace DNBarbershop.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add()
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
+            }
+
             var model = new ServiceCreateViewModel();
             return View(model);
         }
@@ -43,11 +53,31 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(ServiceCreateViewModel model,int DurationHours,int DurationMinutes)
         {
-            if ((DurationHours < 0 || DurationMinutes < 0 || DurationHours == 0 && DurationMinutes == 0))
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
             {
-                TempData["error"] = "Продължителността трябва да бъде по-голяма от 0 минути.";
-                return View(model); 
+                TempData["error"] = "Не сте регистриран/а.";
+                return Unauthorized();
             }
+            if (string.IsNullOrEmpty(model.ServiceName) || string.IsNullOrEmpty(model.Description) || model.Price == 0)
+            {
+                TempData["error"] = "Невалидни данни!";
+                return RedirectToAction("Add", "Service", null);
+            }
+            if (DurationMinutes!=15 && DurationMinutes!=30 && DurationMinutes!=0)
+            {
+                TempData["error"] = "Продължителността на услугата в минути трябва да бъде или 0 или 15 или 30";
+                return RedirectToAction("Add", "Service", null);
+            }
+
+            if (DurationHours == 0 && DurationMinutes == 0)
+            {
+                TempData["error"] = "Невалидна продължителност.";
+                return RedirectToAction("Add", "Service", null);
+            }
+           
+
             model.Duration = new TimeSpan(DurationHours, DurationMinutes, 0);
             var service = new Service
             {
@@ -56,12 +86,17 @@ namespace DNBarbershop.Controllers
                 Price = model.Price,
                 Duration = model.Duration
             };
-            var existingService = await _serviceService.Get(s=>s.Id == model.Id);
-            if (existingService!=null)
+
+            var existingServices = _serviceService.GetAll().ToList();
+            foreach (var item in existingServices)
             {
-                TempData["error"] = "Услуга с това име вече съществува.";
-                return View(model);
+                if (item.ServiceName.ToLower() == service.ServiceName.ToLower() || item.Description.ToLower() == service.Description.ToLower())
+                {
+                    TempData["error"] = "Такава услуга вече съществува!";
+                    return RedirectToAction("Add", "Service", null);
+                }
             }
+
             await _serviceService.Add(service);
             TempData["success"] = "Успешно добавена услуга.";
             return RedirectToAction("Index");
@@ -90,13 +125,25 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ServiceEditViewModel service,int DurationHours,int DurationMinutes)
         {
-            if (DurationHours < 0 || DurationMinutes < 0 || (DurationHours == 0 && DurationMinutes == 0))
+            if (string.IsNullOrEmpty(service.ServiceName) || string.IsNullOrEmpty(service.Description) || service.Price == 0)
             {
-                TempData["error"] = "Продължителността трябва да бъде по-голяма от 0 минути.";
-                return View(service);
+                TempData["error"] = "Невалидни данни!";
+                return RedirectToAction("Edit", "Service", null);
+            }
+            if (DurationMinutes != 15 && DurationMinutes != 30 && DurationMinutes != 0)
+            {
+                TempData["error"] = "Продължителността на услугата в минути трябва да бъде или 0 или 15 или 30";
+                return RedirectToAction("Edit", "Service", null);
             }
 
-            var serviceWithSameName = await _serviceService.Get(s => s.ServiceName == service.ServiceName && s.Id != service.Id);
+            if (DurationHours == 0 && DurationMinutes == 0)
+            {
+                TempData["error"] = "Невалидна продължителност.";
+                return RedirectToAction("Edit", "Service", null);
+            }
+            
+
+            var serviceWithSameName = await _serviceService.Get(s => s.ServiceName.ToLower() == service.ServiceName.ToLower() && s.Id != service.Id);
             if (serviceWithSameName != null)
             {
                 TempData["error"] = "Услуга с това име вече съществува.";

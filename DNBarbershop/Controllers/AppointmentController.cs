@@ -146,12 +146,16 @@ namespace DNBarbershop.Controllers
 
             ViewBag.TimeSlots = availableSlots.Select(ts => new SelectListItem
             {
-                Value = ts,
-                Text = ts
+                Value = ts.ToString(),
+                Text = ts.ToString()
             }).ToList();
 
-            var statuses = Enum.GetValues(typeof(AppointmentStatus));
-            ViewBag.Statuses = statuses;
+            ViewBag.Statuses = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = AppointmentStatus.Scheduled.ToString()},
+                new SelectListItem { Value = "2", Text = AppointmentStatus.Completed.ToString()},
+                new SelectListItem { Value = "3", Text = AppointmentStatus.Canceled.ToString()}
+            };
         }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
@@ -184,6 +188,10 @@ namespace DNBarbershop.Controllers
                 if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Canceled)
                 {
                     item.Status = AppointmentStatus.Completed;
+                }
+                else if (item.Status==AppointmentStatus.Canceled)
+                {
+                    item.Status = AppointmentStatus.Canceled;
                 }
                 else
                 {
@@ -269,10 +277,10 @@ namespace DNBarbershop.Controllers
 
                 if (model.SelectedServiceIds == null || !model.SelectedServiceIds.Any())
                 {
-                    TempData["error"] = "Няма такава услуга!";
+                    TempData["error"] = "Изберете поне една услуга!";
                     return RedirectToAction("Add", "Appointment", null);
                 }
-                if (model.AppointmentTime <= DateTime.Now.TimeOfDay)
+                if (model.AppointmentTime <= DateTime.Now.TimeOfDay && model.AppointmentDate <= DateTime.Now.Date)
                 {
                     TempData["error"] = "Изберете валиден час!";
                     await PopulateViewBags();
@@ -358,14 +366,12 @@ namespace DNBarbershop.Controllers
 
             model.UserId = currentUser.Id;
 
-            
-
-            if (!ModelState.IsValid)
-            {
-                await PopulateViewBags();
-                TempData["error"] = "Неуспешно премината валидация.";
-                return View(model);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    await PopulateViewBags();
+            //    TempData["error"] = "Неуспешно премината валидация.";
+            //    return RedirectToAction("Edit", "Appointment", null);
+            //}
 
             var appointment = await _appointmentService.GetWithRels(a => a.Id == model.Id);
             if (appointment == null)
