@@ -73,7 +73,32 @@ namespace DNBarbershop.Controllers
 
             return BadRequest("Failed to assign admin role");
         }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> MakeUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                TempData["error"] = "Не е намерен такъв потребител.";
+                return NotFound();
+            }
 
+            if (!await _roleManager.RoleExistsAsync("User"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, "User");
+
+            if (result.Succeeded)
+            {
+                TempData["success"] = $"Успешно направихте {user.FirstName} {user.LastName} потребител!";
+                return RedirectToAction("Index");
+            }
+
+            return BadRequest("Failed to assign user role");
+        }
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)

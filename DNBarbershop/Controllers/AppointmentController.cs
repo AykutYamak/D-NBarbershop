@@ -330,6 +330,8 @@ namespace DNBarbershop.Controllers
 
             appointment.UserId = currentUser.Id;
 
+
+
             if (appointment.UserId != currentUser.Id)
             {
                 TempData["error"] = "Не сте регистриран/а.";
@@ -366,13 +368,6 @@ namespace DNBarbershop.Controllers
 
             model.UserId = currentUser.Id;
 
-            //if (!ModelState.IsValid)
-            //{
-            //    await PopulateViewBags();
-            //    TempData["error"] = "Неуспешно премината валидация.";
-            //    return RedirectToAction("Edit", "Appointment", null);
-            //}
-
             var appointment = await _appointmentService.GetWithRels(a => a.Id == model.Id);
             if (appointment == null)
             {
@@ -400,6 +395,7 @@ namespace DNBarbershop.Controllers
                     await PopulateViewBags();
                     return RedirectToAction("Edit", "Appointment", null);
                 }
+               
                 var newAppointment = new Appointment
                 {
                     Id = model.Id,
@@ -410,6 +406,16 @@ namespace DNBarbershop.Controllers
                     Status = model.Status,
                 };
 
+                var existingAppointments = _appointmentService.GetAll().ToList();
+
+                foreach (var item in existingAppointments)
+                {
+                    if (newAppointment.AppointmentDate == item.AppointmentDate && newAppointment.AppointmentTime == item.AppointmentTime && newAppointment.BarberId == item.BarberId && item.Id!=newAppointment.Id)
+                    {
+                        TempData["error"] = "Този час вече е зает!";
+                        return RedirectToAction("Edit", "Appointment", null);
+                    }
+                }
                 await _appointmentService.Update(newAppointment);
 
                 await _appointmentServiceService.DeleteByAppointmentId(newAppointment.Id);
