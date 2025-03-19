@@ -24,32 +24,9 @@ namespace DNBarbershop.Core.Services
             _appointmentRepository = appointmentRepository;
             _appointmentRepo = appointmentRepo;
         }
-        //public bool ValidateAppointment(Appointment appointment)
-        //{
-        //    if (!AppointmentValidator.ValidateInput(appointment.AppointmentDate))
-        //    {
-        //        return false;
-        //    }
-        //    if (!AppointmentValidator.AppointmentExists(appointment.Id))
-        //    {
-        //        return false;
-        //    }
-        //    if (!UserValidator.UserExists(appointment.User.Id))
-        //    {
-        //        return false;
-        //    }
-        //    if (!BarberValidator.BarberExists(appointment.BarberId))
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
         public async Task Add(Appointment appointment)
         {
-        //    if (ValidateAppointment(appointment) == true)
-        //    {
-                await _appointmentRepository.Add(appointment);
-            //}
+              await _appointmentRepository.Add(appointment);
         }
         public async Task Delete(Guid id)
         {

@@ -1,6 +1,5 @@
 ﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.DataAccess.AppointmentServiceRepository;
-using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using Microsoft.EntityFrameworkCore;

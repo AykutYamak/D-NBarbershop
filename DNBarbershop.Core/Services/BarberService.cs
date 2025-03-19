@@ -1,6 +1,5 @@
 ﻿using DNBarbershop.Core.IServices;
 using DNBarbershop.Core.Validators;
-using DNBarbershop.DataAccess.BarberRepository;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,24 +16,11 @@ namespace DNBarbershop.Core.Services
     public class BarberService : IBarberService
     {
         private readonly IRepository<Barber> _barberRepository;
-        private readonly IBarberRepository<Barber> _IBarberRepository;
         public BarberService(IRepository<Barber> barberRepository)
         {
             _barberRepository = barberRepository;
 
         }
-        /*public bool ValidateBarber(Barber barber)
-        {
-            if (!BarberValidator.ValidateInput(barber.ExperienceYears,barber.FirstName,barber.LastName))
-            {
-                return false;
-            }
-            if (!BarberValidator.BarberExists(barber.Id)) 
-            {
-                return false;
-            }
-            return true;
-        }*/
         
         public async Task Add(Barber barber)
         { 

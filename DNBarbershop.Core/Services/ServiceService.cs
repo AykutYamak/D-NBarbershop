@@ -19,18 +19,6 @@ namespace DNBarbershop.Core.Services
         {
             _serviceRepository = serviceRepository;
         }
-        /*public bool ValidateService(Service service)
-        {
-            if (!ServiceValidator.ValidateInput(service.ServiceName,service.Price,service.Duration,service.Description))
-            {
-                return false;
-            }
-            if (!ServiceValidator.ServiceExists(service.Id))
-            {
-                return false;
-            }
-            return true;
-        }*/
         public async Task Add(Service service)
         {
                 await _serviceRepository.Add(service);

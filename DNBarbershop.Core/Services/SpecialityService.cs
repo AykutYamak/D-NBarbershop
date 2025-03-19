@@ -14,24 +14,10 @@ namespace DNBarbershop.Core.Services
     public class SpecialityService : ISpecialityService
     {
         private readonly IRepository<Speciality> _specialityRepository;
-
-
         public SpecialityService(IRepository<Speciality> specialityRepository)
         {
             _specialityRepository = specialityRepository;
         }
-       /* public bool ValidateSpeciality(Speciality speciality)
-        {
-            if (!SpecialityValidator.ValidateInput(speciality.Type))
-            {
-                return false;
-            }
-            if (!SpecialityValidator.SpecialityExists(speciality.Id))
-            {
-                return false;
-            }
-            return true;
-        }*/
         public async Task Add(Speciality speciality)
         {
                 await _specialityRepository.Add(speciality);

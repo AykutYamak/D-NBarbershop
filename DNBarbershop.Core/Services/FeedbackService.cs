@@ -19,18 +19,6 @@ namespace DNBarbershop.Core.Services
         {
             _feedbackRepository = feedbackRepository;
         }
-        /*public bool ValidateFeedback(Feedback feedback)
-        {
-            if (!FeedbackValidator.ValidateInput(feedback.Rating,feedback.FeedBackDate,feedback.Comment))
-            {
-                return false;
-            }
-            if (!FeedbackValidator.FeedbackExists(feedback.Id))
-            {
-                return false;
-            }
-            return true;
-        }*/
         public async Task Add(Feedback feedback)
         {
                 await _feedbackRepository.Add(feedback);
