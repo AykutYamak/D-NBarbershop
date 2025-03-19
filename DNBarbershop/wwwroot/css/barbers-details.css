@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column; /* Stacks form and cards vertically */
     align-items: center; /* Centers content horizontally */
-  
+    margin-bottom:1rem;
 }
 
 /* Cards wrapper to control the row layout */
@@ -33,14 +33,14 @@
 
 .card {
     width: 16rem;
-    height: 20rem;
+    height: 350px;
     background: rgb(73, 72, 72);
     transition: all 0.4s;
     border-radius: 10px;
     box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.705);
     color: black;
     font-size: 30px;
-    margin: 2rem;
+    margin: 1rem;
 }
 
     .card:hover {
@@ -94,13 +94,13 @@
 .card-img-top {
     object-fit: cover;
     width: 90%;
-    height: 70%;
+    height: 100%;
     padding: 1rem;
     border-radius:2rem;
 }
 
 .card-title {
-    font-size: 1.6rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 

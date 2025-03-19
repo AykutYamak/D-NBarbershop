@@ -12,7 +12,7 @@
     <link href="~/css/animation-styles.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="HomePageBody main-content">
-    <section class="introduction">
+    <section class="introduction" data-speed="0.5">
         <div class="d-grid justify-content-center text-center text-light h1 welcomeText" style="font-size:5rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);color: #FFFFFF;">
             Готов за промяна?
             <br />
@@ -31,7 +31,7 @@
             }
         </div>
     </section>
-    <section class="whyUsSection">
+    <section class="whyUsSection" data-speed="0.3">
         <div class="section-title">
             <h2>Усещане за Съвършенство</h2>
         </div>
@@ -171,7 +171,7 @@
             </div>
         </div>
     </section>
-    <div class="home-sections-container">
+    <div class="home-sections-container" data-speed="0.4">
         <section class="left-home-section">
             <div class="left-home-section-title">
                 <h1>Работно време</h1>
@@ -190,7 +190,7 @@
         <section class="right-home-section">
         </section>
     </div>
-    <div class="barbers-section-container">
+    <div class="barbers-section-container" data-speed="0.6">
         <section class="left-barbers-section">
             <div class="image-container">
 
@@ -213,7 +213,7 @@
             </div>
         </section>
     </div>
-    <div class="feedback-section-container">
+    <div class="feedback-section-container" data-speed="0.6">
         <section class="feedback-section">
             <h2>Какво казват хората?</h2>
             <h1>Отзиви</h1>
@@ -246,6 +246,6 @@
         </section>
     </div>
 
-    <script src="~/js/scroll-animations.js"></script>
+    <script src="~/js/scroll-animation.js" asp-append-version="true"></script> 
 </body>
 </html>
