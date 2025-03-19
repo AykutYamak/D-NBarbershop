@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DNBarbershop.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250206090609_DefaultConnectionNewMigrationAfterAddingMappingTable")]
-    partial class DefaultConnectionNewMigrationAfterAddingMappingTable
+    [Migration("20250319090306_InitialSetup")]
+    partial class InitialSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,7 @@ namespace DNBarbershop.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("AppointmentId", "ServiceId");
@@ -107,34 +108,13 @@ namespace DNBarbershop.DataAccess.Migrations
                     b.ToTable("barbers");
                 });
 
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("categories");
-                });
-
             modelBuilder.Entity("DNBarbershop.Models.Entities.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BarberId")
+                    b.Property<Guid>("BarberId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comment")
@@ -148,9 +128,6 @@ namespace DNBarbershop.DataAccess.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("ServiceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -159,96 +136,39 @@ namespace DNBarbershop.DataAccess.Migrations
 
                     b.HasIndex("BarberId");
 
-                    b.HasIndex("ServiceId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("feedbacks");
                 });
 
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Order", b =>
+            modelBuilder.Entity("DNBarbershop.Models.Entities.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("orders");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.OrderDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("orderDetails");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("StockQuantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("products");
+                    b.ToTable("messages");
                 });
 
             modelBuilder.Entity("DNBarbershop.Models.Entities.Service", b =>
@@ -367,31 +287,6 @@ namespace DNBarbershop.DataAccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.WorkSchedule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BarberId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("WorkDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BarberId");
-
-                    b.ToTable("workSchedules");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -538,7 +433,7 @@ namespace DNBarbershop.DataAccess.Migrations
                     b.HasOne("DNBarbershop.Models.Entities.User", "User")
                         .WithMany("Appointments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Barber");
@@ -551,13 +446,13 @@ namespace DNBarbershop.DataAccess.Migrations
                     b.HasOne("DNBarbershop.Models.Entities.Appointment", "Appointment")
                         .WithMany("AppointmentServices")
                         .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DNBarbershop.Models.Entities.Service", "Service")
                         .WithMany("AppointmentServices")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Appointment");
@@ -581,12 +476,8 @@ namespace DNBarbershop.DataAccess.Migrations
                     b.HasOne("DNBarbershop.Models.Entities.Barber", "Barber")
                         .WithMany("Feedbacks")
                         .HasForeignKey("BarberId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("DNBarbershop.Models.Entities.Service", "Service")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DNBarbershop.Models.Entities.User", "User")
                         .WithMany("Feedbacks")
@@ -596,61 +487,17 @@ namespace DNBarbershop.DataAccess.Migrations
 
                     b.Navigation("Barber");
 
-                    b.Navigation("Service");
-
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Order", b =>
+            modelBuilder.Entity("DNBarbershop.Models.Entities.Message", b =>
                 {
                     b.HasOne("DNBarbershop.Models.Entities.User", "User")
-                        .WithMany("Orders")
+                        .WithMany("Messages")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.OrderDetail", b =>
-                {
-                    b.HasOne("DNBarbershop.Models.Entities.Order", "Order")
-                        .WithMany("orderDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DNBarbershop.Models.Entities.Product", "Product")
-                        .WithMany("orderDetails")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Product", b =>
-                {
-                    b.HasOne("DNBarbershop.Models.Entities.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.WorkSchedule", b =>
-                {
-                    b.HasOne("DNBarbershop.Models.Entities.Barber", "Barber")
-                        .WithMany("WorkSchedules")
-                        .HasForeignKey("BarberId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Barber");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -714,30 +561,11 @@ namespace DNBarbershop.DataAccess.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Feedbacks");
-
-                    b.Navigation("WorkSchedules");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Category", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Order", b =>
-                {
-                    b.Navigation("orderDetails");
-                });
-
-            modelBuilder.Entity("DNBarbershop.Models.Entities.Product", b =>
-                {
-                    b.Navigation("orderDetails");
                 });
 
             modelBuilder.Entity("DNBarbershop.Models.Entities.Service", b =>
                 {
                     b.Navigation("AppointmentServices");
-
-                    b.Navigation("Feedbacks");
                 });
 
             modelBuilder.Entity("DNBarbershop.Models.Entities.Speciality", b =>
@@ -751,7 +579,7 @@ namespace DNBarbershop.DataAccess.Migrations
 
                     b.Navigation("Feedbacks");
 
-                    b.Navigation("Orders");
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

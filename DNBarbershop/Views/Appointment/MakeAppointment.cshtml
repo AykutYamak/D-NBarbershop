@@ -118,14 +118,14 @@
                 <div class="text-center">
                     @if (User.IsInRole(SD.AdminRole))
                     {
-                        <button type="submit" asp-action="Add" asp-controller="Appointment" class="btn btn-submit">
-                            <i class="bi bi-check-lg me-2"></i> Запази
+                        <button type="submit" asp-action="Add" asp-controller="Appointment" class="button-elegante">
+                            Запази
                         </button>
                     }
                     else 
                     {
-                        <button type="submit" asp-action="MakeAppointment" asp-controller="Appointment" class="btn btn-submit">
-                            <i class="bi bi-check-lg me-2"></i> Запази
+                        <button type="submit" asp-action="MakeAppointment" asp-controller="Appointment" class="button-elegante">
+                            Запази
                         </button>
                     }
                     

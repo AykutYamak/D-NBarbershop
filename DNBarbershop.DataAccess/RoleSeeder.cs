@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace DNBarbershop.DataAccess
     {
         public static async Task Initialize(IServiceProvider serviceProvider)
         {
+
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
@@ -26,20 +28,25 @@ namespace DNBarbershop.DataAccess
                 }
             }
 
-            string adminEmail = "admin@gmail.com";
-            var adminUser = await userManager.FindByEmailAsync(adminEmail);
-            if (adminEmail == null)
+            var passwordHasher = new PasswordHasher<User>();
+
+            var adminUser = await userManager.FindByEmailAsync("admin@gmail.com");
+            if (adminUser == null)
             {
-                User user = new User
+                User admin = new User
                 {
                     UserName = "Admin",
-                    Email = adminEmail,
+                    NormalizedUserName = "ADMIN",
+                    Email = "admin@gmail.com",
+                    NormalizedEmail = "ADMIN@GMAIL.COM",
+                    PhoneNumber = "0898647382",
                     FirstName = "Admin",
                     LastName = "Admin",
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(user, "Admin123@");
-                await userManager.AddToRoleAsync(user, "Admin");
+                admin.PasswordHash = passwordHasher.HashPassword(admin, "Admin123@");
+                await userManager.CreateAsync(admin, "Admin123@");
+                await userManager.AddToRoleAsync(admin, "Admin");
             }
 
             string userEmail = "aykut@gmail.com";
@@ -56,6 +63,7 @@ namespace DNBarbershop.DataAccess
                     LastName = "Yamak",
                     EmailConfirmed = true
                 };
+                user1.PasswordHash = passwordHasher.HashPassword(user1, "Aykut123@");
                 await userManager.CreateAsync(user1,"Aykut123@");
                 await userManager.AddToRoleAsync(user1, "User");
             }
@@ -68,7 +76,10 @@ namespace DNBarbershop.DataAccess
                     FirstName = "Иван",
                     LastName = "Иванов",
                     EmailConfirmed = true
-                }
+                };
+                user2.PasswordHash = passwordHasher.HashPassword(user2, "Ivan123@");
+                await userManager.CreateAsync(user2, "Ivant123@");
+                await userManager.AddToRoleAsync(user2, "User");
             }
         }
     }

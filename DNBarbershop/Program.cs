@@ -23,7 +23,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("HomeConnection");
+        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
         //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -53,6 +53,7 @@ internal class Program
         .AddErrorDescriber<CustomIdentityErrorDescriber>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
+
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options => { options.LoginPath = "/Account/Login"; options.AccessDeniedPath = "Account/AccessDenied"; });
         
@@ -63,6 +64,8 @@ internal class Program
         {
             var serviceProvider = scope.ServiceProvider;
             await RoleSeeder.Initialize(serviceProvider);
+            var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            DbInitializer.Initialize(context);
         }
 
         // Configure the HTTP request pipeline.

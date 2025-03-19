@@ -164,8 +164,9 @@ namespace DNBarbershop.Controllers
             var barbers = _barberService.GetAll().ToList();
             foreach (var item in barbers)
             {
-                if (model.ProfilePictureUrl == item.ProfilePictureUrl)
+                if (item.Id != model.Id && model.ProfilePictureUrl == item.ProfilePictureUrl)
                 {
+
                     TempData["error"] = "Бръснар с такава снимка вече съществува!";
                     return RedirectToAction("Edit", "Barber", null);
                 }

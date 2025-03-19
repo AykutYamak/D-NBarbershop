@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DNBarbershop.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class HomeConnectionMigration : Migration
+    public partial class InitialSetup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,19 +50,6 @@ namespace DNBarbershop.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "categories",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,44 +186,23 @@ namespace DNBarbershop.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "orders",
+                name: "messages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders", x => x.Id);
+                    table.PrimaryKey("PK_messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orders_AspNetUsers_UserId",
+                        name: "FK_messages_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "products",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    StockQuantity = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_products_categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -264,33 +230,6 @@ namespace DNBarbershop.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "orderDetails",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_orderDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_orderDetails_orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_orderDetails_products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "appointments",
                 columns: table => new
                 {
@@ -298,7 +237,7 @@ namespace DNBarbershop.DataAccess.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BarberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AppointmentTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AppointmentTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -324,8 +263,7 @@ namespace DNBarbershop.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    BarberId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    BarberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     FeedBackDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -337,43 +275,17 @@ namespace DNBarbershop.DataAccess.Migrations
                         name: "FK_feedbacks_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_feedbacks_barbers_BarberId",
                         column: x => x.BarberId,
                         principalTable: "barbers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_feedbacks_services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "services",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "workSchedules",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BarberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WorkDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_workSchedules", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_workSchedules_barbers_BarberId",
-                        column: x => x.BarberId,
-                        principalTable: "barbers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppointmentServices",
+                name: "appointmentServices",
                 columns: table => new
                 {
                     AppointmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -382,15 +294,15 @@ namespace DNBarbershop.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppointmentServices", x => new { x.AppointmentId, x.ServiceId });
+                    table.PrimaryKey("PK_appointmentServices", x => new { x.AppointmentId, x.ServiceId });
                     table.ForeignKey(
-                        name: "FK_AppointmentServices_appointments_AppointmentId",
+                        name: "FK_appointmentServices_appointments_AppointmentId",
                         column: x => x.AppointmentId,
                         principalTable: "appointments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AppointmentServices_services_ServiceId",
+                        name: "FK_appointmentServices_services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "services",
                         principalColumn: "Id",
@@ -408,8 +320,8 @@ namespace DNBarbershop.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppointmentServices_ServiceId",
-                table: "AppointmentServices",
+                name: "IX_appointmentServices_ServiceId",
+                table: "appointmentServices",
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
@@ -462,46 +374,21 @@ namespace DNBarbershop.DataAccess.Migrations
                 column: "BarberId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_feedbacks_ServiceId",
-                table: "feedbacks",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_feedbacks_UserId",
                 table: "feedbacks",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orderDetails_OrderId",
-                table: "orderDetails",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_orderDetails_ProductId",
-                table: "orderDetails",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_orders_UserId",
-                table: "orders",
+                name: "IX_messages_UserId",
+                table: "messages",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_products_CategoryId",
-                table: "products",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_workSchedules_BarberId",
-                table: "workSchedules",
-                column: "BarberId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AppointmentServices");
+                name: "appointmentServices");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -522,34 +409,22 @@ namespace DNBarbershop.DataAccess.Migrations
                 name: "feedbacks");
 
             migrationBuilder.DropTable(
-                name: "orderDetails");
-
-            migrationBuilder.DropTable(
-                name: "workSchedules");
+                name: "messages");
 
             migrationBuilder.DropTable(
                 name: "appointments");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
                 name: "services");
 
             migrationBuilder.DropTable(
-                name: "orders");
-
-            migrationBuilder.DropTable(
-                name: "products");
-
-            migrationBuilder.DropTable(
-                name: "barbers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "categories");
+                name: "barbers");
 
             migrationBuilder.DropTable(
                 name: "speciality");

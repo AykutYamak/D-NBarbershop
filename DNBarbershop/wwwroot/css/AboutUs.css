@@ -8,10 +8,11 @@
 .aboutus-section-info{
     margin:1rem;
 }
-.aboutus-information{
-    background-color:rgb(177, 177, 177,1);
-    margin:5rem;
-    border-radius:10px;
+.aboutus-information {
+    background-color: rgb(177, 177, 177,1);
+    margin: 5rem;
+    border-radius: 10px;
+    box-shadow: 0px 2px 80px rgba(0,0,0,0.7);
 }
     .aboutus-information h2 {
         text-align: center;
@@ -41,16 +42,17 @@
     justify-content: center;
     margin: 1rem;
 }
-.aboutus-foundation-img img{
-    border-radius:10px;
-}
+    .aboutus-foundation-img img {
+        border-radius: 10px;
+        box-shadow: 0px 2px 80px rgba(0,0,0,0.7);
+    }
 .aboutus-foundation-text {
-    margin-top:3.5rem;
-    margin-left:1rem;
-    border-radius:10px;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    border-radius: 10px;
     background-color: rgb(177, 177, 177,1);
-    height:500px;
-}
+    height: 500px;
+ }
     .aboutus-foundation-text h1 {
         text-align: center;
         font-family: "Abril Fatface",serif;
