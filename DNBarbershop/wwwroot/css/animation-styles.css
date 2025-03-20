@@ -405,7 +405,7 @@
     justify-content: center;
     gap: 1rem; /* Increased gap for better spacing */
     flex-wrap: nowrap; /* Prevent wrapping to new line */
-    padding: 0.5rem 0;
+    
     width: 100%;
 }
 

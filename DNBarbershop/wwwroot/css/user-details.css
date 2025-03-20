@@ -126,17 +126,29 @@ hr {
     transition: all 0.3s ease;
 }
 
-.btn-danger {
-    background-color: #e53935;
+.cancel-button {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 1px;
+    text-decoration: none;
     color: white;
-    padding: 8px 16px;
-    font-size: 0.9rem;
+    background-color: rgb(134, 0, 0);
+    cursor: pointer;
+    transition: ease-out 0.5s;
+    border: 2px solid rgb(134, 0, 0);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 0 rgb(134, 0, 0);
 }
 
-    .btn-danger:hover {
-        background-color: #c62828;
-        transform: translateY(-1px);
+    .cancel-button:hover {
+        color: white;
+        box-shadow: inset 0 -100px 0 0 red;
     }
+.cancel-button:active {
+    transform: scale(0.9);
+}
 
 /* Responsive adjustments */
 @media (max-width: 992px) {
