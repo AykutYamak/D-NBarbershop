@@ -1,40 +1,154 @@
 ﻿body {
-    background: url('/Assets/Images/slate-texture-background.jpg');     
+    background: url('/Assets/Images/slate-texture-background.jpg');
     background-position: center;
-    background-size: 100%;
+    background-size: cover;
     background-repeat: no-repeat;
     white-space: normal;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
-.container{
 
+.container {
+    display: flex;
+    justify-content: center;
 }
-.title-container{
-    font-family:"Abril Fatface",serif;
-    margin-top:2rem;
-    border-bottom:solid 3px black;
-    margin-bottom:2rem;
-}
-.title-container h2{
-    font-size:4rem;
-    font-weight: 800;
-}
-.title-container p{
-    font-size:2rem;
-    font-weight:600;
-}
+
+/* User profile section */
 .user-container, .appointments-container {
-    background: rgb(0, 0, 0, 0.60); 
-    padding: 20px;
+    background: rgba(18, 18, 22, 0.85);
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
 }
 
+    .user-info h2, .appointments-container h2 {
+        color: #ffffff;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+    margin: 20px 0;
+}
+
+.info h5 {
+    color: #bbbbbb;
+    font-size: 1.1rem;
+    margin: 10px 0;
+    font-weight: 400;
+}
+
+/* Edit button */
 .edit-button-container {
-    margin-top: 20px;
+    margin-top: 30px;
     text-align: center;
 }
+
     .edit-button-container a {
-        display: inline-block; 
-        padding: 10px 20px; 
+        display: inline-block;
+        padding: 10px 24px;
         border-radius: 5px;
+        background: #333;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+        .edit-button-container a:hover {
+            background: #555;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+/* Appointments table */
+.table-responsive {
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #e0e0e0;
+}
+
+.table-dark {
+    background-color: #1a1a1a;
+}
+
+.table th {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border: none;
+}
+
+    .table th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    .table th:last-child {
+        border-top-right-radius: 8px;
+    }
+
+.table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Buttons */
+.btn {
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-danger {
+    background-color: #e53935;
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+    .btn-danger:hover {
+        background-color: #c62828;
+        transform: translateY(-1px);
+    }
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .container {
+        margin-top: 2%;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .col-md-5, .col-md-7 {
+        width: 100%;
+    }
+}

@@ -23,7 +23,7 @@
 .welcomeText {
     font-family: "Abril Fatface", serif;
     font-style: normal;
-    margin-top: 5rem;
+    margin-top: 1rem;
 }
 
 .reservation-button {
@@ -356,7 +356,7 @@
             opacity: 1;
             filter: grayscale(0%);
             transform: scale(1);
-            transition-delay: calc(var(--anim-index) * 0.15s);
+            transition-delay: calc(var(--anim-index) * 0.055s);
         }
 
 /* Feedback Section */
@@ -425,7 +425,7 @@
     .card.animate {
         opacity: 1;
         transform: scale(1);
-        transition-delay: calc(var(--anim-index) * 0.1s);
+        transition-delay: calc(var(--anim-index) * 0.05s);
     }
 
 .card-img-top {

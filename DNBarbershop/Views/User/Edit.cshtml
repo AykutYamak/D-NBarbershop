@@ -2,51 +2,130 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        body{
+            background: url('/Assets/Images/slate-texture-background.jpg');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            white-space: normal;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .form-label{
+            color:#FFFFFF;
+        }
+        .user-details .card {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border: 3px solid white;
+            transition: transform 0.3s ease;
+        }
+
+            .profile-avatar:hover {
+                transform: scale(1.05);
+            }
+
+        .form-control {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus {
+                background: rgba(255,255,255,0.1);
+                border-color: white;
+                box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+                color:#FFFFFF;
+            }
+
+        .success-button {
+            background-color:lightgray;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .success-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+            }
+            .card{
+                width:auto;
+
+            }
+
+        .form-control::placeholder {
+            opacity: 0.5;
+            color: #FFFFFF;
+        }
+    </style>
 </head>
 <body class="user-details">
-    <div class="container">
+    <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-6 d-flex justify-content-center">
-                <div class="card shadow-lg rounded-4 p-4 bg-dark text-white w-100">
-                    <h3 class="text-center fw-bold mb-3">Редактирай профила си.</h3>
+            <div class="col-xl-4 col-lg-6 col-md-8">
+                <div class="card shadow-lg rounded-3 p-4">
+                    <h3 class="text-center fw-bold mb-4 text-light">Редактиране на профил</h3>
+
                     <form method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Id" />
-                        <div class="mb-3 text-center">
-                            <label class="form-label fw-semibold" asp-for="FirstName">Име</label>
-                            <input type="text" class="form-control border-0 shadow-sm" asp-for="FirstName" placeholder="Въведете име">
-                            <span asp-validation-for="FirstName" class="text-danger"></span>
 
+                        <!-- First Name -->
+                        <div class="mb-4">
+                            <label class="form-label mb-2" asp-for="FirstName">Име</label>
+                            <input type="text" class="form-control rounded-pill px-4 py-2" asp-for="FirstName"
+                                   placeholder="Въведете име">
+                            <span asp-validation-for="FirstName" class="text-danger small d-block mt-1"></span>
                         </div>
-                        <div class="mb-3 text-center">
-                            <label class="form-label fw-semibold" asp-for="LastName">Фамилия</label>
-                            <input type="text" class="form-control border-0 shadow-sm" asp-for="LastName" placeholder="Въведете име">
-                            <span asp-validation-for="LastName" class="text-danger"></span>
+
+                        <!-- Last Name -->
+                        <div class="mb-4">
+                            <label class="form-label mb-2" asp-for="LastName">Фамилия</label>
+                            <input type="text" class="form-control rounded-pill px-4 py-2" asp-for="LastName"
+                                   placeholder="Въведете фамилия">
+                            <span asp-validation-for="LastName" class="text-danger small d-block mt-1"></span>
                         </div>
-                        <div class="mb-3 text-center">
-                            <label class="form-label fw-semibold">Телефонен номер</label>
-                            <br />
-                            <label class="form-label fw-semibold" asp-for="PhoneNumber">
-                                <input type="tel" pattern="[03589]{1}[0-9]{9}" class="form-control" asp-for="PhoneNumber">
-                            </label>
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                        <!-- Phone Number -->
+                        <div class="mb-4">
+                            <label class="form-label text-light mb-2" asp-for="PhoneNumber">Телефонен номер</label>
+                            <input type="tel" pattern="[03589]{1}[0-9]{9}"
+                                   class="form-control text-light rounded-pill px-4 py-2"
+                                   asp-for="PhoneNumber"
+                                   placeholder="Пример: 0878123456">
+                            <span asp-validation-for="PhoneNumber" class="text-danger small d-block mt-1"></span>
                         </div>
-                        <div class="text-center mt-4">
-                            <button type="submit" asp-action="Edit" asp-controller="User" class="btn btn-success px-4 py-2 shadow-sm">
-                                <i class="bi bi-check-lg"></i> Запази
+
+                        <!-- Buttons -->
+                        <div class="d-grid gap-3 mt-5">
+                            <button type="submit" asp-action="Edit" asp-controller="User"
+                                    class="btn success-button rounded-pill py-2 fw-bold">
+                                Запази промените
                             </button>
-                            <a asp-action="Details" class="btn btn-outline-light px-4 py-2 ms-2">Отказ</a>
+                            <a asp-action="Details" class="btn btn-outline-light rounded-pill py-2">
+                                Отказ
+                            </a>
                         </div>
                     </form>
-                    @section Scripts {
-                        @{
-                            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-                        }
-                    }
                 </div>
             </div>
         </div>
     </div>
 
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
 </body>
 </html>

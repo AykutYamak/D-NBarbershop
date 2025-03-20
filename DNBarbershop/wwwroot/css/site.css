@@ -87,13 +87,12 @@ body {
     bottom: 0;
     padding-top: 1.5rem;
     padding-bottom: 1%;
-    height: 100px;
-    z-index: 1000; /* Ensure it stays on top of other content */
+    height: 120px;
 }
 .welcomeText {
     font-family: "Abril Fatface", serif;
     font-style: normal;
-    margin-top: 5rem;
+    
 }
 
 .whyUsSection {

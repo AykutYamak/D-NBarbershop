@@ -34,6 +34,7 @@ namespace DNBarbershop.Controllers
             _feedbackService = feedbackService;
             _messageService = messageService;
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
