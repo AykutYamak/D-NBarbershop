@@ -22,6 +22,6 @@ namespace DNBarbershop.Models.Entities
         public decimal Price { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
         public TimeSpan Duration { get; set; }
-        public ICollection<AppointmentServices> AppointmentServices { get; set; } = new HashSet<AppointmentServices>();
+        public ICollection<AppointmentServices> AppointmentServices { get; set; } = new List<AppointmentServices>();
     }
 }

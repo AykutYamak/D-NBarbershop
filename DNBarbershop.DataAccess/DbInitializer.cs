@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.DataAccess
 {
@@ -134,7 +135,69 @@ namespace DNBarbershop.DataAccess
                 }
                 await context.SaveChangesAsync();
             }
+            if (!context.appointments.Any())
+            {
+                var appointments = new Appointment[]
+                {
+                    new Appointment
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = context.users.First(u => u.FirstName == "Иван" && u.LastName == "Иванов").Id,
+                        BarberId = context.barbers.First(b => b.FirstName == "Христо" && b.LastName == "Петров").Id,
+                        AppointmentDate = new DateTime(2025, 4, 23),
+                        AppointmentTime = new TimeSpan(13, 30, 0),
+                        Status = Models.EnumClasses.AppointmentStatus.Scheduled,
+                        AppointmentServices = new List<AppointmentServices>()
+                    },
+                    new Appointment
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = context.users.First(u => u.FirstName == "Aykut" && u.LastName == "Yamak").Id,
+                        BarberId = context.barbers.First(b => b.FirstName == "Калоян" && b.LastName == "Георгиев").Id,
+                        AppointmentDate = new DateTime(2024,12,12),
+                        AppointmentTime = new TimeSpan(14,30,00),
+                        Status = Models.EnumClasses.AppointmentStatus.Completed,
+                        AppointmentServices = new List<AppointmentServices>()
+                    }
+                };
+                foreach (var appointment in appointments)
+                {
+                    await context.appointments.AddAsync(appointment);
+                }
+                await context.SaveChangesAsync();
 
+            };
+            try
+            {
+                if (!context.appointmentServices.Any())
+                {
+                    var appointmentServices = new AppointmentServices[]
+                    {
+                        new AppointmentServices
+                        {
+                            Id = Guid.NewGuid(),
+                            AppointmentId = context.appointments.First(u=>u.AppointmentDate == new DateTime(2025,4,23) && u.AppointmentTime == new TimeSpan(13,30,00)).Id,
+                            ServiceId = context.services.First(u=>u.ServiceName == "Класическа прическа").Id
+                        },
+                        new AppointmentServices
+                        {
+                            Id = Guid.NewGuid(),
+                            AppointmentId =  context.appointments.First(u => u.AppointmentDate == new DateTime(2024, 12, 12) && u.AppointmentTime == new TimeSpan(14, 30, 00)).Id,
+                            ServiceId = context.services.First(u => u.ServiceName == "Детска прическа").Id
+                        }
+                    };
+                    foreach (var aps in appointmentServices)
+                    {
+                        await context.appointmentServices.AddAsync(aps);
+                    }
+                    await context.SaveChangesAsync();
+                    Console.WriteLine("AppointmentServices seeded successfully");
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error seeding mapping table data: {ex.Message}");
+            }
             if (!context.feedbacks.Any())
             {
                 var feedbacks = new Feedback[]
@@ -204,70 +267,6 @@ namespace DNBarbershop.DataAccess
                 }
                 await context.SaveChangesAsync();
             }
-            if (!context.appointments.Any())
-            {
-                var appointments = new Appointment[]
-                {
-                    new Appointment
-                    {
-                        Id = Guid.NewGuid(),
-                        UserId = context.users.First(u => u.FirstName == "Иван" && u.LastName == "Иванов").Id,
-                        BarberId = context.barbers.First(b => b.FirstName == "Христо" && b.LastName == "Петров").Id,
-                        AppointmentDate = new DateTime(2025, 4, 23),
-                        AppointmentTime = new TimeSpan(13, 30, 0),
-                        Status = Models.EnumClasses.AppointmentStatus.Scheduled
-                    },
-                    new Appointment
-                    {
-                        Id = Guid.NewGuid(),
-                        UserId = context.users.First(u => u.FirstName == "Aykut" && u.LastName == "Yamak").Id,
-                        BarberId = context.barbers.First(b => b.FirstName == "Калоян" && b.LastName == "Георгиев").Id,
-                        AppointmentDate = new DateTime(2024,12,12),
-                        AppointmentTime = new TimeSpan(14,30,00),
-                        Status = Models.EnumClasses.AppointmentStatus.Completed
-                    }
-                };
-                foreach (var appointment in appointments)
-                {
-                    await context.appointments.AddAsync(appointment);
-                }
-                await context.SaveChangesAsync();
-            }
-            if (!context.appointmentServices.Any())
-            {
-                var appointmentServices = new AppointmentServices[]
-                {
-                    new AppointmentServices
-                    {
-                    Id = Guid.NewGuid(),
-                    AppointmentId = context.appointments.First(u => u.AppointmentDate == new DateTime(2024, 12, 12) && u.AppointmentTime == new TimeSpan(14, 30, 00)).Id,
-                    ServiceId = context.services.First(u => u.ServiceName == "Детска прическа").Id
-                    },
-                    new AppointmentServices
-                    {
-                        Id = Guid.NewGuid(),
-                        AppointmentId = context.appointments.First(u=>u.AppointmentDate == new DateTime(2025,1,23)).Id,
-                        ServiceId = context.services.First(u=>u.ServiceName == "Класическа прическа").Id
-                    }
-                };
-                foreach (var appointmentService in appointmentServices)
-                {
-                    await context.appointmentServices.AddAsync(appointmentService);
-                }
-                foreach (var appointment in context.appointments)
-                {
-                    foreach (var appointmentService in appointmentServices)
-                    {
-
-                        if (appointment.Id == appointmentService.AppointmentId)
-                        {
-                            appointment.AppointmentServices.Add(appointmentService);
-                        }
-                    }
-                }
-                await context.SaveChangesAsync();
-            }
         }
-
     }
 }

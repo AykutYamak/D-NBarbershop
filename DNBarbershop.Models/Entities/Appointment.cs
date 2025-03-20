@@ -31,7 +31,7 @@ namespace DNBarbershop.Models.Entities
         [Required]
         public AppointmentStatus Status { get; set; }
 
-        public ICollection<AppointmentServices> AppointmentServices { get; set; } = new HashSet<AppointmentServices>();
+        public ICollection<AppointmentServices> AppointmentServices { get; set; } = new List<AppointmentServices>();
 
     }
 }
