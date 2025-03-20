@@ -9,7 +9,7 @@ namespace DNBarbershop.DataAccess
 {
     public static class DbInitializer
     {
-        public static void Initialize(ApplicationDbContext context)
+        public static async Task Initialize(ApplicationDbContext context)
         {
             context.Database.EnsureCreated();
             if (!context.services.Any())
@@ -61,9 +61,9 @@ namespace DNBarbershop.DataAccess
            };
                 foreach (var service in services)
                 {
-                    context.services.Add(service);
+                    await context.services.AddAsync(service);
                 }
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
 
             if (!context.speciality.Any())
@@ -85,9 +85,9 @@ namespace DNBarbershop.DataAccess
                 };
                 foreach (var speciality in specialities)
                 {
-                    context.speciality.Add(speciality);
+                    await context.speciality.AddAsync(speciality);
                 }
-                context.SaveChanges();
+                await context.SaveChangesAsync();
 
             }
             if (!context.barbers.Any())
@@ -130,9 +130,9 @@ namespace DNBarbershop.DataAccess
 
                 foreach (var barber in barbers)
                 {
-                    context.barbers.Add(barber);
+                    await context.barbers.AddAsync(barber);
                 }
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
 
             if (!context.feedbacks.Any())
@@ -174,15 +174,15 @@ namespace DNBarbershop.DataAccess
             };
                 foreach (var feedback in feedbacks)
                 {
-                    context.feedbacks.Add(feedback);
+                    await context.feedbacks.AddAsync(feedback);
                 }
-                context.SaveChanges();
+                await context.SaveChangesAsync();
 
             }
             if (!context.messages.Any())
             {
                 var messages = new Message[]
-           {
+                {
                     new Message
                     {
                         Email = "gosho@abv.bg",
@@ -197,14 +197,76 @@ namespace DNBarbershop.DataAccess
                         Date = new DateTime(2024, 6, 16),
                         IsRead = false
                     }
-           };
+                };
                 foreach (var message in messages)
                 {
-                    context.messages.Add(message);
+                    await context.messages.AddAsync(message);
                 }
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
+            if (!context.appointments.Any())
+            {
+                var appointments = new Appointment[]
+                {
+                    new Appointment
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = context.users.First(u => u.FirstName == "Иван" && u.LastName == "Иванов").Id,
+                        BarberId = context.barbers.First(b => b.FirstName == "Христо" && b.LastName == "Петров").Id,
+                        AppointmentDate = new DateTime(2025, 4, 23),
+                        AppointmentTime = new TimeSpan(13, 30, 0),
+                        Status = Models.EnumClasses.AppointmentStatus.Scheduled
+                    },
+                    new Appointment
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = context.users.First(u => u.FirstName == "Aykut" && u.LastName == "Yamak").Id,
+                        BarberId = context.barbers.First(b => b.FirstName == "Калоян" && b.LastName == "Георгиев").Id,
+                        AppointmentDate = new DateTime(2024,12,12),
+                        AppointmentTime = new TimeSpan(14,30,00),
+                        Status = Models.EnumClasses.AppointmentStatus.Completed
+                    }
+                };
+                foreach (var appointment in appointments)
+                {
+                    await context.appointments.AddAsync(appointment);
+                }
+                await context.SaveChangesAsync();
+            }
+            if (!context.appointmentServices.Any())
+            {
+                var appointmentServices = new AppointmentServices[]
+                {
+                    new AppointmentServices
+                    {
+                    Id = Guid.NewGuid(),
+                    AppointmentId = context.appointments.First(u => u.AppointmentDate == new DateTime(2024, 12, 12) && u.AppointmentTime == new TimeSpan(14, 30, 00)).Id,
+                    ServiceId = context.services.First(u => u.ServiceName == "Детска прическа").Id
+                    },
+                    new AppointmentServices
+                    {
+                        Id = Guid.NewGuid(),
+                        AppointmentId = context.appointments.First(u=>u.AppointmentDate == new DateTime(2025,1,23)).Id,
+                        ServiceId = context.services.First(u=>u.ServiceName == "Класическа прическа").Id
+                    }
+                };
+                foreach (var appointmentService in appointmentServices)
+                {
+                    await context.appointmentServices.AddAsync(appointmentService);
+                }
+                foreach (var appointment in context.appointments)
+                {
+                    foreach (var appointmentService in appointmentServices)
+                    {
 
+                        if (appointment.Id == appointmentService.AppointmentId)
+                        {
+                            appointment.AppointmentServices.Add(appointmentService);
+                        }
+                    }
+                }
+                await context.SaveChangesAsync();
+            }
         }
 
     }
