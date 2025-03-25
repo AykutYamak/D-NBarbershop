@@ -11,8 +11,8 @@ namespace DNBarbershop.Core.IServices
 {
     public interface IAppointmentService : IGlobalService<Appointment>
     {
-        Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date);
-        Task<IEnumerable<Appointment>> GetAppointmentsByService(string service);
+        Task<bool> IsTimeSlotAvailable(Guid barberId, DateTime date, TimeSpan startTime, int durationMinutes);
         Task<Appointment> GetWithRels(System.Linq.Expressions.Expression<Func<Appointment, bool>> filter);
+        Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval);
     }
 }

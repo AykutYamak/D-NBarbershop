@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using DNBarbershop.DataAccess.AppointmentRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNBarbershop.Core.Services
 {
@@ -58,16 +59,6 @@ namespace DNBarbershop.Core.Services
                 return _appointmentRepository.GetAll();
         }
         
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByDate(DateTime date)
-        {
-            Expression<Func<Appointment, bool>> filter = appointment => appointment.AppointmentDate == date.Date;
-            return await _appointmentRepository.Find(filter);
-        }
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByService(string service)
-        {
-            Expression<Func<Appointment, bool>> filter = appointment => appointment.AppointmentServices.Any(s => s.Service.ServiceName == service);
-            return await _appointmentRepository.Find(filter);
-        }
         public async Task RemoveRange(IEnumerable<Appointment> entities)
         {
             if (entities.Count()<0)
@@ -84,5 +75,37 @@ namespace DNBarbershop.Core.Services
             await _appointmentRepository.Update(appointment);
         }
 
+        public async Task<bool> IsTimeSlotAvailable(Guid barberId, DateTime date, TimeSpan startTime, int durationMinutes)
+        {
+            var endTime = startTime.Add(TimeSpan.FromMinutes(durationMinutes));
+
+            var existingAppointments = await _appointmentRepository.GetAll()
+                .Where(a => a.BarberId == barberId && a.AppointmentDate == date)
+                .Include(a => a.AppointmentServices)
+                .ThenInclude(ap => ap.Service)
+                .ToListAsync();
+
+            foreach (var appointment in existingAppointments)
+            {
+                var appointmentDuration = appointment.AppointmentServices.Sum(s => s.Service.Duration.Hours * 60 + s.Service.Duration.Minutes);
+                var appointmentEnd = appointment.AppointmentTime.Add(TimeSpan.FromMinutes(appointmentDuration));
+
+                if (startTime < appointmentEnd && endTime > appointment.AppointmentTime)
+                    return false;
+            }
+
+            return endTime <= TimeSpan.FromHours(20);
+        }
+
+
+        public async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
+        {
+            var slots = new List<string>();
+            for (var time = start; time < end; time += interval)
+            {
+                slots.Add(time.ToString(@"hh\:mm"));
+            }
+            return slots;
+        }
     }
 }

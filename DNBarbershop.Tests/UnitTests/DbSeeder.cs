@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.DataAccess;
 using DNBarbershop.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace DNBarbershop.Tests.UnitTests
 {
@@ -12,7 +14,16 @@ namespace DNBarbershop.Tests.UnitTests
     {
         public static void SeedDatabase(ApplicationDbContext context)
         {
+            SeedSpecialities(context);
+            SeedServices(context);
+            SeedUsers(context);
+            SeedBarbers(context);
+            SeedMessages(context);
+            SeedFeedbacks(context);
+            SeedAppointments(context);
+            SeedAppointmentServices(context);
 
+            context.SaveChanges();
         }
 
         public static void SeedUsers(ApplicationDbContext context)
@@ -53,6 +64,7 @@ namespace DNBarbershop.Tests.UnitTests
                 ExperienceYears = 6,
                 ProfilePictureUrl = "https://thebarbershop.bg/wp-content/uploads/2024/06/the_barber_shop-173-scaled.jpg"
             };
+            context.barbers.Add(barber);
         }
         public static void SeedServices(ApplicationDbContext context)
         {
@@ -73,15 +85,17 @@ namespace DNBarbershop.Tests.UnitTests
             };
             context.speciality.Add(speciality);
         }
-        public static void SeedMessages()
+        public static void SeedMessages(ApplicationDbContext context)
         {
             var message = new Message()
             {
-                Email = "gosho@abv.bg",
+                Email = "ivan@gmail.com",
                 Content = "Не ми хареса прическата, която Иван Георгиев ми направи.",
                 Date = new DateTime(2024, 6, 15),
-                IsRead = false
+                IsRead = false,
+                UserId = context.users.First(u => u.FirstName == "Иван" && u.LastName == "Иванов").Id
             };
+            context.messages.Add(message);
         }
         public static void SeedFeedbacks(ApplicationDbContext context)
         {
@@ -93,13 +107,31 @@ namespace DNBarbershop.Tests.UnitTests
                 Comment = "Добро обслужване, но не бях напълно удовлетворен.",
                 FeedBackDate = new DateTime(2024, 6, 10, 15, 54, 23)
             };
+            context.feedbacks.Add(feedback);
         }
-        //public static void SeedAppointments(ApplicationDbContext context)
-        //{
-        //    var appointment = new Appointment()
-        //    {
-
-        //    }
-        //}
+        public static void SeedAppointments(ApplicationDbContext context)
+        {
+            var appointment = new Appointment()
+            {
+                Id = Guid.NewGuid(),
+                UserId = context.users.First(u => u.FirstName == "Иван" && u.LastName == "Иванов").Id,
+                BarberId = context.barbers.First(b => b.FirstName == "Христо" && b.LastName == "Петров").Id,
+                AppointmentDate = new DateTime(2025, 4, 23),
+                AppointmentTime = new TimeSpan(13, 30, 0),
+                Status = Models.EnumClasses.AppointmentStatus.Scheduled,
+                AppointmentServices = new List<AppointmentServices>()
+            };
+            context.appointments.Add(appointment);
+        }
+        public static void SeedAppointmentServices(ApplicationDbContext context)
+        {
+            var appointmentService = new AppointmentServices()
+            {
+                Id = Guid.NewGuid(),
+                AppointmentId = context.appointments.First(u => u.AppointmentDate == new DateTime(2025, 4, 23) && u.AppointmentTime == new TimeSpan(13, 30, 00)).Id,
+                ServiceId = context.services.First(u => u.ServiceName == "Класическа прическа").Id
+            };
+            context.appointmentServices.Add(appointmentService);
+        }
     }
 }

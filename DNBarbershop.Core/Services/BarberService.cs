@@ -51,11 +51,7 @@ namespace DNBarbershop.Core.Services
         {
             return _barberRepository.GetAll();
         }
-        public async Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality)
-        {
-            Expression<Func<Barber, bool>> filter = barber => barber.Speciality.Type == speciality;
-            return await _barberRepository.Find(filter);
-        }
+        
         public async Task RemoveRange(IEnumerable<Barber> entities)
         {
             if (entities.Count() < 0)
@@ -72,16 +68,7 @@ namespace DNBarbershop.Core.Services
             await _barberRepository.Update(barber);
         }
 
-        public async Task<IEnumerable<Barber>> GetBarbersWithExperienceAbove(int minExperienceYears)
-        {
-            Expression<Func<Barber, bool>> filter = barber => barber.ExperienceYears >= minExperienceYears;
-            return await _barberRepository.Find(filter);
-        }
 
-        public async Task<IEnumerable<Barber>> SearchBarberByName(string name)
-        {
-            Expression<Func<Barber, bool>> filter = barber => barber.FirstName == name || barber.LastName == name;
-            return await _barberRepository.Find(filter);
-        }
+       
     }
 }

@@ -33,27 +33,6 @@ namespace DNBarbershop.Controllers
             _userManager = userManager;
             _appointmentServiceService = appointmentServiceService;
         }
-        private async Task<bool> IsTimeSlotAvailable(Guid barberId, DateTime date, TimeSpan startTime, int durationMinutes)
-        {
-            var endTime = startTime.Add(TimeSpan.FromMinutes(durationMinutes));
-
-            var existingAppointments = await _appointmentService.GetAll()
-                .Where(a => a.BarberId == barberId && a.AppointmentDate == date)
-                .Include(a => a.AppointmentServices)
-                .ThenInclude(ap => ap.Service)
-                .ToListAsync();
-
-            foreach (var appointment in existingAppointments)
-            {
-                var appointmentDuration = appointment.AppointmentServices.Sum(s => s.Service.Duration.Hours * 60 + s.Service.Duration.Minutes);
-                var appointmentEnd = appointment.AppointmentTime.Add(TimeSpan.FromMinutes(appointmentDuration));
-
-                if (startTime < appointmentEnd && endTime > appointment.AppointmentTime)
-                    return false;
-            }
-
-            return endTime <= TimeSpan.FromHours(20);
-        }
         [HttpGet]
         public async Task<IActionResult> GetAvailableTimeSlots(Guid barberId, DateTime appointmentDate, int totalDurationMinutes)
         {
@@ -81,7 +60,7 @@ namespace DNBarbershop.Controllers
             var allSlots = new List<string>();
             if (startTime < endTime)
             {
-                allSlots = await GenerateTimeSlots(startTime, endTime, interval);
+                allSlots = await _appointmentService.GenerateTimeSlots(startTime, endTime, interval);
             }
 
             var existingAppointments = await _appointmentService.GetAll()
@@ -111,16 +90,6 @@ namespace DNBarbershop.Controllers
 
             return Json(availableSlots);
         }
-
-        private async Task<List<string>> GenerateTimeSlots(TimeSpan start, TimeSpan end, TimeSpan interval)
-        {
-            var slots = new List<string>();
-            for (var time = start; time < end; time += interval)
-            {
-                slots.Add(time.ToString(@"hh\:mm"));
-            }
-            return slots;
-        }
         private async Task PopulateViewBags()
         {
             var barbers = _barberService.GetAll();
@@ -134,11 +103,11 @@ namespace DNBarbershop.Controllers
                 Text = s.ServiceName
             }).ToList();
 
-            var allSlots = await GenerateTimeSlots(TimeSpan.FromHours(8), TimeSpan.FromHours(20, 30, 0, 0, 0), TimeSpan.FromMinutes(30));
+            var allSlots = await _appointmentService.GenerateTimeSlots(TimeSpan.FromHours(8), TimeSpan.FromHours(20, 30, 0, 0, 0), TimeSpan.FromMinutes(30));
 
             var bookedSlots = _appointmentService
                 .GetAll()
-                .Where(a => a.AppointmentDate == DateTime.Today) // Adjust this to use the selected date
+                .Where(a => a.AppointmentDate == DateTime.Today) 
                 .Select(a => a.AppointmentTime.ToString(@"hh\:mm"))
                 .ToList();
 
@@ -257,7 +226,7 @@ namespace DNBarbershop.Controllers
                     totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
                 }
 
-                var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
+                var isAvailable = await _appointmentService.IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
                 if (!isAvailable)
                 {
                     TempData["error"] = "Този час не е свободен.";
@@ -388,7 +357,7 @@ namespace DNBarbershop.Controllers
                     totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
                 }
 
-                var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
+                var isAvailable = await _appointmentService.IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
                 if (!isAvailable)
                 {
                     TempData["error"] = "Този час не е свободен.";
@@ -504,7 +473,7 @@ namespace DNBarbershop.Controllers
                     totalDurationMinutes += service.Duration.Hours * 60 + service.Duration.Minutes;
                 }
 
-                var isAvailable = await IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
+                var isAvailable = await _appointmentService.IsTimeSlotAvailable(model.BarberId, model.AppointmentDate, model.AppointmentTime, totalDurationMinutes);
                 if (!isAvailable)
                 {
                     TempData["error"] = "Този час не е свободен.";

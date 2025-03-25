@@ -39,6 +39,10 @@ namespace DNBarbershop.Core.Services
         }
 
 
+        public async Task Update(AppointmentServices entity)
+        {
+            await _Repository.Update(entity);
+        }
         public Task Delete(Guid id)
         {
             throw new NotImplementedException();
@@ -64,10 +68,6 @@ namespace DNBarbershop.Core.Services
             throw new NotImplementedException();
         }
 
-        public async Task Update(AppointmentServices entity)
-        {
-            await _Repository.Update(entity);
-        }
         
     }
 }

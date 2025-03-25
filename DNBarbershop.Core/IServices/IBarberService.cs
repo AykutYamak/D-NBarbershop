@@ -11,8 +11,6 @@ namespace DNBarbershop.Core.IServices
 {
     public interface IBarberService:IGlobalService<Barber>
     {
-        Task<IEnumerable<Barber>> GetBarberBySpeciality(string speciality);
-        Task<IEnumerable<Barber>> GetBarbersWithExperienceAbove(int minExperienceYears);
-        Task<IEnumerable<Barber>> SearchBarberByName(string name);
+
     }
 }

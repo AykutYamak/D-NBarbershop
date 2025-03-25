@@ -9,6 +9,5 @@ namespace DNBarbershop.Core.IServices
 {
     public interface IServiceService:IGlobalService<DNBarbershop.Models.Entities.Service>
     {
-        Task<IEnumerable<DNBarbershop.Models.Entities.Service>> GetServiceUnderPrice(decimal price);
     }
 }
