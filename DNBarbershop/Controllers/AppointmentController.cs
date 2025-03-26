@@ -123,14 +123,14 @@ namespace DNBarbershop.Controllers
             {
                 new SelectListItem { Value = "1", Text = AppointmentStatus.Scheduled.ToString()},
                 new SelectListItem { Value = "2", Text = AppointmentStatus.Completed.ToString()},
-                new SelectListItem { Value = "3", Text = AppointmentStatus.Canceled.ToString()}
+                new SelectListItem { Value = "3", Text = AppointmentStatus.Cancelled.ToString()}
             };
         }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(AppointmentFilterViewModel? filter)
         {
-            var list = _appointmentService.GetAll();
+            var list = _appointmentService.GetAll().OrderByDescending(x=>x.AppointmentDate);
             var query = list.AsQueryable();
             if (filter.UserId != null)
             {
@@ -153,14 +153,14 @@ namespace DNBarbershop.Controllers
             .ThenInclude(ap => ap.Service)
             .ToList();
             foreach (var item in appointments)
-            {
-                if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Canceled)
+            {   
+                if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Cancelled)
                 {
                     item.Status = AppointmentStatus.Completed;
                 }
-                else if (item.Status==AppointmentStatus.Canceled)
+                else if (item.Status==AppointmentStatus.Cancelled)
                 {
-                    item.Status = AppointmentStatus.Canceled;
+                    item.Status = AppointmentStatus.Cancelled;
                 }
                 else
                 {

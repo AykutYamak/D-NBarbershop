@@ -30,7 +30,7 @@ namespace DNBarbershop.Tests.UnitTests.Services
         }
 
         [TestCase(AppointmentStatus.Scheduled)]
-        [TestCase(AppointmentStatus.Canceled)]
+        [TestCase(AppointmentStatus.Cancelled)]
         [TestCase(AppointmentStatus.Completed)]
         public async Task Add_AppointmentWithDifferentStatuses_ShouldCallRepositoryAdd(AppointmentStatus status)
         {
@@ -60,7 +60,7 @@ namespace DNBarbershop.Tests.UnitTests.Services
         }
 
         [TestCase(AppointmentStatus.Scheduled, "2025-04-23")]
-        [TestCase(AppointmentStatus.Canceled, "2025-12-31")]
+        [TestCase(AppointmentStatus.Cancelled, "2025-12-31")]
         [TestCase(AppointmentStatus.Completed, "2026-01-15")]
         public async Task Update_AppointmentWithDifferentStatuses_ShouldCallRepositoryUpdate(
             AppointmentStatus status, string dateString)

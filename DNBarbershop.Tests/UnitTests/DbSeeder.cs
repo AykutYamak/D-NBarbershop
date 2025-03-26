@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.DataAccess;
 using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.EnumClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
@@ -118,7 +119,7 @@ namespace DNBarbershop.Tests.UnitTests
                 BarberId = context.barbers.First(b => b.FirstName == "Христо" && b.LastName == "Петров").Id,
                 AppointmentDate = new DateTime(2025, 4, 23),
                 AppointmentTime = new TimeSpan(13, 30, 0),
-                Status = Models.EnumClasses.AppointmentStatus.Scheduled,
+                Status = AppointmentStatus.Scheduled,
                 AppointmentServices = new List<AppointmentServices>()
             };
             context.appointments.Add(appointment);

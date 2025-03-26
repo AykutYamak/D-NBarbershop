@@ -10,7 +10,7 @@ namespace DNBarbershop.Models.EnumClasses
     {
         Scheduled = 1,
         Completed = 2,
-        Canceled = 3
+        Cancelled = 3
 
     }
 }

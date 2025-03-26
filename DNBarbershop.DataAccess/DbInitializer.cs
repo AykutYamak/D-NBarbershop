@@ -154,8 +154,8 @@ namespace DNBarbershop.DataAccess
                         Id = Guid.NewGuid(),
                         UserId = context.users.First(u => u.FirstName == "Aykut" && u.LastName == "Yamak").Id,
                         BarberId = context.barbers.First(b => b.FirstName == "Калоян" && b.LastName == "Георгиев").Id,
-                        AppointmentDate = new DateTime(2024,12,12),
-                        AppointmentTime = new TimeSpan(14,30,00),
+                        AppointmentDate = new DateTime(2025,3,21),
+                        AppointmentTime = new TimeSpan(8,00,00),
                         Status = Models.EnumClasses.AppointmentStatus.Completed,
                         AppointmentServices = new List<AppointmentServices>()
                     }

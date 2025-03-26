@@ -148,7 +148,7 @@ namespace DNBarbershop.Controllers
                 .ToList();
             foreach (var item in appointments)
             {
-                if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Canceled)
+                if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Cancelled)
                 {
                     item.Status = AppointmentStatus.Completed;
                 }

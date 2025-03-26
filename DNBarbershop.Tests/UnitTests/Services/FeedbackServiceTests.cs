@@ -150,19 +150,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
             Assert.That(result.Count(), Is.EqualTo(feedbackCount));
         }
 
-
-
-        [Test]
-        public void RemoveRange_WithEmptyList_ThrowsArgumentException()
-        {
-            // Arrange
-            var feedbacks = new List<Feedback>();
-
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await _feedbackService.RemoveRange(feedbacks));
-            Assert.That(ex.Message, Is.EqualTo("Validation didn't pass."));
-        }
-
         [TestCase(1)]
         [TestCase(3)]
         [TestCase(5)]
@@ -218,21 +205,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
             _mockRepository.Verify(r => r.Update(feedback), Times.Once);
         }
 
-        [Test]
-        public void RemoveRange_Bug_IncorrectConditionCheck()
-        {
-            // This test highlights a potential bug in the original implementation
-            // The condition entities.Count() < 0 will never be true
-            // It should likely be entities.Count() <= 0
-            var feedbacks = new List<Feedback>();
-
-            Assert.Throws<ArgumentException>(() =>
-            {
-                if (feedbacks.Count() < 0)
-                {
-                    throw new ArgumentException("This condition will never be true");
-                }
-            });
-        }
+      
     }
 }

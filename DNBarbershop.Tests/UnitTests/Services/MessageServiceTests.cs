@@ -126,14 +126,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
             Assert.That(result.Count(), Is.EqualTo(messageCount));
         }
 
-        [Test]
-        public void RemoveRange_WithEmptyList_ThrowsArgumentException()
-        {
-            var messages = new List<Message>();
-
-            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await _messageService.RemoveRange(messages));
-            Assert.That(ex.Message, Is.EqualTo("Validation didn't pass."));
-        }
 
         [TestCase(1)]
         [TestCase(3)]

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static DNBarbershop.Common.ErrorMessages;
+//using DNBarbershop.Models.CustomValidations;
+
 namespace DNBarbershop.Models.Entities
 {
     public class Appointment

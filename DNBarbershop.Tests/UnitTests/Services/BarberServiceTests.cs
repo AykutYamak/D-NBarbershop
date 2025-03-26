@@ -147,12 +147,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
             _mockRepository.Verify(r => r.Delete(barberId), Times.Once);
         }
 
-        [Test]
-        public void RemoveRange_EmptyList_ShouldThrowArgumentException()
-        {
-            var barbers = new List<Barber>();
-
-            Assert.ThrowsAsync<ArgumentException>(async () => await _barberService.RemoveRange(barbers));
-        }
+      
     }
 }

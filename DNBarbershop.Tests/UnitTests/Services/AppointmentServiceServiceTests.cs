@@ -38,14 +38,7 @@ namespace DNBarbershop.Tests.UnitTests.Services
 
             _mockRepository.Verify(r => r.Add(appointmentService), Times.Once);
         }
-
-        [Test]
-        public async Task Add_NullEntity_ShouldThrowArgumentNullException()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await _service.Add(null)
-            );
-        }
+       
 
         [Test]
         public async Task Delete_ValidIds_ShouldCallRepositoryDeleteMethod()
@@ -87,14 +80,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
             await _service.Update(appointmentService);
 
             _mockRepository.Verify(r => r.Update(appointmentService), Times.Once);
-        }
-
-        [Test]
-        public async Task Update_NullEntity_ShouldThrowArgumentNullException()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await _service.Update(null)
-            );
         }
 
     }

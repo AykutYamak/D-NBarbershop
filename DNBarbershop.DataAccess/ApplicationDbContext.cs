@@ -8,7 +8,21 @@ namespace DNBarbershop.DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
+        private bool seedDb;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, bool seedDb = true) : base(options)
+        {
+            if (this.Database.IsRelational())
+            {
+                this.Database.Migrate();
+            }
+            else
+            {
+                this.Database.EnsureCreated();
+            }
+            this.seedDb = seedDb;
+        }
+
         public DbSet<Appointment> appointments { get; set; }    
         public DbSet<AppointmentServices> appointmentServices { get; set; }
         public DbSet<Barber> barbers { get; set; }
