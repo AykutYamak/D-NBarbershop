@@ -11,180 +11,140 @@ namespace DNBarbershop.Tests.Models
     public class UserModelTests
     {
         private User _user;
+        private ValidationContext _validationContext;
 
         [SetUp]
         public void Setup()
         {
             _user = new User();
+            _validationContext = new ValidationContext(_user, serviceProvider: null, items: null);
         }
 
         [Test]
-        public void FirstName_RequiredValidation_ShouldFail_WhenNull()
+        public void FirstName_WhenNull_ShouldFailValidation()
         {
-            // Arrange
-            var validationContext = new ValidationContext(_user);
+            _user.FirstName = null;
+
             var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
 
-            // Act
-            var isValid = Validator.TryValidateProperty(
-                null,
-                validationContext,
-                validationResults,
-                typeof(User).GetProperty(nameof(User.FirstName))
-            );
-
-            // Assert
-            Assert.IsFalse(isValid, "FirstName should be required");
+            Assert.That(isValid.Equals(false) || isValid == false);
+            Assert.That(validationResults.Count, Is.GreaterThan(0));
             Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(ErrorMessages.RequiredErrorMessage));
         }
 
         [Test]
-        public void FirstName_RequiredValidation_ShouldFail_WhenEmpty()
+        public void FirstName_WhenEmptyString_ShouldFailValidation()
         {
-            // Arrange
             _user.FirstName = string.Empty;
-            var validationContext = new ValidationContext(_user);
+            _user.LastName = "Doe"; // To prevent other validation failures
+
             var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
 
-            // Act
-            var isValid = Validator.TryValidateProperty(
-                _user.FirstName,
-                validationContext,
-                validationResults,
-                typeof(User).GetProperty(nameof(User.FirstName))
-            );
-
-            // Assert
-            Assert.IsFalse(isValid, "FirstName should not be empty");
+            Assert.That(isValid.Equals(false) || isValid == false);
+            Assert.That(validationResults.Count, Is.GreaterThan(0));
             Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(ErrorMessages.RequiredErrorMessage));
         }
 
         [Test]
-        public void FirstName_StringLengthValidation_ShouldFail_WhenExceedsMaxLength()
+        public void FirstName_WhenTooLong_ShouldFailValidation()
         {
-            // Arrange
-            _user.FirstName = new string('A', 101);
-            var validationContext = new ValidationContext(_user);
+            _user.FirstName = new string('a', 101);
+            _user.LastName = "Doe"; 
+
             var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
 
-            // Act
-            var isValid = Validator.TryValidateProperty(
-                _user.FirstName,
-                validationContext,
-                validationResults,
-                typeof(User).GetProperty(nameof(User.FirstName))
-            );
-
-            // Assert
-            Assert.IsFalse(isValid, "FirstName should not exceed 100 characters");
-            Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(nameof(ErrorMessages.MaxLengthExceededErrorMessage)));
+            Assert.That(isValid.Equals(false) || isValid == false);
+            Assert.That(validationResults.Count, Is.GreaterThan(0));
+            Assert.That(validationResults[0].ErrorMessage.Equals("MaxLengthExceededErrorMessage"));
         }
 
         [Test]
-        public void LastName_RequiredValidation_ShouldFail_WhenNull()
+        public void FirstName_WhenValidLength_ShouldPassValidation()
         {
-            // Arrange
-            var validationContext = new ValidationContext(_user);
+            _user.FirstName = "John";
+            _user.LastName = "Doe";
+
             var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
 
-            // Act
-            var isValid = Validator.TryValidateProperty(
-                null,
-                validationContext,
-                validationResults,
-                typeof(User).GetProperty(nameof(User.LastName))
-            );
-
-            // Assert
-            Assert.IsFalse(isValid, "LastName should be required");
-            Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(ErrorMessages.RequiredErrorMessage));
+            Assert.That(isValid.Equals(true) || isValid == true);
+            Assert.That(validationResults.Count, Is.EqualTo(0));
         }
 
         [Test]
-        public void LastName_RequiredValidation_ShouldFail_WhenEmpty()
+        public void LastName_WhenNull_ShouldFailValidation()
         {
-            // Arrange
+            _user.LastName = null;
+
+            var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
+
+            Assert.That(isValid.Equals(false) || isValid == false);
+            Assert.That(validationResults.Count, Is.GreaterThan(0));
+            Assert.That(validationResults[0].ErrorMessage.Equals("This field is required!"));
+        }
+
+        [Test]
+        public void LastName_WhenEmptyString_ShouldFailValidation()
+        {
+            _user.FirstName = "John"; 
             _user.LastName = string.Empty;
-            var validationContext = new ValidationContext(_user);
+
             var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
 
-            // Act
-            var isValid = Validator.TryValidateProperty(
-                _user.LastName,
-                validationContext,
-                validationResults,
-                typeof(User).GetProperty(nameof(User.LastName))
-            );
-
-            // Assert
-            Assert.IsFalse(isValid, "LastName should not be empty");
+            Assert.That(isValid.Equals(false) || isValid == false);
+            Assert.That(validationResults.Count, Is.GreaterThan(0));
             Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(ErrorMessages.RequiredErrorMessage));
         }
 
         [Test]
-        public void LastName_StringLengthValidation_ShouldFail_WhenExceedsMaxLength()
+        public void LastName_WhenTooLong_ShouldFailValidation()
         {
-            // Arrange
-            _user.LastName = new string('B', 101);
-            var validationContext = new ValidationContext(_user);
+            _user.FirstName = "John"; 
+            _user.LastName = new string('a', 101);
+
             var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
 
-            // Act
-            var isValid = Validator.TryValidateProperty(
-                _user.LastName,
-                validationContext,
-                validationResults,
-                typeof(User).GetProperty(nameof(User.LastName))
-            );
-
-            // Assert
-            Assert.IsFalse(isValid, "LastName should not exceed 100 characters");
-            Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(nameof(ErrorMessages.MaxLengthExceededErrorMessage)));
+            Assert.That(isValid.Equals(false) || isValid == false);
+            Assert.That(validationResults.Count, Is.GreaterThan(0));
+            Assert.That(validationResults[0].ErrorMessage.Equals("MaxLengthExceededErrorMessage"));
         }
 
         [Test]
-        public void User_CollectionProperties_ShouldInitializeEmpty()
+        public void LastName_WhenValidLength_ShouldPassValidation()
         {
-            // Arrange & Act
-            var user = new User();
+            _user.FirstName = "John";
+            _user.LastName = "Doe";
 
-            // Assert
-            Assert.IsNotNull(user.Appointments);
-            Assert.IsNotNull(user.Feedbacks);
-            Assert.IsNotNull(user.Messages);
-            Assert.That(user.Appointments, Is.Empty);
-            Assert.That(user.Feedbacks, Is.Empty);
-            Assert.That(user.Messages, Is.Empty);
+            var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
+
+            Assert.That(isValid.Equals(true) || isValid == true);
+            Assert.That(validationResults.Count, Is.EqualTo(0));
         }
 
         [Test]
-        public void User_CollectionProperties_ShouldAllowAddingItems()
+        public void Collections_ShouldBeInitializedAsEmptyHashSet()
         {
-            // Arrange
-            var user = new User
-            {
-                FirstName = "John",
-                LastName = "Doe"
-            };
+            _user.FirstName = "John";
+            _user.LastName = "Doe";
 
-            var appointment = new Appointment();
-            var feedback = new Feedback();
-            var message = new Message();
+            Assert.That(_user.Appointments, Is.Not.Null);
+            Assert.That(_user.Appointments, Is.InstanceOf<HashSet<Appointment>>());
+            Assert.That(_user.Appointments.Count, Is.EqualTo(0));
 
-            // Act
-            user.Appointments.Add(appointment);
-            user.Feedbacks.Add(feedback);
-            user.Messages.Add(message);
+            Assert.That(_user.Feedbacks, Is.Not.Null);
+            Assert.That(_user.Feedbacks, Is.InstanceOf<HashSet<Feedback>>());
+            Assert.That(_user.Feedbacks.Count, Is.EqualTo(0));
 
-            // Assert
-            Assert.That(user.Appointments, Does.Contain(appointment));
-            Assert.That(user.Feedbacks, Does.Contain(feedback));
-            Assert.That(user.Messages, Does.Contain(message));
+            Assert.That(_user.Messages, Is.Not.Null);
+            Assert.That(_user.Messages, Is.InstanceOf<HashSet<Message>>());
+            Assert.That(_user.Messages.Count, Is.EqualTo(0));
         }
     }
-
-    // Placeholder classes for compilation
-    public class Appointment { }
-    public class Feedback { }
-    public class Message { }
 }

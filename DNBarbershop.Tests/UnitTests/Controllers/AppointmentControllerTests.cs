@@ -1,282 +1,188 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Security.Claims;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Mvc;
-//using Moq;
-//using NUnit.Framework;
-//using DNBarbershop.Controllers;
-//using DNBarbershop.Models.Entities;
-//using DNBarbershop.Models.ViewModels.Appointments;
-//using DNBarbershop.Core.IServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using DNBarbershop.Controllers;
+using DNBarbershop.Core.IServices;
+using DNBarbershop.Models.Entities;
+using DNBarbershop.Models.ViewModels.Appointments;
+using DNBarbershop.Models.EnumClasses;
+using System.Linq.Expressions;
 
-//namespace DNBarbershop.Tests.Controllers
-//{
-//    [TestFixture]
-//    public class AppointmentControllerTests
-//    {
-//        private Mock<UserManager<User>> _mockUserManager;
-//        private Mock<IAppointmentService> _mockAppointmentService;
-//        private Mock<IBarberService> _mockBarberService;
-//        private Mock<IServiceService> _mockServiceService;
-//        private Mock<IUserService> _mockUserService;
-//        private Mock<IAppointmentServiceService> _mockAppointmentServiceService;
-//        private Mock<AppointmentController> _appointmentController;
-//        private User _currentUser;
+namespace DNBarbershop.Tests.Controllers
+{
+    [TestFixture]
+    public class AppointmentControllerServiceMethodTests
+    {
+        private Mock<UserManager<User>> _userManagerMock;
+        private Mock<IAppointmentService> _appointmentServiceMock;
+        private Mock<IBarberService> _barberServiceMock;
+        private Mock<IServiceService> _serviceServiceMock;
+        private Mock<IUserService> _userServiceMock;
+        private Mock<IAppointmentServiceService> _appointmentServiceServiceMock;
+        private AppointmentController _controller;
 
-//        [SetUp]
-//        public void Setup()
-//        {
-//            // Create a mock user store
-//            var userStoreMock = new Mock<IUserStore<User>>();
+        [SetUp]
+        public void Setup()
+        {
+            // Setup mocks
+            _appointmentServiceMock = new Mock<IAppointmentService>();
+            _barberServiceMock = new Mock<IBarberService>();
+            _serviceServiceMock = new Mock<IServiceService>();
+            _userServiceMock = new Mock<IUserService>();
+            _appointmentServiceServiceMock = new Mock<IAppointmentServiceService>();
+            var store = new Mock<IUserStore<User>>();
+            _userManagerMock = new Mock<UserManager<User>>(
+                store.Object,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+            // Create controller
+            _controller = new AppointmentController(
+                _userManagerMock.Object,
+                _appointmentServiceMock.Object,
+                _barberServiceMock.Object,
+                _serviceServiceMock.Object,
+                _userServiceMock.Object,
+                _appointmentServiceServiceMock.Object
+            );
+        }
 
-//            // Mock UserManager with a mock user store
-//            _mockUserManager = new Mock<UserManager<User>>(
-//                userStoreMock.Object,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null);
+        [Test]
+        public async Task GetAvailableTimeSlots_ShouldReturnJsonResult()
+        {
+            var barberId = Guid.NewGuid();
+            var appointmentDate = DateTime.Today.AddDays(1);
+            int totalDuration = 30;
 
-//            // Initialize other mock services
-//            _mockAppointmentService = new Mock<IAppointmentService>();
-//            _mockBarberService = new Mock<IBarberService>();
-//            _mockServiceService = new Mock<IServiceService>();
-//            _mockUserService = new Mock<IUserService>();
-//            _mockAppointmentServiceService = new Mock<IAppointmentServiceService>();
+            var existingAppointments = new List<Appointment>();
+            _appointmentServiceMock
+                .Setup(x => x.GetAll())
+                .Returns(existingAppointments.AsQueryable());
 
-//            // Create a test user
-//            _currentUser = new User
-//            {
-//                Id = Guid.NewGuid().ToString(),
-//                FirstName = "Test",
-//                LastName = "User",
-//                Appointments = new List<Appointment>()
-//            };
+            var timeSlots = new List<string> { "09:00", "09:30", "10:00" };
+            _appointmentServiceMock
+                .Setup(x => x.GenerateTimeSlots(
+                    It.IsAny<TimeSpan>(),
+                    It.IsAny<TimeSpan>(),
+                    It.IsAny<TimeSpan>()))
+                .ReturnsAsync(timeSlots);
 
-//            // Setup user manager to return current user
-//            _mockUserManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-//                .ReturnsAsync(_currentUser);
+            var result = await _controller.GetAvailableTimeSlots(barberId, appointmentDate, totalDuration);
 
-//            // Create controller with mocked dependencies
-//            _appointmentController = new Mock<AppointmentController>(
-//                _mockUserManager.Object,
-//                _mockAppointmentService.Object,
-//                _mockBarberService.Object,
-//                _mockServiceService.Object,
-//                _mockUserService.Object,
-//                _mockAppointmentServiceService.Object);
-//        }
+            Assert.That(result.Equals(null) || result == null);
+            Assert.That(result, Is.InstanceOf<RedirectToActionResult>());
+        }
 
-//        [Test]
-//        public async Task MakeAppointment_ValidAppointment_ReturnsRedirectToDetailsAction()
-//        {
-//            // Arrange
-//            var model = new AppointmentCreateViewModel
-//            {
-//                UserId = _currentUser.Id,
-//                BarberId = Guid.NewGuid(),
-//                AppointmentDate = DateTime.Now.AddDays(1),
-//                AppointmentTime = TimeSpan.FromHours(10),
-//                SelectedServiceIds = new List<Guid> { Guid.NewGuid() }
-//            };
+        [Test]
+        public async Task Index_ShouldReturnViewWithAppointmentFilterViewModel()
+        {
+            // Arrange
+            var filter = new AppointmentFilterViewModel();
+            var appointments = new List<Appointment>
+            {
+                new Appointment
+                {
+                    Id = Guid.NewGuid(),
+                    AppointmentDate = DateTime.Today,
+                    AppointmentTime = TimeSpan.FromHours(10),
+                    Status = AppointmentStatus.Scheduled
+                }
+            };
 
-//            var service = new Service
-//            {
-//                Id = model.SelectedServiceIds.First(),
-//                Duration = TimeSpan.FromMinutes(30)
-//            };
+            _appointmentServiceMock
+                .Setup(x => x.GetAll())
+                .Returns(appointments.AsQueryable());
 
-//            // Setup mocks
-//            _mockServiceService.Setup(s => s.GetAll()).Returns(new List<Service> { service }.AsQueryable());
-//            _mockBarberService.Setup(s => s.GetAll()).Returns(new List<Barber> { new Barber { Id = model.BarberId } }.AsQueryable());
-//            _mockAppointmentService.Setup(s => s.GetAll()).Returns(new List<Appointment>().AsQueryable());
-//            _mockAppointmentService.Setup(s => s.Add(It.IsAny<Appointment>())).Returns(Task.CompletedTask);
+            _barberServiceMock
+                .Setup(x => x.GetAll())
+                .Returns(
+                new List<Barber>()
+                {
+                    new Barber { Id = Guid.NewGuid(), FirstName = "John", LastName = "Doe" }
+                }.ToList);
 
-//            // Act
-//            var result = await _appointmentController.Object.MakeAppointment(model) as RedirectToActionResult;
+            _userServiceMock
+                .Setup(x => x.GetAll())
+                .Returns(
+                new List<User>
+                {
+                    new User { Id = "user1", FirstName = "Jane", LastName = "Smith" }
+                }.ToList);
 
-//            // Assert
-//            Assert.Multiple(() =>
-//            {
-//                Assert.That(result, Is.Not.Null);
-//                Assert.That(result.ActionName, Is.EqualTo("Details"));
-//                Assert.That(result.ControllerName, Is.EqualTo("User"));
-//            });
-//        }
+            // Act
+            var result = await _controller.Index(filter);
 
-//        [Test]
-//        public async Task MakeAppointment_NoServices_ReturnsSameView()
-//        {
-//            // Arrange
-//            var model = new AppointmentCreateViewModel
-//            {
-//                UserId = _currentUser.Id,
-//                BarberId = Guid.NewGuid(),
-//                AppointmentDate = DateTime.Now.AddDays(1),
-//                AppointmentTime = TimeSpan.FromHours(10),
-//                SelectedServiceIds = null
-//            };
+            // Assert
+            Assert.That(result != null);
 
-//            // Act
-//            var result = await _appointmentController.Object.MakeAppointment(model) as ViewResult;
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult.Model != null);
+            Assert.That(viewResult.Model, Is.InstanceOf<AppointmentFilterViewModel>());
+        }
 
-//            // Assert
-//            Assert.Multiple(() =>
-//            {
-//                Assert.That(result, Is.Not.Null);
-//                Assert.That(result.ViewName, Is.EqualTo("MakeAppointment"));
-//            });
-//        }
+        [Test]
+        public async Task MakeAppointment_WithValidData_ShouldCreateAppointment()
+        {
+            // Arrange
+            var currentUser = new User
+            {
+                Id = "user1",
+                Appointments = new HashSet<Appointment>()
+            };
 
-//        [Test]
-//        public async Task MakeAppointment_PastDateTime_ReturnsSameView()
-//        {
-//            // Arrange
-//            var model = new AppointmentCreateViewModel
-//            {
-//                UserId = _currentUser.Id,
-//                BarberId = Guid.NewGuid(),
-//                AppointmentDate = DateTime.Now.AddDays(-1),
-//                AppointmentTime = TimeSpan.FromHours(10),
-//                SelectedServiceIds = new List<Guid> { Guid.NewGuid() }
-//            };
+            _userManagerMock
+                .Setup(x => x.GetUserAsync(It.IsAny<System.Security.Claims.ClaimsPrincipal>()))
+                .ReturnsAsync(currentUser);
 
-//            // Act
-//            var result = await _appointmentController.Object.MakeAppointment(model) as ViewResult;
+            var service = new Service
+            {
+                Id = Guid.NewGuid(),
+                Duration = TimeSpan.FromMinutes(30)
+            };
 
-//            // Assert
-//            Assert.Multiple(() =>
-//            {
-//                Assert.That(result, Is.Not.Null);
-//                Assert.That(result.ViewName, Is.EqualTo("MakeAppointment"));
-//            });
-//        }
+            _serviceServiceMock
+                .Setup(x => x.Get(It.IsAny<Expression<Func<Service, bool>>>()))
+                .ReturnsAsync(service);
 
-//        [Test]
-//        public async Task Edit_ValidAppointment_ReturnsRedirectToIndexAction()
-//        {
-//            // Arrange
-//            var existingAppointment = new Appointment
-//            {
-//                Id = Guid.NewGuid(),
-//                UserId = _currentUser.Id,
-//                BarberId = Guid.NewGuid(),
-//                AppointmentDate = DateTime.Now.AddDays(1),
-//                AppointmentTime = TimeSpan.FromHours(10),
-//                AppointmentServices = new List<AppointmentServices>()
-//            };
+            _appointmentServiceMock
+                .Setup(x => x.IsTimeSlotAvailable(
+                    It.IsAny<Guid>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<TimeSpan>(),
+                    It.IsAny<int>()))
+                .ReturnsAsync(true);
 
-//            var model = new AppointmentEditViewModel
-//            {
-//                Id = existingAppointment.Id,
-//                UserId = _currentUser.Id,
-//                BarberId = existingAppointment.BarberId,
-//                AppointmentDate = DateTime.Now.AddDays(2),
-//                AppointmentTime = TimeSpan.FromHours(11),
-//                SelectedServiceIds = new List<Guid> { Guid.NewGuid() }
-//            };
+            var model = new AppointmentCreateViewModel
+            {
+                UserId = currentUser.Id,
+                BarberId = Guid.NewGuid(),
+                AppointmentDate = DateTime.Today.AddDays(1),
+                AppointmentTime = TimeSpan.FromHours(10),
+                SelectedServiceIds = new List<Guid> { Guid.NewGuid() },
+                Status = AppointmentStatus.Scheduled
+            };
 
-//            var service = new Service
-//            {
-//                Id = model.SelectedServiceIds.First(),
-//                Duration = TimeSpan.FromMinutes(30)
-//            };
+            // Act
+            var result = await _controller.MakeAppointment(model);
 
-//            // Setup service mocks
-//            _mockAppointmentService.Setup(s => s.GetWithRels(It.IsAny<System.Linq.Expressions.Expression<Func<Appointment, bool>>> ()))
-//                .ReturnsAsync(existingAppointment);
-//            _mockServiceService.Setup(s => s.GetAll()).Returns(new List<Service> { service }.AsQueryable());
-//            _mockServiceService.Setup(s => s.Get(It.IsAny<System.Linq.Expressions.Expression<Func<Service, bool>>>())).ReturnsAsync(service);
-//            _mockAppointmentService.Setup(s => s.GetAll()).Returns(new List<Appointment>().AsQueryable());
-//            _mockAppointmentService.Setup(s => s.Update(It.IsAny<Appointment>())).Returns(Task.CompletedTask);
+            // Assert
+            Assert.That(!result.Equals(null));
+            Assert.That(result, Is.InstanceOf<RedirectToActionResult>());
 
-//            // Act
-//            var result = await _appointmentController.Object.Edit(model) as RedirectToActionResult;
-
-//            // Assert
-//            Assert.Multiple(() =>
-//            {
-//                Assert.That(result, Is.Not.Null);
-//                Assert.That(result.ActionName, Is.EqualTo("Index"));
-//            });
-//        }
-
-//        [Test]
-//        public async Task Edit_NonExistentAppointment_ReturnsRedirectToIndexAction()
-//        {
-//            // Arrange
-//            var model = new AppointmentEditViewModel
-//            {
-//                Id = Guid.NewGuid(),
-//                UserId = _currentUser.Id
-//            };
-
-//            _mockAppointmentService.Setup(s => s.GetWithRels(It.IsAny<System.Linq.Expressions.Expression<Func<Appointment, bool>>>()))
-//                .ReturnsAsync((Appointment)null);
-
-//            // Act
-//            var result = await _appointmentController.Object.Edit(model) as RedirectToActionResult;
-
-//            // Assert
-//            Assert.Multiple(() =>
-//            {
-//                Assert.That(result, Is.Not.Null);
-//                Assert.That(result.ActionName, Is.EqualTo("Index"));
-//            });
-//        }
-
-//        [Test]
-//        public async Task Delete_ValidAppointment_ReturnsRedirectToIndexAction()
-//        {
-//            // Arrange
-//            var appointmentId = Guid.NewGuid();
-
-//            _mockAppointmentServiceService.Setup(s => s.DeleteByAppointmentId(appointmentId)).Returns(Task.CompletedTask);
-//            _mockAppointmentService.Setup(s => s.Delete(appointmentId)).Returns(Task.CompletedTask);
-
-//            // Act
-//            var result = await _appointmentController.Object.Delete(appointmentId) as RedirectToActionResult;
-
-//            // Assert
-//            Assert.Multiple(() =>
-//            {
-//                Assert.That(result, Is.Not.Null);
-//                Assert.That(result.ActionName, Is.EqualTo("Index"));
-
-//                _mockAppointmentServiceService.Verify(s => s.DeleteByAppointmentId(appointmentId), Times.Once);
-//                _mockAppointmentService.Verify(s => s.Delete(appointmentId), Times.Once);
-//            });
-//        }
-
-//        [Test]
-//        public async Task UserAppointmentDelete_ValidAppointment_ReturnsRedirectToDetailsAction()
-//        {
-//            // Arrange
-//            var appointmentId = Guid.NewGuid();
-
-//            _mockAppointmentServiceService.Setup(s => s.DeleteByAppointmentId(appointmentId)).Returns(Task.CompletedTask);
-//            _mockAppointmentService.Setup(s => s.Delete(appointmentId)).Returns(Task.CompletedTask);
-
-//            // Act
-//            var result = await _appointmentController.Object.UserAppointmentDelete(appointmentId) as RedirectToActionResult;
-
-//            // Assert
-//            Assert.Multiple(() =>
-//            {
-//                Assert.That(result, Is.Not.Null);
-//                Assert.That(result.ActionName, Is.EqualTo("Details"));
-//                Assert.That(result.ControllerName, Is.EqualTo("User"));
-
-//                _mockAppointmentServiceService.Verify(s => s.DeleteByAppointmentId(appointmentId), Times.Once);
-//                _mockAppointmentService.Verify(s => s.Delete(appointmentId), Times.Once);
-//            });
-//        }
-//    }
-//}
+            var redirectResult = result as RedirectToActionResult;
+            Assert.That("Details".Equals(redirectResult.ActionName));
+            Assert.That("User".Equals(redirectResult.ControllerName));
+        }
+    }
+}

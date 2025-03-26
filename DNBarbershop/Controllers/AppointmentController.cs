@@ -63,11 +63,13 @@ namespace DNBarbershop.Controllers
                 allSlots = await _appointmentService.GenerateTimeSlots(startTime, endTime, interval);
             }
 
-            var existingAppointments = await _appointmentService.GetAll()
-                .Where(a => a.BarberId == barberId && a.AppointmentDate == appointmentDate)
-                .Include(a => a.AppointmentServices)
-                .ThenInclude(ap => ap.Service)
-                .ToListAsync();
+            var existingAppointments = await _appointmentService
+            .GetAll()
+            .AsQueryable()
+            .Where(a => a.BarberId == barberId && a.AppointmentDate == appointmentDate)
+            .Include(a => a.AppointmentServices)
+            .ThenInclude(ap => ap.Service)
+            .ToListAsync();
 
             var bookedRanges = existingAppointments.Select(a =>
             {
@@ -418,6 +420,7 @@ namespace DNBarbershop.Controllers
                 await _appointmentServiceService.DeleteByAppointmentId(id);
                 await _appointmentService.Delete(id);
                 TempData["success"] = "Упсешно изтрита резервация.";
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
