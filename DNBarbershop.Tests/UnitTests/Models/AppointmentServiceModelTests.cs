@@ -14,6 +14,7 @@ namespace DNBarbershop.Tests.Models
         private Appointment _validAppointment;
         private Service _validService;
         private AppointmentServices _validAppointmentServices;
+        private AppointmentServices _invalidAppointmentServices;
 
         [SetUp]
         public void Setup()
@@ -89,27 +90,37 @@ namespace DNBarbershop.Tests.Models
         [Test]
         public void AppointmentServices_WithoutAppointmentId_ShouldFailValidation()
         {
-            _validAppointmentServices.AppointmentId = Guid.Empty;
+            _invalidAppointmentServices = new AppointmentServices
+            {
+                ServiceId = _validService.Id
+            };
 
-            var validationContext = new ValidationContext(_validAppointmentServices);
+            var validationContext = new ValidationContext(_invalidAppointmentServices);
             var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(_validAppointmentServices, validationContext, validationResults, true);
+            var isValid = Validator.TryValidateObject(_invalidAppointmentServices, validationContext, validationResults, true);
 
-            Assert.That(isValid = false, "AppointmentServices should be invalid without AppointmentId");
+            Assert.That(isValid, Is.False, "AppointmentServices should be invalid without AppointmentId");
             Assert.That(1.Equals(validationResults.Count), "Should have one validation error");
         }
 
         [Test]
         public void AppointmentServices_WithoutServiceId_ShouldFailValidation()
         {
-            _validAppointmentServices.ServiceId = Guid.Empty;
+            _invalidAppointmentServices = new AppointmentServices
+            {
+                AppointmentId = _validAppointment.Id
+            };
 
-            var validationContext = new ValidationContext(_validAppointmentServices);
+            var validationContext = new ValidationContext(_invalidAppointmentServices, null, null);
             var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(_validAppointmentServices, validationContext, validationResults, true);
-
-            Assert.That(isValid = false, "AppointmentServices should be invalid without ServiceId");
-            Assert.That(1.Equals(validationResults.Count), "Should have one validation error");
+            var isValid = Validator.TryValidateObject(
+                _invalidAppointmentServices,
+                validationContext,
+                validationResults,
+                true
+            );
+            Assert.That(isValid, Is.False, "AppointmentServices should be invalid without ServiceId");
+            Assert.That(validationResults.Count, Is.EqualTo(1), "Should have one validation error");
         }
 
         [Test]

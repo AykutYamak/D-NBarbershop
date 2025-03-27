@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DNBarbershop.Core.IService;
-using DNBarbershop.Core.Validators;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 
