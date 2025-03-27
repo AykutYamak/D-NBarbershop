@@ -5,6 +5,7 @@ using NUnit.Framework;
 using DNBarbershop.Models.Entities;
 using DNBarbershop.Models.EnumClasses;
 using System.ComponentModel.DataAnnotations.Schema;
+using DNBarbershop.Common;
 
 namespace DNBarbershop.Tests.Models
 {
@@ -90,17 +91,26 @@ namespace DNBarbershop.Tests.Models
         [Test]
         public void AppointmentServices_WithoutAppointmentId_ShouldFailValidation()
         {
-            _invalidAppointmentServices = new AppointmentServices
+            // Arrange
+            var invalidAppointmentServices = new AppointmentServices
             {
                 ServiceId = _validService.Id
             };
 
-            var validationContext = new ValidationContext(_invalidAppointmentServices);
+            var validationContext = new ValidationContext(invalidAppointmentServices);
             var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(_invalidAppointmentServices, validationContext, validationResults, true);
 
-            Assert.That(isValid, Is.False, "AppointmentServices should be invalid without AppointmentId");
-            Assert.That(1.Equals(validationResults.Count), "Should have one validation error");
+            // Act
+            var isValid = Validator.TryValidateObject(invalidAppointmentServices, validationContext, validationResults, true);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(isValid == false, "AppointmentServices should be invalid without AppointmentId.");
+                Assert.That(1 == validationResults.Count, "Should have exactly one validation error.");
+                Assert.That(ErrorMessages.RequiredErrorMessage.ToString() == validationResults[0].ErrorMessage.ToString(), "Error message should match RequiredErrorMessage.");
+                Assert.That(validationResults[0].MemberNames.Contains("AppointmentId") == true, "Validation error should be for AppointmentId.");
+            });
         }
 
         [Test]

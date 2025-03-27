@@ -22,8 +22,12 @@ namespace DNBarbershop.Core.Services
         }
         
         public async Task Add(Barber barber)
-        { 
-              await _barberRepository.Add(barber);
+        {
+            if (barber == null)
+            {
+                throw new ArgumentNullException();
+            }
+            await _barberRepository.Add(barber);
         }
         public async Task Delete(Guid id)
         {
@@ -64,6 +68,10 @@ namespace DNBarbershop.Core.Services
         }
         public async Task Update(Barber barber)
         {
+            if (barber == null)
+            {
+                throw new ArgumentNullException();
+            }
             await _barberRepository.Update(barber);
         }
 

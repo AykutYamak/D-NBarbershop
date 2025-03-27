@@ -44,6 +44,10 @@ namespace DNBarbershop.Core.GlobalServiceFolder
 
         public async Task Update(T entity)
         {
+            if (entity == null)
+            {
+                throw new ArgumentNullException();
+            }
             await _repository.Update(entity);
         }
     }

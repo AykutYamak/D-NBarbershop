@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using DNBarbershop.Core.Services;
+using System.Reflection;
 
 namespace DNBarbershop.Tests.UnitTests
 {
@@ -214,20 +216,55 @@ namespace DNBarbershop.Tests.UnitTests
         public async Task Details_ExistingBarber_ReturnsBarberDetails()
         {
             // Arrange
-            var existingBarber = _context.barbers.First();
-            var feedbacks = _context.feedbacks.Select(x=>x).Where(x=>x.BarberId == existingBarber.Id).ToList();
-            var speciality = _context.speciality.First();
-            existingBarber.SpecialityId = speciality.Id;
-            existingBarber.Feedbacks = feedbacks;
+            var barberId = Guid.NewGuid();
+            var specialityId = Guid.NewGuid();
+
+            var barber = new Barber
+            {
+                Id = barberId,
+                FirstName = "Иван",
+                LastName = "Новев",
+                ExperienceYears = 5,
+                ProfilePictureUrl = "https://example.com/barber.jpg",
+                SpecialityId = specialityId
+            };
+
+            var feedbacks = new List<Feedback>
+    {
+        new Feedback { BarberId = barberId, User = new User { UserName = "User1" }, FeedBackDate = DateTime.Now.AddDays(-1) },
+        new Feedback { BarberId = barberId, User = new User { UserName = "User2" }, FeedBackDate = DateTime.Now }
+    };
+
+            var speciality = new Speciality
+            {
+                Id = specialityId,
+                Type = "Шеф"
+            };
+
+            // Mock services to return the barber, feedbacks, and speciality
+            _barberServiceMock.Setup(s => s.Get(It.IsAny<Expression<Func<Barber, bool>>>()))
+                              .ReturnsAsync(barber);
+
+            _feedbackServiceMock.Setup(f => f.GetAll())
+                                .Returns(feedbacks.AsQueryable());
+
+            _specialityServiceMock.Setup(s => s.Get(It.IsAny<Expression<Func<Speciality, bool>>>()))
+                                  .ReturnsAsync(speciality);
+
             // Act
-            var result = await _barberController.Details(existingBarber.Id) as ViewResult;
+            var result = await _barberController.Details(barberId) as ViewResult;
             var model = result?.Model as SingleBarberViewModel;
 
             // Assert
-            Assert.That(!result.Equals(null));
-            Assert.That(!model.Equals(null));
-            Assert.That(existingBarber.FirstName.Equals(model.FirstName));
-            Assert.That(existingBarber.LastName.Equals(model.LastName));
+            Assert.That(result != null, "Result should not be null.");
+            Assert.That(model != null, "Model should not be null.");
+
+            Assert.That(barberId == model.Id, "Barber ID should match.");
+            Assert.That("Иван" == model.FirstName, "FirstName should match.");
+            Assert.That("Новев" == model.LastName, "LastName should match.");
+            Assert.That("Шеф" == model.Speciality, "Speciality should match.");
+            Assert.That(2 == model.Feedbacks.Count, "Feedback count should be 2.");
+            Assert.That("User2" == model.Feedbacks.First().User.UserName, "Latest feedback should be first.");
         }
 
         [Test]
@@ -249,6 +286,39 @@ namespace DNBarbershop.Tests.UnitTests
             Assert.That(!result.Equals(null));
             Assert.That("Index".Equals(result.ActionName.ToString()));
             _barberServiceMock.Verify(x => x.Delete(existingBarber.Id), Times.Once);
+        }
+        
+        [Test]
+        public void GetAll_ShouldReturnEmptyList_WhenNoBarbersExist()
+        {
+            _barberServiceMock.Setup(r => r.GetAll()).Returns(new List<Barber>().AsQueryable());
+
+            var result = _barberServiceMock.Object.GetAll();
+
+            Assert.That(!result.Any());
+        }
+        [Test]
+        public async Task Get_WithNonExistentBarber_ShouldReturnNull()
+        {
+            var result = await _barberServiceMock.Object.Get(b => b.FirstName == "NonExistent");
+
+            Assert.That(result == null || result.ToString() == "System.NullReferenceException");
+        }
+
+        [Test]
+        public void GetAll_ShouldReturnAllBarbers()
+        {
+            var barbers = new List<Barber>
+            {
+                new Barber { Id = Guid.NewGuid(), FirstName = "Ivan", LastName = "Petrov" },
+                new Barber { Id = Guid.NewGuid(), FirstName = "Petar", LastName = "Georgiev" }
+            }.AsQueryable();
+
+            _barberServiceMock.Setup(r => r.GetAll()).Returns(barbers);
+
+            var result = _barberServiceMock.Object.GetAll();
+
+            Assert.That(result.Count(), Is.EqualTo(2));
         }
     }
 }

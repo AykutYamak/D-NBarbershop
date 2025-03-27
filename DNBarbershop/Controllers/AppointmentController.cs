@@ -71,9 +71,9 @@ namespace DNBarbershop.Controllers
 
             var bookedRanges = existingAppointments.Select(a =>
             {
-                var duration = a.AppointmentServices.Sum(s => s.Duration.Hours * 60 + s.Duration.Minutes);
-                var end = a.a.AppointmentTime.Add(TimeSpan.FromMinutes(duration));
-                return (Start: a.a.AppointmentTime, End: end);
+                var duration = a.AppointmentServices.Sum(s => s.Service.Duration.Hours * 60 + s.Service.Duration.Minutes);
+                var end = a.AppointmentTime.Add(TimeSpan.FromMinutes(duration));
+                return (Start: a.AppointmentTime, End: end);
 
             }).ToList();
 
