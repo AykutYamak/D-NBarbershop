@@ -169,21 +169,6 @@ namespace DNBarbershop.Controllers
                 TempData["error"] = "Не сте регистриран/a.";
                 return Unauthorized();
             }
-            if (false)
-            {
-                var feedback = await _feedbackService.Get(f => f.Id == feedbackModel.Id);
-                if (feedback == null || feedback.UserId != currentUser.Id)
-                {
-                    TempData["error"] = "Отзивът не съществува или нямате право да го редактирате.";
-                    return NotFound();
-                }
-
-                if (!_barberService.GetAll().Any(b => b.Id == feedbackModel.SelectedBarberId))
-                {
-                    TempData["error"] = "Избраният бръснар не съществува.";
-                    return View(feedbackModel);
-                }
-            }
             var model = new Feedback
             {
                 Id = feedbackModel.Id,

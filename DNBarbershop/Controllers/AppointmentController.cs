@@ -63,16 +63,11 @@ namespace DNBarbershop.Controllers
                 allSlots = await _appointmentService.GenerateTimeSlots(startTime, endTime, interval);
             }
 
-            var appointments = await _appointmentService.GetAll().ToListAsync();
-
-            var existingAppointments = appointments
+            var existingAppointments = await _appointmentService.GetAll()
                 .Where(a => a.BarberId == barberId && a.AppointmentDate == appointmentDate)
-                .Select(a => new
-                {
-                    a,
-                    AppointmentServices = a.AppointmentServices.Select(ap => ap.Service).ToList()
-                })
-                .ToList();
+                .Include(a => a.AppointmentServices)
+                .ThenInclude(ap => ap.Service)
+                .ToListAsync();
 
             var bookedRanges = existingAppointments.Select(a =>
             {

@@ -88,7 +88,7 @@ namespace DNBarbershop.Controllers
                 LastName = barberModel.LastName,
                 ExperienceYears = barberModel.ExperienceYears,
                 ProfilePictureUrl = barberModel.ProfilePictureUrl,
-                SpecialityId = barberModel.SelectedSpecialityId 
+                SpecialityId = barberModel.SelectedSpecialityId
             };
             if (string.IsNullOrEmpty(barber.FirstName) || string.IsNullOrEmpty(barber.LastName) || barber.ExperienceYears < 0 || barber.ExperienceYears > 30 || barber.SpecialityId.ToString() == "00000000-0000-0000-0000-000000000000")
             {
@@ -232,17 +232,17 @@ namespace DNBarbershop.Controllers
                 return NotFound();
             }
             var feedbacks = _feedbackService.GetAll().Where(f=>f.BarberId == id).Include(f => f.User).ToList();
+            var speciality = _specialityService.Get(s => s.Id == barber.SpecialityId).Result.Type;
             var model = new SingleBarberViewModel
             {
                 Id = barber.Id,
                 FirstName = barber.FirstName,
                 LastName = barber.LastName,
                 SpecialityId = barber.SpecialityId,
-                Speciality = _specialityService.Get(s => s.Id == barber.SpecialityId).Result.Type,
+                Speciality = speciality,
                 ExperienceYears = barber.ExperienceYears,
                 ProfilePictureUrl = barber.ProfilePictureUrl,
                 Feedbacks = feedbacks.OrderByDescending(c=>c.FeedBackDate).ToList()
-
             };
             return View(model);
         }

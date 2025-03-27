@@ -1,5 +1,4 @@
-﻿using DNBarbershop.Core.Validators;
-using DNBarbershop.DataAccess.Repository;
+﻿using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;

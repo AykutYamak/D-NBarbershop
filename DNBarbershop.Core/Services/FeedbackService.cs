@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using DNBarbershop.Core.Validators;
 
 namespace DNBarbershop.Core.Services
 {
