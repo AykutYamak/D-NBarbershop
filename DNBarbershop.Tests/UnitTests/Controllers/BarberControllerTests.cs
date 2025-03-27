@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using DNBarbershop.Core.Services;
 using System.Reflection;
 
-namespace DNBarbershop.Tests.UnitTests
+namespace DNBarbershop.Tests.UnitTests.Controllers
 {
     [TestFixture]
     public class BarberControllerTests
@@ -30,7 +30,6 @@ namespace DNBarbershop.Tests.UnitTests
         private Mock<IFeedbackService> _feedbackServiceMock;
         private Mock<ISpecialityService> _specialityServiceMock;
         private BarberController _barberController;
-        private ITempDataDictionary _tempDataDictionaryMock;
 
         [SetUp]
         public void Setup()

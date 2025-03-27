@@ -94,24 +94,34 @@ namespace DNBarbershop.Tests.Models
             // Arrange
             var invalidAppointmentServices = new AppointmentServices
             {
-                ServiceId = _validService.Id
+                ServiceId = _validService.Id // No AppointmentId set
             };
 
             var validationContext = new ValidationContext(invalidAppointmentServices);
             var validationResults = new List<ValidationResult>();
 
             // Act
-            var isValid = Validator.TryValidateObject(invalidAppointmentServices, validationContext, validationResults, true);
+            bool isValid = Validator.TryValidateObject(invalidAppointmentServices, validationContext, validationResults, true);
 
             // Assert
             Assert.Multiple(() =>
             {
+                // Assert that validation failed
                 Assert.That(isValid == false, "AppointmentServices should be invalid without AppointmentId.");
-                Assert.That(1 == validationResults.Count, "Should have exactly one validation error.");
-                Assert.That(ErrorMessages.RequiredErrorMessage.ToString() == validationResults[0].ErrorMessage.ToString(), "Error message should match RequiredErrorMessage.");
-                Assert.That(validationResults[0].MemberNames.Contains("AppointmentId") == true, "Validation error should be for AppointmentId.");
+
+                // Assert that there's exactly one validation error
+                Assert.That(validationResults.Count, Is.EqualTo(1), "Should have exactly one validation error.");
+
+                // Assert that the error message matches the required error message
+                Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(ErrorMessages.RequiredErrorMessage.ToString()),
+                    "Error message should match RequiredErrorMessage.");
+
+                // Assert that the error is specifically for the AppointmentId field
+                Assert.That(validationResults[0].MemberNames.Contains("AppointmentId"),
+                    "Validation error should be for AppointmentId.");
             });
         }
+
 
         [Test]
         public void AppointmentServices_WithoutServiceId_ShouldFailValidation()

@@ -9,7 +9,7 @@ using DNBarbershop.Core.Services;
 using DNBarbershop.DataAccess.Repository;
 using DNBarbershop.Models.Entities;
 
-namespace DNBarbershop.Tests.Services
+namespace DNBarbershop.Tests.UnitTests.Services
 {
     [TestFixture]
     public class UserServiceTests
