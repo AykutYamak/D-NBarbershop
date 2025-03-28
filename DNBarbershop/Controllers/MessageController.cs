@@ -74,6 +74,11 @@ namespace DNBarbershop.Controllers
                     TempData["error"] = "Невалидни данни.";
                     return RedirectToAction("AboutUs", "Home", null);
                 }
+                else if (string.IsNullOrEmpty(message.Email))
+                {
+                    TempData["error"] = "Въведете валиден e-mail!";
+                    return RedirectToAction("AboutUs", "Home", null);
+                }
                 else if(!string.IsNullOrEmpty(message.Email))
                 {
                     if (string.IsNullOrEmpty(message.Content))

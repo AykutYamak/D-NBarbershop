@@ -34,7 +34,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [SetUp]
         public void Setup()
         {
-            // Create in-memory database
             _dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase("DNBarbershopInMemoryDb" + Guid.NewGuid().ToString())
                 .Options;
@@ -43,19 +42,13 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             DbSeeder.SeedDatabase(_context);
 
 
-            // Mock UserManager
-            //var store = new Mock<IUserStore<User>>();
-
             _userManagerMock = new Mock<UserManager<User>>(
                 new Mock<IUserStore<User>>().Object, null, null, null, null, null, null, null, null);
-            //_userManagerMock.Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>())).ReturnsAsync(true);
 
-            // Mock Services
             _barberServiceMock = new Mock<IBarberService>();
             _feedbackServiceMock = new Mock<IFeedbackService>();
             _specialityServiceMock = new Mock<ISpecialityService>();
 
-            // Setup mocked services to return seeded data
             _barberServiceMock.Setup(x => x.GetAll())
                 .Returns(_context.barbers);
             _specialityServiceMock.Setup(x => x.GetAll())
@@ -63,7 +56,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             _feedbackServiceMock.Setup(x => x.GetAll())
                 .Returns(_context.feedbacks);
 
-            // Mocking services' methods
             _barberServiceMock.Setup(x => x.Get(It.IsAny<Expression<Func<Barber, bool>>>()))
                 .ReturnsAsync((Expression<Func<Barber, bool>> predicate) =>
                     _context.barbers.FirstOrDefault(predicate));
@@ -71,7 +63,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             _specialityServiceMock.Setup(x => x.Get(It.IsAny<Expression<Func<Speciality, bool>>>()))
                 .Returns<Func<Speciality, bool>>(predicate => Task.FromResult(_context.speciality.FirstOrDefault(predicate)));
 
-            // Create controller
             _barberController = new BarberController(
                 _userManagerMock.Object,
                 _feedbackServiceMock.Object,
@@ -91,14 +82,11 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Index_WithNoFilter_ReturnsAllBarbers()
         {
-            // Arrange
             var filter = new BarberFilterViewModel();
 
-            // Act
             var result = await _barberController.Index(filter) as ViewResult;
             var model = result?.Model as BarberFilterViewModel;
 
-            // Assert
             Assert.That(!result.Equals(null));
             Assert.That(!model.Equals(null));
             Assert.That(1.Equals(model.Barbers.Count));
@@ -107,14 +95,11 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Index_WithExperienceFilter_ReturnsFilteredBarbers()
         {
-            // Arrange
             var filter = new BarberFilterViewModel { MinExperienceYears = 5 };
 
-            // Act
             var result = await _barberController.Index(filter) as ViewResult;
             var model = result?.Model as BarberFilterViewModel;
 
-            // Assert
             Assert.That(!result.Equals(null));
             Assert.That(!model.Equals(null));
             Assert.That(1.Equals(model.Barbers.Count));
@@ -123,7 +108,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Add_ValidBarber_AddsSuccessfully()
         {
-            // Arrange
             _userManagerMock.Setup(x => x.GetUserAsync(It.IsAny<System.Security.Claims.ClaimsPrincipal>()))
                 .ReturnsAsync(new User { Id = Guid.NewGuid().ToString() });
 
@@ -140,10 +124,8 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             tempData.Setup(t => t["success"]).Returns("Успешно добавен бръснар.");
             _barberController.TempData = tempData.Object;
 
-            // Act
             var result = await _barberController.Add(barberModel) as RedirectToActionResult;
 
-            // Assert
             Assert.That(!result.Equals(null));
             Assert.That("Index".Equals(result.ActionName.ToString()));
             _barberServiceMock.Verify(x => x.Add(It.IsAny<Barber>()), Times.Once);
@@ -152,29 +134,25 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Add_InvalidBarber_ReturnsRedirectToAdd()
         {
-            // Arrange
             _userManagerMock.Setup(x => x.GetUserAsync(It.IsAny<System.Security.Claims.ClaimsPrincipal>()))
                 .ReturnsAsync(new User { Id = Guid.NewGuid().ToString() });
 
             var tempData = new Mock<ITempDataDictionary>();
             tempData.Setup(t => t["error"]).Returns("Невалидни данни!");
 
-            // Assign to controller
             _barberController.TempData = tempData.Object;
 
             var barberModel = new BarberCreateViewModel
             {
-                FirstName = "", // Invalid input
+                FirstName = "",
                 LastName = "Петров",
-                ExperienceYears = 40, // Invalid experience
+                ExperienceYears = 40, 
                 ProfilePictureUrl = "https://example.com/barber.jpg",
                 SelectedSpecialityId = Guid.Empty
             };
 
-            // Act
             var result = await _barberController.Add(barberModel) as RedirectToActionResult;
 
-            // Assert
             Assert.That(!result.Equals(null));
             Assert.That("Add".Equals(result.ActionName.ToString()));
             Assert.That("Barber".Equals(result.ControllerName.ToString()));
@@ -183,7 +161,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Edit_ValidBarber_UpdatesSuccessfully()
         {
-            // Arrange
             var existingBarber = _context.barbers.First();
             var barberModel = new BarberEditViewModel
             {
@@ -199,13 +176,10 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             var tempData = new Mock<ITempDataDictionary>();
             tempData.Setup(t => t["success"]).Returns("Упсешно редактиран бръснар.");
 
-            // Assign to controller
             _barberController.TempData = tempData.Object;
 
-            // Act
             var result = await _barberController.Edit(barberModel) as RedirectToActionResult;
 
-            // Assert
             Assert.That(!result.Equals(null));
             Assert.That("Index".Equals(result.ActionName.ToString()));
             _barberServiceMock.Verify(x => x.Update(It.IsAny<Barber>()), Times.Once);
@@ -214,7 +188,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Details_ExistingBarber_ReturnsBarberDetails()
         {
-            // Arrange
             var barberId = Guid.NewGuid();
             var specialityId = Guid.NewGuid();
 
@@ -240,7 +213,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 Type = "Шеф"
             };
 
-            // Mock services to return the barber, feedbacks, and speciality
             _barberServiceMock.Setup(s => s.Get(It.IsAny<Expression<Func<Barber, bool>>>()))
                               .ReturnsAsync(barber);
 
@@ -250,11 +222,9 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             _specialityServiceMock.Setup(s => s.Get(It.IsAny<Expression<Func<Speciality, bool>>>()))
                                   .ReturnsAsync(speciality);
 
-            // Act
             var result = await _barberController.Details(barberId) as ViewResult;
             var model = result?.Model as SingleBarberViewModel;
 
-            // Assert
             Assert.That(result != null, "Result should not be null.");
             Assert.That(model != null, "Model should not be null.");
 
@@ -269,19 +239,15 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Delete_ExistingBarber_DeletesSuccessfully()
         {
-            // Arrange
             var existingBarber = _context.barbers.First();
 
             var tempData = new Mock<ITempDataDictionary>();
             tempData.Setup(t => t["success"]).Returns("Упсешно изтрит бръснар.");
 
-            // Assign to controller
             _barberController.TempData = tempData.Object;
 
-            // Act
             var result = await _barberController.Delete(existingBarber.Id) as RedirectToActionResult;
 
-            // Assert
             Assert.That(!result.Equals(null));
             Assert.That("Index".Equals(result.ActionName.ToString()));
             _barberServiceMock.Verify(x => x.Delete(existingBarber.Id), Times.Once);

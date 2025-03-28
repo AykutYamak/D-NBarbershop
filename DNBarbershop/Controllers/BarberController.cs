@@ -104,7 +104,6 @@ namespace DNBarbershop.Controllers
                     return RedirectToAction("Add", "Barber", null);
                 }
             }
-
             await _barberService.Add(barber);
             TempData["success"] = "Упсешно добавен бръснар.";
 
@@ -226,6 +225,7 @@ namespace DNBarbershop.Controllers
         }
         public async Task<IActionResult> Details(Guid id)
         {
+
             var barber = await _barberService.Get(b => b.Id == id);
             if (barber == null)
             {
@@ -244,6 +244,7 @@ namespace DNBarbershop.Controllers
                 ProfilePictureUrl = barber.ProfilePictureUrl,
                 Feedbacks = feedbacks.OrderByDescending(c=>c.FeedBackDate).ToList()
             };
+            
             return View(model);
         }
     }

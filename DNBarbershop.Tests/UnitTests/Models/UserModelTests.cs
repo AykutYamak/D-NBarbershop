@@ -51,7 +51,7 @@ namespace DNBarbershop.Tests.Models
         public void FirstName_WhenTooLong_ShouldFailValidation()
         {
             _user.FirstName = new string('a', 101);
-            _user.LastName = "Doe"; 
+            _user.LastName = "Doe";
 
             var validationResults = new List<ValidationResult>();
             var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);
@@ -90,7 +90,7 @@ namespace DNBarbershop.Tests.Models
         [Test]
         public void LastName_WhenEmptyString_ShouldFailValidation()
         {
-            _user.FirstName = "John"; 
+            _user.FirstName = "John";
             _user.LastName = string.Empty;
 
             var validationResults = new List<ValidationResult>();
@@ -104,7 +104,7 @@ namespace DNBarbershop.Tests.Models
         [Test]
         public void LastName_WhenTooLong_ShouldFailValidation()
         {
-            _user.FirstName = "John"; 
+            _user.FirstName = "John";
             _user.LastName = new string('a', 101);
 
             var validationResults = new List<ValidationResult>();

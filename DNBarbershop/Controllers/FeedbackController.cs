@@ -253,6 +253,11 @@ namespace DNBarbershop.Controllers
                     Comment = feedbackModel.Comment,
                     FeedBackDate = feedbackModel.FeedBackDate
                 };
+                if (feedback.Comment == null || string.IsNullOrEmpty(feedback.Comment))
+                {
+                    TempData["error"] = "Невалиден коментар.";
+                    return RedirectToAction("Details", "Barber", new { id = feedbackModel.BarberId });
+                }
                 await _feedbackService.Add(feedback);
                 TempData["success"] = "Успешно добавен коментар.";
             }
