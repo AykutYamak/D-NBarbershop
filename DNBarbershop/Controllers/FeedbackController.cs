@@ -263,26 +263,6 @@ namespace DNBarbershop.Controllers
             }
             return RedirectToAction("Details","Barber", new {id=feedbackModel.BarberId});
         }
-        [Authorize(Roles = "User")]
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> DeleteComment(Guid Id)
-        {
-            var feedback = await _feedbackService.Get(f => f.Id == Id);
-            if (feedback == null)
-            {
-                TempData["error"] = "Отзивът не съществува.";
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                await _feedbackService.Delete(Id);
-                TempData["success"] = "Успешно изтрит коментар";
-                return RedirectToAction("Details", "Barber", new {id=feedback.Id});
-            }
-            return RedirectToAction("Details", "Barber", new {id=feedback.Id});
-        }
     }
 }
 

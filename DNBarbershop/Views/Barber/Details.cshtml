@@ -51,7 +51,6 @@
 
                 @foreach (var comment in Model.Feedbacks)
                 {
-                    var userId = UserManager.GetUserId(User);
                     <div class="comment">
                         @if (comment.User != null)
                         {
@@ -67,16 +66,6 @@
                         }
                         <p>@comment.Comment</p>
                         <span>@comment.FeedBackDate.ToString("dd.MM.yyyy HH:mm")</span>
-                        @if (comment.UserId == userId)
-                        {
-                            <div style="display:flex;justify-content:center; width:200px; cancel-button-position`">
-                                <form asp-controller="Feedback" asp-action="DeleteComment" asp-route-id="@comment.Id" method="post">
-                                    <button type="submit" class="btn cancel-button px-3 py-2">
-                                        Изтрии
-                                    </button>
-                                </form>
-                            </div>
-                        }
                     </div>
                     
                 }
