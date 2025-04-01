@@ -39,18 +39,19 @@
                 @if (User.IsInRole(SD.AdminRole) || User.IsInRole(SD.UserRole))
                 {
                     <button type="submit">Добави коментар</button>
-
                 }
                 else
                 {
                     <a class="btn addcommentbutton" asp-area="Identity" asp-page="/Account/Login">Добави коментар</a>
                 }
-                
+
             </form>
             <hr />
             <div class="comments-list">
+
                 @foreach (var comment in Model.Feedbacks)
                 {
+                    var userId = UserManager.GetUserId(User);
                     <div class="comment">
                         @if (comment.User != null)
                         {
@@ -64,18 +65,54 @@
                                 <div class="comment-to">&#x2705; Клиент на @Model.FirstName @Model.LastName</div>
                             </div>
                         }
-                        else
-                        {
-                            <h1>Анонимен потребител</h1>
-                        }
-                        
                         <p>@comment.Comment</p>
                         <span>@comment.FeedBackDate.ToString("dd.MM.yyyy HH:mm")</span>
+                        @if (comment.UserId == userId)
+                        {
+                            <div style="display:flex;justify-content:center; width:200px; cancel-button-position`">
+                                <form asp-controller="Feedback" asp-action="DeleteComment" asp-route-id="@comment.Id" method="post">
+                                    <button type="submit" class="btn cancel-button px-3 py-2">
+                                        Изтрии
+                                    </button>
+                                </form>
+                            </div>
+                        }
                     </div>
+                    
                 }
             </div>
         </div>
     </div>
+    <style>
+        .cancel-button-position{
+            display:flex;
+            justify-content:end;
+        }
+        .cancel-button {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: white;
+            background-color: rgb(134, 0, 0);
+            cursor: pointer;
+            transition: ease-out 0.5s;
+            border: 2px solid rgb(134, 0, 0);
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 0 rgb(134, 0, 0);
+        }
+
+            .cancel-button:hover {
+                color: white;
+                box-shadow: inset 0 -100px 0 0 red;
+            }
+
+            .cancel-button:active {
+                transform: scale(0.9);
+            }
+</style>
     <script src="~/js/scroll-animation.js"></script>
 
 </body>
