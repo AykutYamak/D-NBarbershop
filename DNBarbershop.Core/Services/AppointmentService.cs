@@ -93,7 +93,7 @@ namespace DNBarbershop.Core.Services
                     return false;
             }
 
-            return endTime <= TimeSpan.FromHours(20);
+            return endTime <= TimeSpan.FromHours(20,30);
         }
 
 
