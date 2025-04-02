@@ -37,7 +37,7 @@ namespace DNBarbershop.Tests.Models
         public void FirstName_WhenEmptyString_ShouldFailValidation()
         {
             _user.FirstName = string.Empty;
-            _user.LastName = "Doe"; // To prevent other validation failures
+            _user.LastName = "Doe"; 
 
             var validationResults = new List<ValidationResult>();
             var isValid = Validator.TryValidateObject(_user, _validationContext, validationResults, validateAllProperties: true);

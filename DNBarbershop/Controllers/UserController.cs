@@ -173,11 +173,6 @@ namespace DNBarbershop.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            //if (user == null)
-            //{
-            //    TempData["error"] = "Не е намерен такъв потребител.";
-            //    return NotFound();
-            //}
             var model = new UserEditViewModel
             {
                 Id = user.Id,

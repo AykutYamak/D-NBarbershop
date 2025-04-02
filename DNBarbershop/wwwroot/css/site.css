@@ -169,7 +169,6 @@ body {
     background-attachment: fixed;
     white-space: normal;
 }
-
 .LoginContainer {
     height: 100%;
     font-size: 100%;
@@ -277,7 +276,7 @@ body {
             transform: translateY(-5px);
         }
 
-@keyframes bounce-animation {
+/*@keyframes bounce-animation {
     16.65% {
         -webkit-transform: translateY(8px);
         transform: translateY(8px);
@@ -307,12 +306,12 @@ body {
         -webkit-transform: translateY(0);
         transform: translateY(0);
     }
-}
+}*/
 
-.bounce {
+/*.bounce {
     animation-name: bounce-animation;
     animation-duration: 2s;
-}
+}*/
 
 /*everything below here is just setting up the page, so dont worry about it */
 @media (min-width: 768px) {

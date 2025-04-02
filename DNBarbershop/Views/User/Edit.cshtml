@@ -80,7 +80,6 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Id" />
 
-                        <!-- First Name -->
                         <div class="mb-4">
                             <label class="form-label mb-2" asp-for="FirstName">Име</label>
                             <input type="text" class="form-control rounded-pill px-4 py-2" asp-for="FirstName"
@@ -88,7 +87,6 @@
                             <span asp-validation-for="FirstName" class="text-danger small d-block mt-1"></span>
                         </div>
 
-                        <!-- Last Name -->
                         <div class="mb-4">
                             <label class="form-label mb-2" asp-for="LastName">Фамилия</label>
                             <input type="text" class="form-control rounded-pill px-4 py-2" asp-for="LastName"
@@ -96,7 +94,6 @@
                             <span asp-validation-for="LastName" class="text-danger small d-block mt-1"></span>
                         </div>
 
-                        <!-- Phone Number -->
                         <div class="mb-4">
                             <label class="form-label text-light mb-2" asp-for="PhoneNumber">Телефонен номер</label>
                             <input type="tel" pattern="[03589]{1}[0-9]{9}"
@@ -106,7 +103,6 @@
                             <span asp-validation-for="PhoneNumber" class="text-danger small d-block mt-1"></span>
                         </div>
 
-                        <!-- Buttons -->
                         <div class="d-grid gap-3 mt-5">
                             <button type="submit" asp-action="Edit" asp-controller="User"
                                     class="btn success-button rounded-pill py-2 fw-bold">

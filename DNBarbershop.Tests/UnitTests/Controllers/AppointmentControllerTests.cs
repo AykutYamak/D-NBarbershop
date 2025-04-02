@@ -62,7 +62,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             _userServiceMock = new Mock<IUserService>();
             _appointmentServiceServiceMock = new Mock<IAppointmentServiceService>();
 
-            // Setup mock services with basic returns
             _appointmentServiceMock.Setup(x => x.GetAll())
                 .Returns(_context.appointments.AsQueryable());
             _barberServiceMock.Setup(x => x.GetAll())
@@ -81,11 +80,9 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 _appointmentServiceServiceMock.Object
             );
 
-            // Setup TempData
             var tempData = new Mock<ITempDataDictionary>();
             _appointmentController.TempData = tempData.Object;
 
-            // Setup HttpContext
             var httpContext = new DefaultHttpContext();
             _appointmentController.ControllerContext = new ControllerContext
             {
@@ -130,7 +127,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 Status = AppointmentStatus.Scheduled
             };
 
-            // Setup availability check
             _appointmentServiceMock.Setup(x => x.IsTimeSlotAvailable(
                 It.IsAny<Guid>(),
                 It.IsAny<DateTime>(),
@@ -138,7 +134,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 It.IsAny<int>()))
                 .ReturnsAsync(true);
 
-            // Setup service duration
             _serviceServiceMock.Setup(x => x.Get(It.IsAny<Expression<Func<Service, bool>>>()))
                 .ReturnsAsync(service);
 
@@ -166,7 +161,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 Status = AppointmentStatus.Scheduled
             };
 
-            // Setup availability check to return false
             _appointmentServiceMock.Setup(x => x.IsTimeSlotAvailable(
                 It.IsAny<Guid>(),
                 It.IsAny<DateTime>(),
@@ -174,7 +168,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 It.IsAny<int>()))
                 .ReturnsAsync(false);
 
-            // Setup service duration
             _serviceServiceMock.Setup(x => x.Get(It.IsAny<Expression<Func<Service, bool>>>()))
                 .ReturnsAsync(service);
 
@@ -203,11 +196,9 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 Status = AppointmentStatus.Scheduled
             };
 
-            // Setup existing appointment retrieval
             _appointmentServiceMock.Setup(x => x.GetWithRels(It.IsAny<Expression<Func<Appointment, bool>>>()))
                 .ReturnsAsync(existingAppointment);
 
-            // Setup availability check
             _appointmentServiceMock.Setup(x => x.IsTimeSlotAvailable(
                 It.IsAny<Guid>(),
                 It.IsAny<DateTime>(),
@@ -215,7 +206,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 It.IsAny<int>()))
                 .ReturnsAsync(true);
 
-            // Setup service duration
             _serviceServiceMock.Setup(x => x.Get(It.IsAny<Expression<Func<Service, bool>>>()))
                 .ReturnsAsync(service);
 
@@ -257,7 +247,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 Status = AppointmentStatus.Scheduled
             };
 
-            // Setup availability check
             _appointmentServiceMock.Setup(x => x.IsTimeSlotAvailable(
                 It.IsAny<Guid>(),
                 It.IsAny<DateTime>(),
@@ -265,7 +254,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 It.IsAny<int>()))
                 .ReturnsAsync(true);
 
-            // Setup service duration
             _serviceServiceMock.Setup(x => x.Get(It.IsAny<Expression<Func<Service, bool>>>()))
                 .ReturnsAsync(service);
 

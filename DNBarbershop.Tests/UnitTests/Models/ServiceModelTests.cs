@@ -149,10 +149,8 @@ namespace DNBarbershop.Tests.Models
         [Test]
         public void Service_AppointmentServicesCollection_ShouldBeInitializedAsEmpty()
         {
-            // Arrange
             var newService = new Service();
 
-            // Assert
             Assert.That(!newService.AppointmentServices.Equals(null), "AppointmentServices collection should not be null");
             Assert.That(0.Equals(newService.AppointmentServices.Count), "AppointmentServices collection should be initially empty");
         }

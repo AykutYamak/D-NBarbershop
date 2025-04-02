@@ -1,5 +1,11 @@
-﻿body {
-    background: url('/Assets/Images/slate-texture-background.jpg');
+﻿
+.user-details {
+    background-image: url("/Assets/Images/slate-texture-background-min.jpg");
+}
+
+
+body {
+    background: #141414;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -10,6 +16,10 @@
     padding: 0;
     min-height: 100vh;
 }
+
+/*body::after{
+    background-image: 
+}*/
 
 .container {
     display: flex;
@@ -130,7 +140,8 @@ hr {
     position: relative;
     display: inline-block;
     text-align: center;
-    font-size: 18px;
+    font-size: 15px;
+    font-weight:600;
     letter-spacing: 1px;
     text-decoration: none;
     color: white;

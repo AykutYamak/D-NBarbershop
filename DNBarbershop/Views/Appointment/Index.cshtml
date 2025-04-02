@@ -7,7 +7,7 @@
     <div class="container mt-4">
         <div class="row align-items-center mb-3">
             <div class="col-md-6">
-                <h3 class="text-uppercase fw-bold text-danger">Резервации</h3>
+                <h3 class="text-uppercase fw-bold text-white" style="font-family:Abril Fatface, serif; font-size:2.5rem; text-align:left;">Резервации</h3>
             </div>
             <div class="col-md-6 text-md-end">
                 <a asp-controller="Appointment" asp-action="Add" class="btn btn-dark shadow-sm px-4 py-2">
@@ -15,23 +15,23 @@
                 </a>
             </div>
         </div>
-        <form method="get" class="mb-3 bg-black bg-opacity-75 text-white p-3 rounded">
-            <div class="row g-2 align-items-end">
+        <form method="get" class="mb-4 bg-black bg-opacity-85 text-white p-3 rounded shadow-sm" style="height:110px;">
+            <div class="row g-3 align-items-end">
                 <div class="col-md-4">
-                    <label asp-for="UserId" class="form-label">Потребител</label>
-                    <select asp-for="UserId" asp-items="Model.Users" class="form-select">
+                    <label asp-for="UserId" class="form-label mb-2">Потребител</label>
+                    <select asp-for="UserId" asp-items="Model.Users" class="form-select bg-dark text-light border-secondary">
                         <option value="">Всички потребители</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="BarberId" class="form-label">Бръснар</label>
-                    <select asp-for="BarberId" asp-items="Model.Barbers" class="form-select">
+                    <label asp-for="BarberId" class="form-label mb-2">Бръснар</label>
+                    <select asp-for="BarberId" asp-items="Model.Barbers" class="form-select bg-dark text-light border-secondary">
                         <option value="">Всички бръснари</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <button asp-action="Index" asp-controller="Appointment" type="submit" class="btn btn-secondary">
-                        <i class="bi bi-filter"></i> Филтрирай
+                    <button asp-action="Index" asp-controller="Appointment" type="submit" class="btn btn-secondary w-100 border-0">
+                        <i class="bi bi-filter me-2"></i> Филтрирай
                     </button>
                 </div>
             </div>
@@ -99,4 +99,3 @@
 
 </html>
 
-</html>

@@ -23,7 +23,7 @@ namespace DNBarbershop.Controllers
         public IActionResult Index(MessageViewModel? model)
         {
             var list = _messageService.GetAll();
-            var query = list.AsQueryable(); 
+            var query = list.AsQueryable().OrderByDescending(x => x.Date.Date).ToList(); 
             var message = new MessageViewModel
             {
                 Id = model.Id,
@@ -38,7 +38,6 @@ namespace DNBarbershop.Controllers
             };
             return View(message);
         }
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add()
         {
             var model = new MessageCreateViewModel();

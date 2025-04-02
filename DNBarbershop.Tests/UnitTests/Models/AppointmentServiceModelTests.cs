@@ -20,7 +20,6 @@ namespace DNBarbershop.Tests.Models
         [SetUp]
         public void Setup()
         {
-            // Create a valid User
             var user = new User
             {
                 Id = "test-user-id",
@@ -30,7 +29,6 @@ namespace DNBarbershop.Tests.Models
                 LastName = "Doe"
             };
 
-            // Create a valid Barber
             var barber = new Barber
             {
                 Id = Guid.NewGuid(),
@@ -41,7 +39,6 @@ namespace DNBarbershop.Tests.Models
                 ProfilePictureUrl = "http://example.com/profile.jpg"
             };
 
-            // Create a valid Appointment
             _validAppointment = new Appointment
             {
                 Id = Guid.NewGuid(),
@@ -52,7 +49,6 @@ namespace DNBarbershop.Tests.Models
                 Status = AppointmentStatus.Scheduled
             };
 
-            // Create a valid Service
             _validService = new Service
             {
                 Id = Guid.NewGuid(),
@@ -62,7 +58,6 @@ namespace DNBarbershop.Tests.Models
                 Duration = TimeSpan.FromMinutes(30)
             };
 
-            // Create a valid AppointmentServices
             _validAppointmentServices = new AppointmentServices
             {
                 AppointmentId = _validAppointment.Id,
@@ -91,10 +86,9 @@ namespace DNBarbershop.Tests.Models
         [Test]
         public void AppointmentServices_WithoutAppointmentId_ShouldFailValidation()
         {
-            // Arrange
             var invalidAppointmentServices = new AppointmentServices
             {
-                ServiceId = _validService.Id // No AppointmentId set
+                ServiceId = _validService.Id 
             };
 
             var validationContext = new ValidationContext(invalidAppointmentServices);
@@ -103,20 +97,15 @@ namespace DNBarbershop.Tests.Models
             // Act
             bool isValid = Validator.TryValidateObject(invalidAppointmentServices, validationContext, validationResults, true);
 
-            // Assert
             Assert.Multiple(() =>
             {
-                // Assert that validation failed
                 Assert.That(isValid == false, "AppointmentServices should be invalid without AppointmentId.");
 
-                // Assert that there's exactly one validation error
                 Assert.That(validationResults.Count, Is.EqualTo(1), "Should have exactly one validation error.");
 
-                // Assert that the error message matches the required error message
                 Assert.That(validationResults[0].ErrorMessage, Is.EqualTo(ErrorMessages.RequiredErrorMessage.ToString()),
                     "Error message should match RequiredErrorMessage.");
 
-                // Assert that the error is specifically for the AppointmentId field
                 Assert.That(validationResults[0].MemberNames.Contains("AppointmentId"),
                     "Validation error should be for AppointmentId.");
             });
@@ -146,12 +135,10 @@ namespace DNBarbershop.Tests.Models
         [Test]
         public void AppointmentServices_RelationshipsAreCorrect()
         {
-            // Verify Appointment relationship
             _validAppointmentServices.Appointment = _validAppointment;
             Assert.That(_validAppointment.Equals(_validAppointmentServices.Appointment), "Appointment relationship should be set correctly");
             Assert.That(_validAppointment.Id.Equals(_validAppointmentServices.AppointmentId), "AppointmentId should match Appointment's Id");
 
-            // Verify Service relationship
             _validAppointmentServices.Service = _validService;
             Assert.That(_validService.Equals(_validAppointmentServices.Service), "Service relationship should be set correctly");
             Assert.That(_validService.Id.Equals(_validAppointmentServices.ServiceId), "ServiceId should match Service's Id");

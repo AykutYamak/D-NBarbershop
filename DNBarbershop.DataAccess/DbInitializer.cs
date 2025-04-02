@@ -101,7 +101,7 @@ namespace DNBarbershop.DataAccess
                         LastName = "Георгиев",
                         SpecialityId = context.speciality.First(s=>s.Type == "Шеф").Id,
                         ExperienceYears = 6,
-                        ProfilePictureUrl = "https://thebarbershop.bg/wp-content/uploads/2024/06/the_barber_shop-173-scaled.jpg"
+                        ProfilePictureUrl = "/Assets/Images/barber2.jpg"
                     },
                     new Barber
                     {
@@ -109,7 +109,7 @@ namespace DNBarbershop.DataAccess
                         LastName = "Христов",
                         SpecialityId = context.speciality.First(s => s.Type == "Стажант").Id,
                         ExperienceYears = 0,
-                        ProfilePictureUrl = "https://thebarbershop.bg/wp-content/uploads/2024/06/the_barber_shop-123-scaled.jpg",
+                        ProfilePictureUrl = "/Assets/Images/barber1.jpg",
                     },
                     new Barber
                     {
@@ -117,7 +117,7 @@ namespace DNBarbershop.DataAccess
                         LastName = "Георгиев",
                         SpecialityId = context.speciality.First(s => s.Type == "Младши").Id,
                         ExperienceYears = 1,
-                        ProfilePictureUrl = "https://thebarbershop.bg/wp-content/uploads/2024/06/the_barber_shop-132-scaled.jpg"
+                        ProfilePictureUrl = "/Assets/Images/barber3.jpg"
                     },
                     new Barber
                     {
@@ -125,7 +125,7 @@ namespace DNBarbershop.DataAccess
                         LastName = "Петров",
                         SpecialityId = context.speciality.First(s => s.Type == "Шеф").Id,
                         ExperienceYears = 7,
-                        ProfilePictureUrl = "https://thebarbershop.bg/wp-content/uploads/2024/06/the_barber_shop-158-1-scaled.jpg"
+                        ProfilePictureUrl = "/Assets/Images/barber4.jpg"
                     }
                 };
 
@@ -135,69 +135,7 @@ namespace DNBarbershop.DataAccess
                 }
                 await context.SaveChangesAsync();
             }
-            if (!context.appointments.Any())
-            {
-                var appointments = new Appointment[]
-                {
-                    new Appointment
-                    {
-                        Id = Guid.NewGuid(),
-                        UserId = context.users.First(u => u.FirstName == "Иван" && u.LastName == "Иванов").Id,
-                        BarberId = context.barbers.First(b => b.FirstName == "Христо" && b.LastName == "Петров").Id,
-                        AppointmentDate = new DateTime(2025, 4, 23),
-                        AppointmentTime = new TimeSpan(13, 30, 0),
-                        Status = Models.EnumClasses.AppointmentStatus.Scheduled,
-                        AppointmentServices = new List<AppointmentServices>()
-                    },
-                    new Appointment
-                    {
-                        Id = Guid.NewGuid(),
-                        UserId = context.users.First(u => u.FirstName == "Aykut" && u.LastName == "Yamak").Id,
-                        BarberId = context.barbers.First(b => b.FirstName == "Калоян" && b.LastName == "Георгиев").Id,
-                        AppointmentDate = new DateTime(2025,3,21),
-                        AppointmentTime = new TimeSpan(8,00,00),
-                        Status = Models.EnumClasses.AppointmentStatus.Completed,
-                        AppointmentServices = new List<AppointmentServices>()
-                    }
-                };
-                foreach (var appointment in appointments)
-                {
-                    await context.appointments.AddAsync(appointment);
-                }
-                await context.SaveChangesAsync();
 
-            };
-            try
-            {
-                if (!context.appointmentServices.Any())
-                {
-                    var appointmentServices = new AppointmentServices[]
-                    {
-                        new AppointmentServices
-                        {
-                            Id = Guid.NewGuid(),
-                            AppointmentId = context.appointments.First(u=>u.AppointmentDate == new DateTime(2025,4,23) && u.AppointmentTime == new TimeSpan(13,30,00)).Id,
-                            ServiceId = context.services.First(u=>u.ServiceName == "Класическа прическа").Id
-                        },
-                        new AppointmentServices
-                        {
-                            Id = Guid.NewGuid(),
-                            AppointmentId =  context.appointments.First(u => u.AppointmentDate == new DateTime(2024, 12, 12) && u.AppointmentTime == new TimeSpan(14, 30, 00)).Id,
-                            ServiceId = context.services.First(u => u.ServiceName == "Детска прическа").Id
-                        }
-                    };
-                    foreach (var aps in appointmentServices)
-                    {
-                        await context.appointmentServices.AddAsync(aps);
-                    }
-                    await context.SaveChangesAsync();
-                    Console.WriteLine("AppointmentServices seeded successfully");
-                }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"Error seeding mapping table data: {ex.Message}");
-            }
             if (!context.feedbacks.Any())
             {
                 var feedbacks = new Feedback[]

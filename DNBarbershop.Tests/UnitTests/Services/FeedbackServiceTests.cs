@@ -29,7 +29,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [TestCase(3, "Alice", "Johnson")]
         public async Task Add_ValidFeedback_CallsRepositoryAdd(int rating, string barberFirstName, string barberLastName)
         {
-            // Arrange
             var feedback = new Feedback
             {
                 Id = Guid.NewGuid(),
@@ -43,10 +42,8 @@ namespace DNBarbershop.Tests.UnitTests.Services
             };
             _mockRepository.Setup(r => r.Add(feedback)).Returns(Task.CompletedTask);
 
-            // Act
             await _feedbackService.Add(feedback);
 
-            // Assert
             _mockRepository.Verify(r => r.Add(feedback), Times.Once);
         }
 
@@ -57,22 +54,17 @@ namespace DNBarbershop.Tests.UnitTests.Services
         {
             if (recordCount > 0)
             {
-                // Arrange
                 _mockRepository.Setup(r => r.GetCount()).ReturnsAsync(recordCount);
                 _mockRepository.Setup(r => r.DeleteAll()).Returns(Task.CompletedTask);
 
-                // Act
                 await _feedbackService.DeleteAll();
 
-                // Assert
                 _mockRepository.Verify(r => r.DeleteAll(), Times.Once);
             }
             else
             {
-                // Arrange
                 _mockRepository.Setup(r => r.GetCount()).ReturnsAsync(0);
 
-                // Act & Assert
                 var ex = Assert.ThrowsAsync<ArgumentException>(async () => await _feedbackService.DeleteAll());
                 Assert.That(ex.Message, Is.EqualTo("Nothing to delete here."));
             }
@@ -83,7 +75,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [TestCase("Non", "Existent", false)]
         public async Task Get_WithVariousFilters_ReturnsExpectedResult(string barberFirstName, string barberLastName, bool shouldExist)
         {
-            // Arrange
             Expression<Func<Feedback, bool>> filter = f =>
                 f.Barber.FirstName == barberFirstName && f.Barber.LastName == barberLastName;
 
@@ -103,10 +94,8 @@ namespace DNBarbershop.Tests.UnitTests.Services
 
             _mockRepository.Setup(r => r.Get(filter)).ReturnsAsync(expectedFeedback);
 
-            // Act
             var result = await _feedbackService.Get(filter);
 
-            // Assert
             if (shouldExist)
             {
                 Assert.That(result, Is.Not.Null);
@@ -125,7 +114,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [TestCase(5)]
         public void GetAll_WithDifferentNumberOfFeedbacks_ReturnsCorrectCount(int feedbackCount)
         {
-            // Arrange
             var feedbacks = Enumerable.Range(0, feedbackCount)
                 .Select(i => new Feedback
                 {
@@ -142,10 +130,8 @@ namespace DNBarbershop.Tests.UnitTests.Services
 
             _mockRepository.Setup(r => r.GetAll()).Returns(feedbacks);
 
-            // Act
             var result = _feedbackService.GetAll();
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count(), Is.EqualTo(feedbackCount));
         }
@@ -155,7 +141,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [TestCase(5)]
         public async Task RemoveRange_WithVariousEntityCounts_BehavesCorrectly(int entityCount)
         {
-            // Arrange
             var feedbacks = Enumerable.Range(0, entityCount)
                 .Select(i => new Feedback
                 {
@@ -172,10 +157,8 @@ namespace DNBarbershop.Tests.UnitTests.Services
 
             _mockRepository.Setup(r => r.RemoveRange(feedbacks)).Returns(Task.CompletedTask);
 
-            // Act
             await _feedbackService.RemoveRange(feedbacks);
 
-            // Assert
             _mockRepository.Verify(r => r.RemoveRange(feedbacks), Times.Once);
         }
 
@@ -184,7 +167,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [TestCase(3, "Alice", "Johnson")]
         public async Task Update_WithDifferentFeedbacks_CallsRepositoryUpdate(int rating, string barberFirstName, string barberLastName)
         {
-            // Arrange
             var feedback = new Feedback
             {
                 Id = Guid.NewGuid(),
@@ -198,10 +180,8 @@ namespace DNBarbershop.Tests.UnitTests.Services
             };
             _mockRepository.Setup(r => r.Update(feedback)).Returns(Task.CompletedTask);
 
-            // Act
             await _feedbackService.Update(feedback);
 
-            // Assert
             _mockRepository.Verify(r => r.Update(feedback), Times.Once);
         }
 

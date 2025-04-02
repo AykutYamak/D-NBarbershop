@@ -44,10 +44,20 @@
                                asp-for="ExperienceYears" placeholder="Въведете години опит" min="0">
                     </div>
 
+                    @* <div class="mb-4"> *@
+                    @*     <label class="form-label fw-bold" asp-for="ProfilePictureUrl">Профилна снимка</label> *@
+                    @*     <input type="text" class="form-control shadow-sm rounded-3 py-2" *@
+                    @*            asp-for="ProfilePictureUrl" placeholder="URL на снимката"> *@
+                    @* </div> *@
+
                     <div class="mb-4">
-                        <label class="form-label fw-bold" asp-for="ProfilePictureUrl">Профилна снимка</label>
-                        <input type="text" class="form-control shadow-sm rounded-3 py-2"
-                               asp-for="ProfilePictureUrl" placeholder="URL на снимката">
+                        <label class="form-label fw-bold">Изберете снимка:</label>
+                        <input type="file" name="imageFile" id="imageFileInput" accept="image/*" class="form-control" />
+                    </div>
+
+                    <div class="mb-4">
+                        <h3>Качена снимка:</h3>
+                        <img id="imagePreview"  alt="Uploaded Image" style="max-width: 300px; text-align:center;" />
                     </div>
 
                     <div class="text-center mt-4">
@@ -60,7 +70,7 @@
             </div>
         </div>
     </div>
-
+   
     <style>
         .card-body label {
             text-shadow: 0px 2px 4px rgba(0,0,0,0.5);

@@ -37,71 +37,57 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [Test]
         public async Task Add_ValidUser_ShouldCallRepositoryAdd()
         {
-            // Arrange
             _mockUserRepository.Setup(repo => repo.Add(It.IsAny<User>()))
                 .Returns(Task.CompletedTask);
 
-            // Act
             await _userService.Add(_testUser);
 
-            // Assert
             _mockUserRepository.Verify(repo => repo.Add(_testUser), Times.Once);
         }
 
         [Test]
         public async Task Delete_ValidId_ShouldCallRepositoryDelete()
         {
-            // Arrange
             Guid userId = Guid.NewGuid();
             _mockUserRepository.Setup(repo => repo.Delete(userId))
                 .Returns(Task.CompletedTask);
 
-            // Act
             await _userService.Delete(userId);
 
-            // Assert
             _mockUserRepository.Verify(repo => repo.Delete(userId), Times.Once);
         }
 
         [Test]
         public async Task DeleteStringId_ValidId_ShouldCallRepositoryDeleteStringId()
         {
-            // Arrange
             Guid userId = Guid.NewGuid();
             _mockUserRepository.Setup(repo => repo.DeleteStringId(userId))
                 .Returns(Task.CompletedTask);
 
-            // Act
             await _userService.DeleteStringId(userId);
 
-            // Assert
             _mockUserRepository.Verify(repo => repo.DeleteStringId(userId), Times.Once);
         }
 
         [Test]
         public async Task DeleteAll_WithExistingUsers_ShouldCallRepositoryDeleteAll()
         {
-            // Arrange
             _mockUserRepository.Setup(repo => repo.GetCount())
                 .ReturnsAsync(5);
             _mockUserRepository.Setup(repo => repo.DeleteAll())
                 .Returns(Task.CompletedTask);
 
-            // Act
             await _userService.DeleteAll();
 
-            // Assert
             _mockUserRepository.Verify(repo => repo.DeleteAll(), Times.Once);
         }
 
         [Test]
         public async Task DeleteAll_NoUsers_ShouldThrowArgumentException()
         {
-            // Arrange
             _mockUserRepository.Setup(repo => repo.GetCount())
                 .ReturnsAsync(0);
 
-            // Assert
             var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
                 await _userService.DeleteAll()
             );
@@ -111,15 +97,12 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [Test]
         public async Task Get_WithFilter_ShouldReturnUser()
         {
-            // Arrange
             Expression<Func<User, bool>> filter = u => u.Email == "test@example.com";
             _mockUserRepository.Setup(repo => repo.Get(filter))
                 .ReturnsAsync(_testUser);
 
-            // Act
             var result = await _userService.Get(filter);
 
-            // Assert
             Assert.That(_testUser.Equals(result));
             _mockUserRepository.Verify(repo => repo.Get(filter), Times.Once);
         }
@@ -127,15 +110,12 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [Test]
         public void GetAll_ShouldReturnQueryableUsers()
         {
-            // Arrange
             var users = new List<User> { _testUser }.AsQueryable();
             _mockUserRepository.Setup(repo => repo.GetAll())
                 .Returns(users);
 
-            // Act
             var result = _userService.GetAll();
 
-            // Assert
             Assert.That(users.Equals(result));
             _mockUserRepository.Verify(repo => repo.GetAll(), Times.Once);
         }
@@ -143,15 +123,12 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [Test]
         public async Task RemoveRange_ValidUsers_ShouldCallRepositoryRemoveRange()
         {
-            // Arrange
             var users = new List<User> { _testUser, new User() };
             _mockUserRepository.Setup(repo => repo.RemoveRange(users))
                 .Returns(Task.CompletedTask);
 
-            // Act
             await _userService.RemoveRange(users);
 
-            // Assert
             _mockUserRepository.Verify(repo => repo.RemoveRange(users), Times.Once);
         }
 
@@ -159,14 +136,11 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [Test]
         public async Task Update_ValidUser_ShouldCallRepositoryUpdate()
         {
-            // Arrange
             _mockUserRepository.Setup(repo => repo.Update(It.IsAny<User>()))
                 .Returns(Task.CompletedTask);
 
-            // Act
             await _userService.Update(_testUser);
 
-            // Assert
             _mockUserRepository.Verify(repo => repo.Update(_testUser), Times.Once);
         }
     }

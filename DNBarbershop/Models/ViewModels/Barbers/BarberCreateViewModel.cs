@@ -21,6 +21,7 @@ namespace DNBarbershop.Models.ViewModels.Barbers
         public int ExperienceYears { get; set; }
         [Required(ErrorMessage = RequiredErrorMessage)]
         public string ProfilePictureUrl { get; set; }
+        public IFormFile? imageFile { get; set; }
 
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
         public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();

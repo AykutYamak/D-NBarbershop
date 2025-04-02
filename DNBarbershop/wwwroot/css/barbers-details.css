@@ -1,5 +1,8 @@
-﻿body {
-    background: url('/Assets/Images/slate-texture-background.jpg');
+﻿.barbers-details {
+    background-image: url("/Assets/Images/slate-texture-background-min.jpg");
+}
+body {
+    background: #141414;
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -116,13 +119,13 @@
     color:inherit;
 }
 .barbers-index-title{
-    margin-bottom:2%;
+    margin-bottom:2.3%;
     position:relative;
     width:100%;
 }
     .barbers-index-title h1 {
         font-size: 4rem;
         font-family: "Abril Fatface",serif;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         color: #FFFFFF;
     }

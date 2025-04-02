@@ -45,7 +45,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             _barberServiceMock = new Mock<IBarberService>();
             _userServiceMock = new Mock<IUserService>();
 
-            // Setup mocks with default returns based on context
             _feedbackServiceMock.Setup(x => x.GetAll())
                 .Returns(_context.feedbacks);
             _barberServiceMock.Setup(x => x.GetAll())
@@ -76,14 +75,11 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public void Index_WithNoFilter_ReturnsAllFeedbacks()
         {
-            // Arrange
             var filter = new FeedbackFilterViewModel();
 
-            // Setup a user and barbers for the test
             var user = new User { Id = Guid.NewGuid().ToString(), FirstName = "Test", LastName = "User" };
             var barber = _context.barbers.First();
 
-            // Create some sample feedbacks
             var feedbacks = new List<Feedback>
             {
                 new Feedback
@@ -100,11 +96,9 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
 
             _feedbackServiceMock.Setup(x => x.GetAll()).Returns(feedbacks.AsQueryable());
 
-            // Act
             var result = _feedbackController.Index(filter) as ViewResult;
             var model = result?.Model as FeedbackFilterViewModel;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(model, Is.Not.Null);
             Assert.That(model.Feedbacks.Count, Is.EqualTo(1));
@@ -113,11 +107,9 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public void Index_WithBarberFilter_ReturnsFilteredFeedbacks()
         {
-            // Arrange
             var barber = _context.barbers.First();
             var filter = new FeedbackFilterViewModel { BarberId = barber.Id };
 
-            // Create some sample feedbacks
             var feedbacks = new List<Feedback>
             {
                 new Feedback
@@ -132,11 +124,9 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
 
             _feedbackServiceMock.Setup(x => x.GetAll()).Returns(feedbacks.AsQueryable());
 
-            // Act
             var result = _feedbackController.Index(filter) as ViewResult;
             var model = result?.Model as FeedbackFilterViewModel;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(model, Is.Not.Null);
             Assert.That(model.Feedbacks.Count, Is.EqualTo(1));
@@ -146,7 +136,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Add_ValidFeedback_AddsSuccessfully()
         {
-            // Arrange
             var user = new User { Id = Guid.NewGuid().ToString() };
             var barber = _context.barbers.First();
 
@@ -164,10 +153,8 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 FeedBackDate = DateTime.UtcNow
             };
 
-            // Act
             var result = await _feedbackController.Add(feedbackModel) as RedirectToActionResult;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ActionName.ToString(), Is.EqualTo("Index"));
             _feedbackServiceMock.Verify(x => x.Add(It.IsAny<Feedback>()), Times.Once);
@@ -176,7 +163,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Add_InvalidBarber_ReturnsViewWithError()
         {
-            // Arrange
             var user = new User { Id = Guid.NewGuid().ToString() };
             _userManagerMock.Setup(x => x.GetUserAsync(It.IsAny<System.Security.Claims.ClaimsPrincipal>()))
                 .ReturnsAsync(user);
@@ -186,22 +172,19 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
 
             var feedbackModel = new FeedbackCreateViewModel
             {
-                BarberId = Guid.Empty, // Invalid barber ID
+                BarberId = Guid.Empty, 
                 Rating = 5,
                 Comment = "Test Comment"
             };
 
-            // Act
             var result = await _feedbackController.Add(feedbackModel) as ViewResult;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
         }
 
         [Test]
         public async Task Edit_ValidFeedback_UpdatesSuccessfully()
         {
-            // Arrange
             var user = new User { Id = Guid.NewGuid().ToString() };
             var barber = _context.barbers.First();
             var existingFeedback = new Feedback
@@ -230,10 +213,8 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 Comment = "Updated comment"
             };
 
-            // Act
             var result = await _feedbackController.Edit(feedbackModel) as RedirectToActionResult;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ActionName, Is.EqualTo("Index"));
             _feedbackServiceMock.Verify(x => x.Update(It.IsAny<Feedback>()), Times.Once);
@@ -242,7 +223,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task Delete_ExistingFeedback_DeletesSuccessfully()
         {
-            // Arrange
             var feedbackId = Guid.NewGuid();
             var existingFeedback = new Feedback
             {
@@ -256,10 +236,8 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             var tempData = new Mock<ITempDataDictionary>();
             _feedbackController.TempData = tempData.Object;
 
-            // Act
             var result = await _feedbackController.Delete(feedbackId) as RedirectToActionResult;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ActionName, Is.EqualTo("Index"));
             _feedbackServiceMock.Verify(x => x.Delete(feedbackId), Times.Once);
@@ -268,7 +246,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task AddComment_ValidUserComment_AddsSuccessfully()
         {
-            // Arrange
             var user = new User { Id = Guid.NewGuid().ToString() };
             var barber = _context.barbers.First();
 
@@ -286,10 +263,8 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
                 FeedBackDate = DateTime.UtcNow
             };
 
-            // Act
             var result = await _feedbackController.AddComment(feedbackModel) as RedirectToActionResult;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ActionName, Is.EqualTo("Details"));
             Assert.That(result.ControllerName, Is.EqualTo("Barber"));
@@ -299,7 +274,6 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
         [Test]
         public async Task AddComment_InvalidComment_ReturnsRedirectWithError()
         {
-            // Arrange
             var user = new User { Id = Guid.NewGuid().ToString() };
             var barber = _context.barbers.First();
 
@@ -313,13 +287,11 @@ namespace DNBarbershop.Tests.UnitTests.Controllers
             {
                 BarberId = barber.Id,
                 Rating = 4,
-                Comment = null  // Invalid comment
+                Comment = null 
             };
 
-            // Act
             var result = await _feedbackController.AddComment(feedbackModel) as RedirectToActionResult;
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ActionName, Is.EqualTo("Details"));
             Assert.That(result.ControllerName, Is.EqualTo("Barber"));

@@ -173,7 +173,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [Test]
         public void InvalidEmail_ShouldFail_Validation()
         {
-            // Test cases for invalid emails
             string[] invalidEmails = new[]
             {
                 "invalid-email",
@@ -205,7 +204,6 @@ namespace DNBarbershop.Tests.UnitTests.Services
         [Test]
         public void ValidEmail_ShouldPass_Validation()
         {
-            // Test cases for valid emails
             string[] validEmails = new[]
             {
                 "user@example.com",

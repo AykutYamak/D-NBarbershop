@@ -19,7 +19,6 @@
         <div class="main-container">
             <h2>Запази своя час!</h2>
             <form asp-action="MakeAppointment" method="post">
-                <!-- Barber Selection -->
                 <div class="mb-4">
                     <label class="form-label">Избери бръснар:</label>
                     <div class="row g-4 d-flex justify-content-center">
@@ -35,8 +34,6 @@
                         }
                     </div>
                 </div>
-
-                <!-- Service Selection -->
                 <div class="mb-4 service-container">
                     <label class="form-label">Избери услуга:</label>
                     <div id="serviceContainer" class="row g-4 justify-content-center">
@@ -68,11 +65,8 @@
                         }
                     </div>
                 </div>
-
-                <!-- Date & Time Section - Enhanced -->
                 <div class="date-time-section">
                     <div class="row g-4">
-                        <!-- Date Picker -->
                         <div class="col-md-6">
                             <div class="date-picker-container">
                                 <label class="form-label mb-3 d-block text-light" style="font-size: 1.3rem; text-align: left;">
@@ -91,8 +85,6 @@
                                 </small>
                             </div>
                         </div>
-
-                        <!-- Time Selector -->
                         <div class="col-md-6">
                             <div class="time-select-container">
                                 <label class="form-label mb-3 d-block text-light" style="font-size: 1.3rem; text-align: left;">
@@ -113,8 +105,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Submit Button -->
                 <div class="text-center">
                     @if (User.IsInRole(SD.AdminRole))
                     {
@@ -145,7 +135,7 @@
 
                 function disableWeekendsAndPast(event) {
                     const selectedDate = new Date(event.target.value);
-                    const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+                    const dayOfWeek = selectedDate.getDay(); 
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
 
@@ -187,18 +177,16 @@
                         }
                         const availableSlots = await response.json();
 
-                        // Clear and populate the dropdown with available slots
                         timeSelect.innerHTML = '<option value="">Избери си час от тук!</option>';
                         availableSlots.forEach(slot => {
                             const option = document.createElement("option");
                             option.value = slot;
-                            option.textContent = slot; // Already formatted as "hh:mm" from backend
+                            option.textContent = slot;
                             timeSelect.appendChild(option);
                         });
 
-                        // Optional: Add a note for Saturday
                         const selectedDate = new Date(appointmentDate);
-                        if (selectedDate.getDay() === 6) { // Saturday
+                        if (selectedDate.getDay() === 6) {
                             console.log("Saturday selected: Showing slots from 10:00 to 15:00");
                         }
                     } catch (error) {

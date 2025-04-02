@@ -18,12 +18,43 @@ namespace DNBarbershop.Controllers
         private readonly IFeedbackService _feedbackService;
         private readonly ISpecialityService _specialityService;
         private readonly UserManager<User> _userManager;
-        public BarberController(UserManager<User> userManager,IFeedbackService feedbackService, IBarberService barberService, ISpecialityService specialityService)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public BarberController(UserManager<User> userManager,IFeedbackService feedbackService, IBarberService barberService, ISpecialityService specialityService, IWebHostEnvironment webHostEnvironment)
         {
             _barberService = barberService;
             _specialityService = specialityService;
             _feedbackService = feedbackService;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
+        }
+        [HttpGet]
+        public IActionResult Upload()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile imageFile)
+        {
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+
+            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            string filePath = Path.Combine(uploadPath, fileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+
+            ViewBag.ImagePath = "/uploads/" + fileName;
+            ViewBag.Message = "Image uploaded successfully!";
+
+            return View();
         }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
@@ -74,6 +105,29 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(BarberCreateViewModel barberModel)
         {
+            
+            string localPath = "/uploads/default-icon.webp";
+
+            if (barberModel.imageFile != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(barberModel.imageFile.FileName);
+
+                string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                string filePath = Path.Combine(uploadPath, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await barberModel.imageFile.CopyToAsync(fileStream);
+                }
+
+                localPath = "/uploads/" + fileName;
+            }
+
             var currentUser = await _userManager.GetUserAsync(User);
 
             if (currentUser == null)
@@ -87,7 +141,7 @@ namespace DNBarbershop.Controllers
                 FirstName = barberModel.FirstName,
                 LastName = barberModel.LastName,
                 ExperienceYears = barberModel.ExperienceYears,
-                ProfilePictureUrl = barberModel.ProfilePictureUrl,
+                ProfilePictureUrl = localPath,
                 SpecialityId = barberModel.SelectedSpecialityId
             };
             if (string.IsNullOrEmpty(barber.FirstName) || string.IsNullOrEmpty(barber.LastName) || barber.ExperienceYears < 0 || barber.ExperienceYears > 30 || barber.SpecialityId.ToString() == "00000000-0000-0000-0000-000000000000")
@@ -98,7 +152,7 @@ namespace DNBarbershop.Controllers
             var barbers = _barberService.GetAll().ToList();
             foreach (var item in barbers)
             {
-                if (barber.ProfilePictureUrl == item.ProfilePictureUrl)
+                if (barber.ProfilePictureUrl == item.ProfilePictureUrl && barber.ProfilePictureUrl != "/uploads/default-icon.webp")
                 {
                     TempData["error"] = "Бръснар с такава снимка вече съществува!";
                     return RedirectToAction("Add", "Barber", null);
@@ -137,14 +191,32 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(BarberEditViewModel barberModel)
         {
-            if (false)
+            var existingBarber = await _barberService.Get(x=>x.Id == barberModel.Id);
+            if (existingBarber == null)
             {
-                var barber = await _barberService.Get(b => b.Id == barberModel.Id);
-                if (barber == null)
+                TempData["error"] = "Бръснарят не е намерен!";
+                return RedirectToAction("Index");
+            }
+
+            string localPath = existingBarber.ProfilePictureUrl;
+
+            if (barberModel.imageFile != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(barberModel.imageFile.FileName);
+                string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+
+                if (!Directory.Exists(uploadPath))
                 {
-                    TempData["error"] = "Няма такъв бръснар.";
-                    return NotFound();
+                    Directory.CreateDirectory(uploadPath);
                 }
+
+                string filePath = Path.Combine(uploadPath, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await barberModel.imageFile.CopyToAsync(fileStream);
+                }
+
+                localPath = "/uploads/" + fileName; 
             }
             var model = new Barber
             {
@@ -152,7 +224,7 @@ namespace DNBarbershop.Controllers
                 FirstName = barberModel.FirstName,
                 LastName = barberModel.LastName,
                 ExperienceYears = barberModel.ExperienceYears,
-                ProfilePictureUrl = barberModel.ProfilePictureUrl,
+                ProfilePictureUrl = localPath,
                 SpecialityId = barberModel.SelectedSpecialityId
             };
             if (string.IsNullOrEmpty(model.FirstName) || string.IsNullOrEmpty(model.LastName) || model.ExperienceYears < 0 || model.ExperienceYears > 30 || model.SpecialityId.ToString() == "00000000-0000-0000-0000-000000000000")

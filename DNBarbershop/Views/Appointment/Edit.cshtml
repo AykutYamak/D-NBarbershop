@@ -48,7 +48,6 @@
                     </div>
 
                     <div class="row mt-4">
-                        <!-- Barber Selection -->
                         <div class="col-md-3 mb-3">
                             <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
                                 Бръснар
@@ -57,8 +56,6 @@
                                     class="form-select shadow-sm rounded-3 py-2" id="barberSelect" disabled>
                             </select>
                         </div>
-
-                        <!-- Date Selection -->
                         <div class="col-md-3 mb-3">
                             <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
                                 Дата
@@ -69,8 +66,6 @@
                                    min="@DateTime.Now.ToString("yyyy-MM-dd")" id="dateInput">
                             <span class="text-danger">@Html.ValidationMessageFor(m => m.AppointmentDate)</span>
                         </div>
-
-                        <!-- Time Selection -->
                         <div class="col-md-3 mb-3">
                             <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
                                 Час
@@ -93,8 +88,6 @@
                             </select>
                             <span class="text-danger">@Html.ValidationMessageFor(m => m.AppointmentTime)</span>
                         </div>
-
-                        <!-- Status Selection -->
                         <div class="col-md-3 mb-3">
                             <h5 class="form-label fw-bold mb-3 pb-2 border-bottom border-2">
                                 Статус
@@ -132,14 +125,12 @@
                 const errorText = document.getElementById("dateError");
                 const serviceCheckboxes = document.querySelectorAll("input[name='SelectedServiceIds']");
 
-                // Store the current appointment time globally - will be set properly when page loads
                 const currentAppointmentTime = '@Model.AppointmentTime.ToString()';
                 console.log("Current Appointment Time:", currentAppointmentTime);
 
-                // Disable weekends and past dates
                 function disableWeekendsAndPast(event) {
                     const selectedDate = new Date(event.target.value);
-                    const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+                    const dayOfWeek = selectedDate.getDay(); 
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
 
@@ -152,8 +143,6 @@
                         errorText.classList.add("d-none");
                     }
                 }
-
-                // Calculate total duration of selected services
                 function calculateTotalDuration() {
                     let totalDuration = 0;
                     serviceCheckboxes.forEach(checkbox => {
@@ -165,8 +154,6 @@
                     });
                     return totalDuration;
                 }
-
-                // Update available time slots based on selections
                 async function updateAvailableTimeSlots() {
                     const selectedBarber = barberSelect.value;
                     const appointmentDate = dateInput.value;
@@ -176,7 +163,6 @@
                     console.log("Appointment Date:", appointmentDate);
                     console.log("Total Duration (minutes):", totalDurationMinutes);
 
-                    // Save the currently selected time value before wiping out the dropdown
                     const currentlySelectedTime = timeSelect.value;
 
                     if (!selectedBarber || !appointmentDate || totalDurationMinutes === 0) {
@@ -193,10 +179,8 @@
 
                         console.log("Available Slots:", availableSlots);
 
-                        // Clear and populate the dropdown with available slots
                         timeSelect.innerHTML = '<option value="" disabled>Избери си час от тук!</option>';
 
-                        // Always add the current appointment time if we're in edit mode
                         if (currentAppointmentTime && currentAppointmentTime.trim() !== '') {
                             const currentOption = document.createElement("option");
                             currentOption.value = currentAppointmentTime;
@@ -204,9 +188,7 @@
                             timeSelect.appendChild(currentOption);
                         }
 
-                        // Add all available slots except the current one (which we've already added)
                         availableSlots.forEach(slot => {
-                            // Skip if this slot is the same as the current appointment time
                             if (slot.trim() === currentAppointmentTime.trim()) {
                                 return;
                             }
@@ -217,10 +199,6 @@
                             timeSelect.appendChild(option);
                         });
 
-                        // Restore selection priority:
-                        // 1. Previously selected time (if user was changing things)
-                        // 2. Current appointment time from model (for initial load)
-                        // 3. First available option
                         if (currentlySelectedTime && currentlySelectedTime !== "") {
                             for (let i = 0; i < timeSelect.options.length; i++) {
                                 if (timeSelect.options[i].value === currentlySelectedTime) {
@@ -237,16 +215,14 @@
                             }
                         }
 
-                        // Optional: Add a note for Saturday
                         const selectedDate = new Date(appointmentDate);
-                        if (selectedDate.getDay() === 6) { // Saturday
+                        if (selectedDate.getDay() === 6) { 
                             console.log("Saturday selected: Showing slots from 10:00 to 15:00");
                         }
                     } catch (error) {
                         console.error("Error fetching available time slots:", error);
                         timeSelect.innerHTML = '<option value="">Грешка при зареждане на свободните часове.</option>';
 
-                        // Still add the current time even if there's an error
                         if (currentAppointmentTime && currentAppointmentTime.trim() !== '') {
                             const option = document.createElement("option");
                             option.value = currentAppointmentTime;
@@ -257,7 +233,6 @@
                     }
                 }
 
-                // Attach event listeners
                 barberSelect.addEventListener("change", updateAvailableTimeSlots);
                 dateInput.addEventListener("change", function (event) {
                     disableWeekendsAndPast(event);
@@ -265,25 +240,20 @@
                 });
                 serviceCheckboxes.forEach(checkbox => checkbox.addEventListener("change", updateAvailableTimeSlots));
 
-                // Initialize form
                 disableWeekendsAndPast({ target: dateInput });
                 const today = new Date().toISOString().split('T')[0];
                 dateInput.setAttribute('min', today);
 
-                // Mark selected services as selected-service for visual feedback
                 serviceCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
                         document.querySelector(`label[for="${checkbox.id}"]`).classList.add("selected-service");
                     }
                 });
 
-                // Update time slots on initial load if barber and date are selected
                 if (barberSelect.value && dateInput.value) {
-                    updateAvailableTimeSlots(); // Call this function on page load
+                    updateAvailableTimeSlots(); 
                 } else {
-                    // If we can't call updateAvailableTimeSlots yet, at least make sure the current time is in the dropdown
                     if (currentAppointmentTime && currentAppointmentTime.trim() !== '') {
-                        // Check if it's already there
                         let exists = false;
                         for (let i = 0; i < timeSelect.options.length; i++) {
                             if (timeSelect.options[i].value === currentAppointmentTime) {
@@ -292,8 +262,6 @@
                                 break;
                             }
                         }
-
-                        // If not, add it
                         if (!exists) {
                             const option = document.createElement("option");
                             option.value = currentAppointmentTime;
@@ -304,7 +272,6 @@
                     }
                 }
 
-                // Add visual feedback when services are selected
                 serviceCheckboxes.forEach(checkbox => {
                     checkbox.addEventListener("change", function() {
                         const serviceCards = document.querySelectorAll(".service-card label");
@@ -321,8 +288,6 @@
                                 document.querySelector(`label[for="${cb.id}"]`).classList.add("selected-service");
                             }
                         });
-
-                        // Update total duration and price display if needed
                         const totalDuration = calculateTotalDuration();
                         console.log(`Selected services: ${selectedCount}, Total duration: ${totalDuration} minutes`);
                     });
@@ -379,7 +344,6 @@
                 .btn-dark:hover::before {
                     left: 100%;
                 }
-            /* Other styles... */
         </style>
     }
 </body>

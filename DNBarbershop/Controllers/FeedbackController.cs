@@ -46,7 +46,7 @@ namespace DNBarbershop.Controllers
             var barbers = _barberService.GetAll();
             var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
-            var feedbacks = query.Include(u => u.User).Include(b => b.Barber).ToList();
+            var feedbacks = query.Include(u => u.User).Include(b => b.Barber).OrderByDescending(x => x.FeedBackDate.Date).ToList();
 
             var model = new FeedbackFilterViewModel
             {
@@ -246,9 +246,7 @@ namespace DNBarbershop.Controllers
                 {
                     Id = Guid.NewGuid(),
                     UserId = feedbackModel.UserId,
-                    //User = currentUser,
                     BarberId = feedbackModel.BarberId,
-                    //Barber = _barberService.Get(b => b.Id == feedbackModel.BarberId).Result,
                     Rating = feedbackModel.Rating,
                     Comment = feedbackModel.Comment,
                     FeedBackDate = feedbackModel.FeedBackDate

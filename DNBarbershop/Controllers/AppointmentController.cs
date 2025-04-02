@@ -152,6 +152,7 @@ namespace DNBarbershop.Controllers
             .Include(a => a.Barber)
             .Include(a => a.AppointmentServices)
             .ThenInclude(ap => ap.Service)
+            .OrderByDescending(x => x.AppointmentDate)
             .ToList();
             foreach (var item in appointments)
             {   
@@ -467,7 +468,6 @@ namespace DNBarbershop.Controllers
             }
             else
             {
-                // Calculate total duration
                 int totalDurationMinutes = 0;
                 foreach (var serviceId in model.SelectedServiceIds)
                 {

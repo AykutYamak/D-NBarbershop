@@ -94,16 +94,6 @@
                                     <option value="@i" selected="@(i == Model.Duration.Hours ? "selected" : null)">@i час(а)</option>
                                 }
                             </select>
-
-                            @* <select id="Hours" name="DurationHours" class="form-select me-2 shadow-sm rounded-3 py-2"> *@
-                            @*     <option value="0">0 часа</option> *@
-                            @*     <option value="1">1 час</option> *@
-                            @*     <option value="2" selected>2 часа</option> *@
-                            @*     <option value="3">3 часа</option> *@
-                            @*     <option value="4">4 часа</option> *@
-                            @*     <option value="5">5 часа</option> *@
-                            @* </select> *@
-
                             <select id="Minutes" name="DurationMinutes" class="form-select shadow-sm rounded-3 py-2">
                                 @foreach (var minute in new[] { 0, 15, 30 })
                                 {

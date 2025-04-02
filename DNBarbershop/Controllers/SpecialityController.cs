@@ -150,7 +150,5 @@ namespace DNBarbershop.Controllers
             }
             return RedirectToAction("Index");
         }
-        //User View Actions
-
     }
 }
