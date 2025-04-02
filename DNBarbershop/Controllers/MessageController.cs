@@ -47,28 +47,20 @@ namespace DNBarbershop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(MessageCreateViewModel messageModel)
         {
-           
-
+            string regex = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             var currentUser = await _userManager.GetUserAsync(User);
-
-            if (currentUser==null)
-            {
-                TempData["error"] = "Не сте регистриран/а.";
-                return RedirectToAction("AboutUs", "Home", null);
-            }
-            else
+            if (currentUser == null)
             {
                 var message = new Message
                 {
                     Id = Guid.NewGuid(),
                     Email = messageModel.Email,
-                    UserId = currentUser.Id,
+                    UserId = null,
                     Content = messageModel.Content,
                     Date = DateTime.UtcNow,
                     IsRead = false
                 };
-                string regex = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-                if (!Regex.IsMatch(message.Email,regex,RegexOptions.IgnoreCase))
+                if (!Regex.IsMatch(message.Email, regex, RegexOptions.IgnoreCase))
                 {
                     TempData["error"] = "Невалидни данни.";
                     return RedirectToAction("AboutUs", "Home", null);
@@ -78,7 +70,7 @@ namespace DNBarbershop.Controllers
                     TempData["error"] = "Въведете валиден e-mail!";
                     return RedirectToAction("AboutUs", "Home", null);
                 }
-                else if(!string.IsNullOrEmpty(message.Email))
+                else if (!string.IsNullOrEmpty(message.Email))
                 {
                     if (string.IsNullOrEmpty(message.Content))
                     {
@@ -94,6 +86,44 @@ namespace DNBarbershop.Controllers
                     return RedirectToAction("AboutUs", "Home", null);
                 }
             }
+            else
+            {
+                var message = new Message
+                {
+                    Id = Guid.NewGuid(),
+                    Email = messageModel.Email,
+                    UserId = currentUser.Id,
+                    Content = messageModel.Content,
+                    Date = DateTime.UtcNow,
+                    IsRead = false
+                };
+                if (!Regex.IsMatch(message.Email, regex, RegexOptions.IgnoreCase))
+                {
+                    TempData["error"] = "Невалидни данни.";
+                    return RedirectToAction("AboutUs", "Home", null);
+                }
+                else if (string.IsNullOrEmpty(message.Email))
+                {
+                    TempData["error"] = "Въведете валиден e-mail!";
+                    return RedirectToAction("AboutUs", "Home", null);
+                }
+                else if (!string.IsNullOrEmpty(message.Email))
+                {
+                    if (string.IsNullOrEmpty(message.Content))
+                    {
+                        TempData["error"] = "Не може да се изпрати празен текст!";
+                        return RedirectToAction("AboutUs", "Home", null);
+                    }
+                    await _messageService.Add(message);
+                    TempData["success"] = "Успешно изпратено съобщение.";
+                }
+                else
+                {
+                    TempData["error"] = "Невалидни данни.";
+                    return RedirectToAction("AboutUs", "Home", null);
+                }
+            }
+                
             return RedirectToAction("AboutUs","Home",null);
         }
         [Authorize(Roles = "Admin")]
