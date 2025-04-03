@@ -157,6 +157,12 @@ namespace DNBarbershop.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+            if (existingUser!=null)
+            {
+                ModelState.AddModelError("Input.Email", "This email address is already registered.");
+                return Page();
+            }
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
