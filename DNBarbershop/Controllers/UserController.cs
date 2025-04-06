@@ -63,15 +63,21 @@ namespace DNBarbershop.Controllers
             {
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
-
-            var result = await _userManager.AddToRoleAsync(user, "Admin");
-
-            if (result.Succeeded)
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("User"))
             {
-                TempData["success"] = $"Успешно направихте {user.FirstName} {user.LastName} админ!";
+                var result = await _userManager.AddToRoleAsync(user, "Admin");
+                if (result.Succeeded)
+                {
+                    TempData["success"] = $"Успешно направихте {user.FirstName} {user.LastName} админ!";
+                }
+                if (roles.Contains("User"))
+                {
+                    await _userManager.RemoveFromRoleAsync(user, "User");
+                }
                 return RedirectToAction("Index");
-            }
 
+            }
             return BadRequest("Failed to assign admin role");
         }
         [Authorize(Roles = "Admin")]
@@ -89,15 +95,23 @@ namespace DNBarbershop.Controllers
             {
                 await _roleManager.CreateAsync(new IdentityRole("User"));
             }
-
-            var result = await _userManager.AddToRoleAsync(user, "User");
-
-            if (result.Succeeded)
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("Admin"))
             {
-                TempData["success"] = $"Успешно направихте {user.FirstName} {user.LastName} потребител!";
-                return RedirectToAction("Index");
-            }
 
+                var result = await _userManager.AddToRoleAsync(user, "User");
+
+                if (result.Succeeded)
+                {
+                    TempData["success"] = $"Успешно направихте {user.FirstName} {user.LastName} потребител!";
+                }
+                if (roles.Contains("Admin"))
+                {
+                    await _userManager.RemoveFromRoleAsync(user, "Admin");
+                }
+                return RedirectToAction("Index");
+
+            }
             return BadRequest("Failed to assign user role");
         }
         [Authorize(Roles = "Admin")]
@@ -151,6 +165,10 @@ namespace DNBarbershop.Controllers
                 if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Cancelled)
                 {
                     item.Status = AppointmentStatus.Completed;
+                }
+                else if (item.Status == AppointmentStatus.Cancelled)
+                {
+                    item.Status = AppointmentStatus.Cancelled;
                 }
                 else
                 {

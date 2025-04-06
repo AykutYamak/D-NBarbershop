@@ -299,15 +299,6 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
-            appointment.UserId = currentUser.Id;
-
-
-
-            if (appointment.UserId != currentUser.Id)
-            {
-                TempData["error"] = "Не сте регистриран/а.";
-                return Unauthorized();
-            }
 
             await PopulateViewBags();
 
@@ -337,18 +328,11 @@ namespace DNBarbershop.Controllers
                 return Unauthorized();
             }
 
-            model.UserId = currentUser.Id;
-
             var appointment = await _appointmentService.GetWithRels(a => a.Id == model.Id);
             if (appointment == null)
             {
                 TempData["error"] = "Резервацията не е намерена.";
                 return RedirectToAction("Index");
-            }
-            if (model.UserId != currentUser.Id)
-            {
-                TempData["error"] = "Не сте регистриран/а.";
-                return BadRequest();
             }
             else
             {

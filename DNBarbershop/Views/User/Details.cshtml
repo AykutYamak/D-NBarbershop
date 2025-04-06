@@ -71,6 +71,14 @@
                                                     </button>
                                                 </form>
                                             }
+                                            else if(appointment.Status.ToString() == "Cancelled")
+                                            {
+                                                <form asp-controller="Appointment" asp-action="UserAppointmentDelete" asp-route-id="@appointment.Id" method="post">
+                                                    <button type="submit" class="btn cancel-button px-3 py-2">
+                                                        <i class="bi bi-trash"></i> Изтрии
+                                                    </button>
+                                                </form>
+                                            }
                                             else
                                             {
                                                 <form asp-controller="Appointment" asp-action="UserAppointmentDelete" asp-route-id="@appointment.Id" method="post">
