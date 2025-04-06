@@ -27,35 +27,7 @@ namespace DNBarbershop.Controllers
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
-        [HttpGet]
-        public IActionResult Upload()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile imageFile)
-        {
-            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-
-            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-
-            string filePath = Path.Combine(uploadPath, fileName);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(fileStream);
-            }
-
-            ViewBag.ImagePath = "/uploads/" + fileName;
-            ViewBag.Message = "Image uploaded successfully!";
-
-            return View();
-        }
+        
         //Admin View Actions
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(BarberFilterViewModel? filter)
