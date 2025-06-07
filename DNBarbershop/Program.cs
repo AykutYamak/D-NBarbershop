@@ -22,11 +22,11 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("HomeConnection");
-
-
-
-
+        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(connection))
+        {
+            throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        }
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,b=>b.MigrationsAssembly("DNBarbershop.DataAccess")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));

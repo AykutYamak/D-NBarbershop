@@ -19,6 +19,7 @@ namespace DNBarbershop.Models.Entities
         [Required(ErrorMessage = RequiredErrorMessage)]
         [StringLength(100, ErrorMessage = nameof(MaxLengthExceededErrorMessage))]
         public string LastName { get; set; }
+
         [Required(ErrorMessage = RequiredErrorMessage)]
         [ForeignKey(nameof(Speciality))]
         public Guid SpecialityId { get; set; }
@@ -28,6 +29,10 @@ namespace DNBarbershop.Models.Entities
         [Required(ErrorMessage = RequiredErrorMessage)]
         public string ProfilePictureUrl { get; set; }
 
+        //[Required(ErrorMessage = RequiredErrorMessage)]
+        //[ForeignKey(nameof(User))]
+        //public string UserId { get; set; }
+        //public User User { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
         public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
     }

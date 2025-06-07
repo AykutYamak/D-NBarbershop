@@ -17,7 +17,9 @@ namespace DNBarbershop.Models.Entities
             [Required(ErrorMessage = RequiredErrorMessage)]
             [StringLength(100, ErrorMessage = nameof(MaxLengthExceededErrorMessage))]
             public string LastName { get; set; }
+        
 
+            //public Barber BarberProfile { get; set; }
             public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
             public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
             public ICollection<Message> Messages { get; set; } = new HashSet<Message>();

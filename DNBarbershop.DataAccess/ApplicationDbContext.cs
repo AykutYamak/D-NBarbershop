@@ -57,6 +57,12 @@ namespace DNBarbershop.DataAccess
             .HasForeignKey(b => b.SpecialityId)
             .OnDelete(DeleteBehavior.Cascade);
 
+            //modelBuilder.Entity<User>()
+            // .HasOne(u => u.BarberProfile)
+            // .WithOne(b => b.User)
+            // .HasForeignKey<Barber>(b => b.UserId)
+            // .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Feedback>()
             .HasOne(f => f.User)
             .WithMany(u => u.Feedbacks)
