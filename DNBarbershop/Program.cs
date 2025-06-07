@@ -22,7 +22,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
-        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        var connection = builder.Configuration.GetConnectionString("HomeConnection");
 
 
 
@@ -77,9 +77,7 @@ internal class Program
 
         app.UseAuthentication();
 
-        app.UseAuthorization(
-            //{ options => options.AddPolicy("RequireAdmin", ); }
-        );
+        app.UseAuthorization();
 
         app.MapRazorPages();
         

@@ -46,8 +46,11 @@ namespace DNBarbershop.Controllers
             var barbers = _barberService.GetAll();
             var barbersList = barbers.Select(b => new { b.Id, FullName = b.FirstName + " " + b.LastName }).ToList();
 
-            var feedbacks = query.Include(u => u.User).Include(b => b.Barber).OrderByDescending(x => x.FeedBackDate.Date).ToList();
-
+            var feedbacks = query
+                            .Include(f => f.User)
+                            .Include(f => f.Barber)
+                            .OrderByDescending(f => f.FeedBackDate)
+                            .ToList();
             var model = new FeedbackFilterViewModel
             {
                 BarberId = filter.BarberId,

@@ -127,6 +127,15 @@ namespace DNBarbershop.Controllers
                 new SelectListItem { Value = "3", Text = AppointmentStatus.Cancelled.ToString()}
             };
         }
+        int GetStatusOrder(AppointmentStatus status)
+        {
+            return status switch
+            {
+                AppointmentStatus.Scheduled => 0,
+                AppointmentStatus.Cancelled => 1,
+                AppointmentStatus.Completed => 2
+            };
+        }
         //Admin View Actions
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(AppointmentFilterViewModel? filter)
@@ -169,13 +178,18 @@ namespace DNBarbershop.Controllers
                     item.Status = AppointmentStatus.Scheduled;
                 }
             }
+            var sortedAppointments = appointments
+                                    .OrderBy(a => GetStatusOrder(a.Status))
+                                    .ThenBy(a => a.AppointmentDate)
+                                    .ThenBy(a => a.AppointmentTime)
+                                    .ToList();
             var model = new AppointmentFilterViewModel
             {
                 UserId = filter.UserId,
                 BarberId = filter.BarberId,
                 Barbers = new SelectList(barbersList, "Id", "FullName"),
                 Users = new SelectList(usersList, "Id", "FullName"),
-                Appointments = appointments
+                Appointments = sortedAppointments
             };
            
             return View(model);

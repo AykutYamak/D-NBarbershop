@@ -160,20 +160,15 @@ namespace DNBarbershop.Controllers
                 .Include(a => a.AppointmentServices)
                     .ThenInclude(s => s.Service)
                 .ToList();
+
+            var sortedAppointments = appointments
+                .OrderBy(a => GetStatusOrder(a.Status))
+                .ThenBy(a => a.AppointmentDate)
+                .ThenBy(a => a.AppointmentTime)
+                .ToList();
             foreach (var item in appointments)
             {
-                if (item.AppointmentDate.Date <= DateTime.Now.Date && item.AppointmentTime < DateTime.Now.TimeOfDay && item.Status != AppointmentStatus.Cancelled)
-                {
-                    item.Status = AppointmentStatus.Completed;
-                }
-                else if (item.Status == AppointmentStatus.Cancelled)
-                {
-                    item.Status = AppointmentStatus.Cancelled;
-                }
-                else
-                {
-                    item.Status = AppointmentStatus.Scheduled;
-                }
+                item.Status = GetEffectiveStatus(item);
             }
             var model = new UserViewModel
             {
@@ -182,10 +177,31 @@ namespace DNBarbershop.Controllers
                 LastName = currentUser.LastName,
                 Email = currentUser.Email,
                 PhoneNumber = currentUser.PhoneNumber,
-                Appointments = appointments
-            };
+                Appointments = sortedAppointments
+            };  
 
             return View(model);
+        }
+        int GetStatusOrder(AppointmentStatus status)
+        {
+            return status switch
+            {
+                AppointmentStatus.Scheduled => 0,
+                AppointmentStatus.Cancelled => 1,
+                AppointmentStatus.Completed => 2
+            };
+        }
+
+        private AppointmentStatus GetEffectiveStatus(Appointment appointment)
+        {
+            if (appointment.Status == AppointmentStatus.Cancelled)
+                return AppointmentStatus.Cancelled;
+
+            var dateTime = appointment.AppointmentDate.Date + appointment.AppointmentTime;
+            if (dateTime <= DateTime.Now)
+                return AppointmentStatus.Completed;
+
+            return AppointmentStatus.Scheduled;
         }
         [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Edit(string id)
