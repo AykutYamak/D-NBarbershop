@@ -23,17 +23,6 @@ internal class Program
 
         builder.Services.AddControllersWithViews();
         var connection = builder.Configuration.GetConnectionString("DefaultConnection");
-<<<<<<< HEAD
-        if (string.IsNullOrEmpty(connection))
-        {
-            throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        }
-=======
-
-
-
-
->>>>>>> parent of 16360ab (Added Sorting to the Appointments and the feedbacks)
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,b=>b.MigrationsAssembly("DNBarbershop.DataAccess")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
@@ -65,6 +54,8 @@ internal class Program
 
         using (var scope = app.Services.CreateScope())
         {
+            //var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            //db.Database.Migrate();
             var serviceProvider = scope.ServiceProvider;
             await RoleSeeder.Initialize(serviceProvider);
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();

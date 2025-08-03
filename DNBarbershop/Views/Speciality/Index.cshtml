@@ -35,11 +35,15 @@
                                     <a class="btn btn-dark px-3 py-2" asp-controller="Speciality" asp-action="Edit" asp-route-id="@speciality.Id">
                                         <i class="bi bi-pencil"></i> Редактирай
                                     </a>
-                                    <form asp-controller="Speciality" asp-action="Delete" asp-route-id="@speciality.Id" method="post">
-                                        <button type="submit" class="btn btn-danger px-3 py-2">
-                                            <i class="bi bi-trash"></i> Изтрий
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                            class="btn btn-danger px-3 py-2"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteSpecialityModal"
+                                            data-speciality-id="@speciality.Id"
+                                            data-speciality-type="@speciality.Type">
+                                        <i class="bi bi-trash"></i> Изтрий
+                                    </button>
+
                                 </div>
                             </td>
                         </tr>
@@ -48,6 +52,48 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="deleteSpecialityModal" tabindex="-1" aria-labelledby="deleteSpecialityModalLabel" aria-hidden="true" style="color:black;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="deleteSpecialityModalLabel">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i> Потвърждение за изтриване
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Затвори"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-3 mx-auto d-flex justify-content-center align-items-center" style="width:50px; height:50px;">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M14 10V17M10 10V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h6 class="mb-3">Наистина ли искате да изтриете специализацията: <strong id="modalSpecialityType"></strong>?</h6>
+                    <p class="text-muted mb-0"><u>Това действие не може да бъде отменено.</u></p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <form id="deleteSpecialityForm" method="post">
+                        <button type="submit" class="btn btn-danger">Изтрий</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('deleteSpecialityModal');
+            const form = document.getElementById('deleteSpecialityForm');
+
+            modal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+
+                const id = button.getAttribute('data-speciality-id');
+                const type = button.getAttribute('data-speciality-type');
+
+                document.getElementById('modalSpecialityType').textContent = type;
+                form.action = `/Speciality/Delete/${id}`;
+            });
+        });
+    </script>
 
 </body>
 </html>

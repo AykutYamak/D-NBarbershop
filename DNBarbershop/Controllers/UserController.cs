@@ -182,7 +182,7 @@ namespace DNBarbershop.Controllers
                 LastName = currentUser.LastName,
                 Email = currentUser.Email,
                 PhoneNumber = currentUser.PhoneNumber,
-                Appointments = appointments
+                Appointments = appointments.OrderBy(x => x.AppointmentDate).ThenBy(x=>x.AppointmentTime).ToList()
             };
 
             return View(model);

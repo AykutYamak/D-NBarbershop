@@ -131,7 +131,7 @@ namespace DNBarbershop.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(AppointmentFilterViewModel? filter)
         {
-            var list = _appointmentService.GetAll().OrderByDescending(x=>x.AppointmentDate);
+            var list = _appointmentService.GetAll().OrderBy(x=>x.AppointmentDate).ThenBy(x=>x.AppointmentTime);
             var query = list.AsQueryable();
             if (filter.UserId != null)
             {

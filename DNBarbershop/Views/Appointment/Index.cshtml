@@ -64,29 +64,36 @@
                             <td>@appointment.AppointmentTime</td>
                             <td>@appointment.Status.ToString()</td>
                             <td>
-                                
-                                    @if(appointment.Status != DNBarbershop.Models.EnumClasses.AppointmentStatus.Completed)
-                                    {
+
+                                @if (appointment.Status != DNBarbershop.Models.EnumClasses.AppointmentStatus.Completed)
+                                {
                                     <div class="d-flex gap-2">
                                         <a class="btn btn-dark px-3 py-2" asp-controller="Appointment" asp-action="Edit" asp-route-id="@appointment.Id">
                                             <i class="bi bi-pencil"></i> Редактирай
                                         </a>
-                                        <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@appointment.Id" method="post">
-                                            <button type="submit" class="btn btn-danger px-3 py-2">
-                                                <i class="bi bi-trash"></i> Изтрий
-                                            </button>
-                                        </form>
-                                        </div>
-                                    }
-                                    else{
-                                        <div class="d-flex justify-content-center">
-                                        <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@appointment.Id" method="post">
-                                            <button type="submit" class="btn btn-danger px-3 py-2">
-                                                <i class="bi bi-trash"></i> Изтрий
-                                            </button>
-                                        </form>
-                                        </div>
-                                    }
+                                        <button type="button" class="btn btn-danger px-3 py-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                data-appointment-id="@appointment.Id"
+                                                data-barber-name="@appointment.Barber.FirstName @appointment.Barber.LastName"
+                                                data-user-name="@appointment.User.FirstName @appointment.User.LastName"
+                                                data-appointment-date="@appointment.AppointmentDate.Day/@appointment.AppointmentDate.Month/@appointment.AppointmentDate.Year г."
+                                                data-appointment-time="@appointment.AppointmentTime">
+                                            <i class="bi bi-trash"></i> Изтрий
+                                        </button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-danger px-3 py-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                data-appointment-id="@appointment.Id"
+                                                data-barber-name="@appointment.Barber.FirstName @appointment.Barber.LastName"
+                                                data-user-name="@appointment.User.FirstName @appointment.User.LastName"
+                                                data-appointment-date="@appointment.AppointmentDate.Day/@appointment.AppointmentDate.Month/@appointment.AppointmentDate.Year г."
+                                                data-appointment-time="@appointment.AppointmentTime">
+                                            <i class="bi bi-trash"></i> Изтрий
+                                        </button>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }
@@ -94,6 +101,68 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" style="color:black;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel" style="font-weight:bold;">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                        Потвърждение за изтриване
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-3 mx-auto d-flex justify-content-center align-items-center" style="width:50px; height:50px;">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier"> 
+                            <path d="M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M14 10V17M10 10V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                            </g>
+                        </svg>
+                    </div>
+                    <h6 class="mb-3">Сигурни ли сте, че искате да изтриете тази резервация?</h6>
+                    <div class="appointment-details p-3 rounded mb-3" style="background-color:lightgray">
+                        <p class="mb-1"><strong>Бръснар:</strong> <span id="modalBarberName"></span></p>
+                        <p class="mb-1"><strong>Потребител:</strong> <span id="modalUserName"></span></p>
+                        <p class="mb-1"><strong>Дата:</strong> <span id="modalAppointmentDate"></span></p>
+                        <p class="mb-0"><strong>Час:</strong> <span id="modalAppointmentTime"></span></p>
+                    </div>
+                    <p class="text-muted mb-0"><u>Това действие не може да бъде отменено.</u></p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <form id="deleteForm" method="post" style="display: flex; justify-content:center;">
+                        <button type="submit" class="btn btn-danger">
+                            Изтрий
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteModal = document.getElementById('deleteModal');
+            const deleteForm = document.getElementById('deleteForm');
+
+            deleteModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const appointmentId = button.getAttribute('data-appointment-id');
+                const barberName = button.getAttribute('data-barber-name');
+                const userName = button.getAttribute('data-user-name');
+                const appointmentDate = button.getAttribute('data-appointment-date');
+                const appointmentTime = button.getAttribute('data-appointment-time');
+
+                document.getElementById('modalBarberName').textContent = barberName;
+                document.getElementById('modalUserName').textContent = userName;
+                document.getElementById('modalAppointmentDate').textContent = appointmentDate;
+                document.getElementById('modalAppointmentTime').textContent = appointmentTime;
+
+                deleteForm.action = `/Appointment/Delete/${appointmentId}`;
+            });
+        });
+    </script>
 
 </body>
 
