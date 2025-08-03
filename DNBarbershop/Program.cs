@@ -23,10 +23,17 @@ internal class Program
 
         builder.Services.AddControllersWithViews();
         var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+<<<<<<< HEAD
         if (string.IsNullOrEmpty(connection))
         {
             throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         }
+=======
+
+
+
+
+>>>>>>> parent of 16360ab (Added Sorting to the Appointments and the feedbacks)
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,b=>b.MigrationsAssembly("DNBarbershop.DataAccess")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
@@ -77,7 +84,9 @@ internal class Program
 
         app.UseAuthentication();
 
-        app.UseAuthorization();
+        app.UseAuthorization(
+            //{ options => options.AddPolicy("RequireAdmin", ); }
+        );
 
         app.MapRazorPages();
         
